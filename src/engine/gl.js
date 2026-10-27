@@ -210,7 +210,7 @@ function setUniform(gl, u, v) {
     case T.FLOAT: gl.uniform1f(u.loc, typeof v === 'boolean' ? (v ? 1 : 0) : +v || 0); break
     case T.FLOAT_VEC2: gl.uniform2fv(u.loc, toArr(v, 2)); break
     case T.FLOAT_VEC3: gl.uniform3fv(u.loc, typeof v === 'string' ? hexToRgb(v) : toArr(v, 3)); break
-    case T.FLOAT_VEC4: gl.uniform4fv(u.loc, typeof v === 'string' ? [...hexToRgb(v), 1] : toArr(v, 4)); break
+    case T.FLOAT_VEC4: gl.uniform4fv(u.loc, typeof v === 'string' ? [...hexToRgb(v), 1] : ((Array.isArray(v) || v instanceof Float32Array) && v.length === 3 ? [v[0], v[1], v[2], 1] : toArr(v, 4))); break
     case T.INT: case T.BOOL: gl.uniform1i(u.loc, typeof v === 'boolean' ? (v ? 1 : 0) : Math.round(+v || 0)); break
     case T.INT_VEC2: gl.uniform2iv(u.loc, toArr(v, 2).map(Math.round)); break
     case T.FLOAT_MAT3: gl.uniformMatrix3fv(u.loc, false, v); break
