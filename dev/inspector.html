@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <title>Denetçi testi</title>
+  <link rel="stylesheet" href="../fonts/fonts.css">
+  <style>
+    html, body, #root { height: 100%; }
+    .tstage { display: flex; height: 100%; }
+    .tslot { width: 330px; height: 100%; flex-shrink: 0; }
+    /* test çekimleri: gizli pencerede animasyonlar yarıda kalmasın */
+    html.noanim *, html.noanim *::before, html.noanim *::after { animation: none !important; transition: none !important; }
+    .tinfo { flex: 1; padding: 16px; font: 12px/1.5 var(--font-mono); color: var(--tx-2); overflow: auto; border-left: 1px solid var(--line); white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="./inspector-test.jsx"></script>
+</body>
+</html>

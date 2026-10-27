@@ -157,6 +157,31 @@ export function setSpeed(clipId, speed, curve = null) {
 
 // ---------------------------------------------------------------- özellik bağlama
 // Bir özelliği ayarla: o özellikte anahtar kare varsa oynatma kafasında anahtar kare günceller/ekler.
+// Anahtar karesiz temel değer. 'fx:<uid>:<param>' yolları efektin params nesnesine bakar.
+function fxRef(c, p) {
+  const m = /^fx:([^:]+):(.+)$/.exec(p)
+  if (!m) return null
+  const fx = m[1] === 'layer' ? (c.effect ? { params: (c.effect.params = c.effect.params || {}), id: c.effect.id } : null) : (c.effects || []).find(e => e.uid === m[1])
+  if (!fx) return null
+  if (!fx.params) fx.params = {}
+  return { fx, key: m[2] }
+}
+export function baseValue(c, p) {
+  const r = fxRef(c, p)
+  if (r) {
+    if (r.fx.params[r.key] != null) return r.fx.params[r.key]
+    const def = regGet('effects', r.fx.id)
+    const pd = def && (def.params || []).find(x => x.key === r.key)
+    return pd ? pd.default : 0
+  }
+  return getPath(c, p)
+}
+function setBase(c, p, v) {
+  const r = fxRef(c, p)
+  if (r) r.fx.params[r.key] = v
+  else setPath(c, p, v)
+}
+
 export function setProp(clipId, p, value, label = 'Özellik', opts = {}) {
   store.edit(label, d => {
     const c = TL.getClip(d, clipId)
@@ -165,7 +190,7 @@ export function setProp(clipId, p, value, label = 'Özellik', opts = {}) {
     if (keys && keys.length && !opts.static) {
       const lt = Math.max(0, Math.min(c.duration, now() - c.start))
       upsertKey(c, p, lt, value)
-    } else setPath(c, p, value)
+    } else setBase(c, p, value)
   }, { coalesce: 'prop:' + clipId + ':' + p })
 }
 
@@ -185,7 +210,8 @@ export function toggleKey(clipId, p) {
     if (idx >= 0) removeKey(x, p, lt)
     else {
       const keys = x.keyframes && x.keyframes[p]
-      const v = keys && keys.length ? evalKeys(keys, lt, getPath(x, p)) : getPath(x, p)
+      const base = baseValue(x, p)
+      const v = keys && keys.length ? evalKeys(keys, lt, base) : base
       upsertKey(x, p, lt, typeof v === 'number' ? v : 0)
     }
   })

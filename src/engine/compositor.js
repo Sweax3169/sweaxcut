@@ -7,7 +7,7 @@
 import { GL, VS_LAYER, hexToRgb } from './gl.js'
 import { FS_COPY, FS_SOLID, FS_GRADIENT, FS_BLUR, FS_RGBSPLIT, FS_COMPOSE, FS_BLEND, BLEND_MODES, ADJ_KEYS, colorShader, effectShader, transitionShader } from './shaders.js'
 import { REG, get as regGet } from './registry.js'
-import { prop } from '../core/keyframes.js'
+import { prop, evalKeys } from '../core/keyframes.js'
 import { sourceTime } from '../core/time.js'
 import { transitionWindow } from '../core/timeline.js'
 import { renderTextLayer } from './text-render.js'
@@ -397,7 +397,7 @@ export class Compositor {
         const def = regGet('effects', fx.id)
         if (!def) continue
         // uOrig = bu efektin girişi (önceki efektler korunur)
-        const res = this._effectPasses(cur, def, fx.params || {}, lt, clip, cur)
+        const res = this._effectPasses(cur, def, fxParams(clip, fx, def, lt), lt, clip, cur)
         if (res && res !== cur) {
           if (own && cur !== orig) glw.release(cur)
           else if (own && cur === orig) keepOrig = true
@@ -432,7 +432,8 @@ export class Compositor {
     const adj = clip.adjust || {}
     for (let i = 0; i < ADJ_KEYS.length; i++) {
       const k = ADJ_KEYS[i]
-      A[i] = (prop(clip, 'adjust.' + k, lt) || adj[k] || 0) / 100
+      const v = prop(clip, 'adjust.' + k, lt)
+      A[i] = (Number.isFinite(v) ? v : (adj[k] || 0)) / 100
     }
     let hasF = 0, famt = 0, tone = null, curveTex = null, mono = 0
     if (fdef) {
@@ -546,7 +547,7 @@ export class Compositor {
     if (clip.type === 'effect' && clip.effect) {
       const def = regGet('effects', clip.effect.id)
       if (!def) return accum
-      const res = this._effectPasses(accum, def, clip.effect.params || {}, lt, clip, accum)
+      const res = this._effectPasses(accum, def, fxParams(clip, { uid: 'layer', params: clip.effect.params }, def, lt), lt, clip, accum)
       if (res !== accum) {
         // boyut farklıysa (ölçekli geçiş) tuvale geri büyüt
         if (res.w !== accum.w) {
@@ -649,6 +650,22 @@ export class Compositor {
     const ext = gl.getExtension('WEBGL_lose_context')
     if (ext) ext.loseContext()
   }
+}
+
+// Efekt parametreleri anahtar karelenebilir: yol 'fx:<uid>:<param>' (efekt katmanında uid = 'layer')
+function fxParams(clip, fx, def, lt) {
+  const base = fx.params || {}
+  const kf = clip.keyframes
+  if (!kf) return base
+  let out = null
+  for (const p of def.params || []) {
+    const keys = kf['fx:' + fx.uid + ':' + p.key]
+    if (keys && keys.length) {
+      if (!out) out = { ...base }
+      out[p.key] = evalKeys(keys, lt, base[p.key] ?? p.default)
+    }
+  }
+  return out || base
 }
 
 function needsColor(clip, lt) {
