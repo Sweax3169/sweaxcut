@@ -224,7 +224,9 @@ export class Compositor {
   // -------------------------------------------------------------- arka plan (tuval)
   _drawBackground(target, clip, L) {
     const { project, W, H } = this.ctx
-    const bg = clip.canvasBg || project.settings.bg || { type: 'color', color: '#000' }
+    let bg = clip.canvasBg || project.settings.bg || { type: 'color', color: '#000' }
+    // arka planı silinmiş klibin kendisini bulanıklaştırmak anlamsız: düz renge düş
+    if (bg.type === 'blur' && clip.bgRemove) bg = { ...bg, type: 'color' }
     const gl = this.gl
     this.glw.bindTarget(target)
     gl.disable(gl.BLEND)

@@ -437,6 +437,14 @@ async function testTools() {
   store.select([])
   try { await VT.TOOLS[0].run({ store, selection: [], onProgress: () => {} }) } catch (e) { err = e }
   check('seçim yokken Türkçe hata', err && /video klibi/.test(err.message), err && err.message)
+  // başka makinede açılan proje: türev yolu yok → ensureVariants yeniden üretir (önbellekte varsa anında)
+  const km = await addMedia(path.join(OUT, 'kisi_test.mp4'))
+  const kc = addClip(km)
+  store.edit('x', d => { d.media[km].variants = { bgremove: 'C:\yok\bgremove-hizli.webm' }; for (const t of d.tracks) for (const c of t.clips) if (c.id === kc) c.bgRemove = true }, { noHistory: true })
+  const t0 = performance.now()
+  const n = await VT.ensureVariants({})
+  const vp = store.get().project.media[km].variants.bgremove
+  check('ensureVariants: eksik türev yeniden bağlandı/üretildi', n >= 1 && fs.existsSync(vp), `${n} iş · ${ms(t0)} ms · ${vp}`)
 }
 
 ;(async () => {

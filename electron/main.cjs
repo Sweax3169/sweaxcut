@@ -54,6 +54,7 @@ function createWindow() {
     icon: path.join(__dirname, '..', 'build', 'icon.ico'),
     webPreferences: {
       nodeIntegration: true,
+      nodeIntegrationInWorker: true,
       contextIsolation: false,
       sandbox: false,
       webSecurity: false,

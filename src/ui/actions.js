@@ -424,6 +424,8 @@ export async function openProject(file) {
     const miss = missingMedia(store.get().project)
     if (miss.length) store.toast(miss.length + ' medya dosyası bulunamadı (taşınmış olabilir)', 'error', 6000)
     revalidateMedia()
+    // eksik arka plan silme / sabitleme dosyalarını arka planda yeniden üret
+    import('../features/video/index.js').then(m => m.ensureVariants && m.ensureVariants({})).catch(() => {})
   } catch (e) {
     store.toast('Proje açılamadı: ' + e.message, 'error', 5000)
   }

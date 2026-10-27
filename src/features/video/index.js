@@ -10,6 +10,7 @@ import { autoReframe, REFRAME_MODES } from './reframe.js'
 import { detectScenes, splitClipAtScenes } from './scenes.js'
 import { autoZoomPunch, autoZoomFromHighlights } from './autozoom.js'
 import { isAbort, sourceToTimeline, sourceToLocal } from './util.js'
+import { fs as nfs } from '../../platform/node.js'
 
 export {
   removeBackground, setClipBgRemove, BG_QUALITY,
@@ -181,6 +182,37 @@ export const TOOLS = [
 ]
 
 export function getTool(id) { return TOOLS.find(t => t.id === id) || null }
+
+// Proje açılınca: bgRemove / stabilize açık kliplerin türev dosyası yoksa (başka makine, önbellek silinmiş) yeniden üret.
+// Dönen: yeniden üretilen türev sayısı. Türev hazır olana dek clipSourcePath orijinal dosyaya düşer.
+export async function ensureVariants({ onProgress, signal, store: st = coreStore } = {}) {
+  const ok = p => { try { return !!p && !!nfs && nfs.statSync(p).size > 0 } catch (e) { return false } }
+  const p = st.get().project
+  const jobs = []
+  const seen = new Set()
+  for (const t of p.tracks) {
+    for (const c of t.clips) {
+      if (c.type !== 'video') continue
+      const m = p.media[c.mediaId]
+      if (!m || !ok(m.path)) continue
+      const v = m.variants || {}
+      if (c.bgRemove && !ok(v.bgremove) && !seen.has(m.id + ':bg')) {
+        seen.add(m.id + ':bg')
+        const quality = /kaliteli/.test(v.bgremove || '') ? 'kaliteli' : 'hizli'
+        jobs.push(o => removeBackground(m.id, { quality, ...o }))
+      }
+      if (c.stabilize && !ok(v['stab' + c.stabilize]) && !seen.has(m.id + ':s' + c.stabilize)) {
+        seen.add(m.id + ':s' + c.stabilize)
+        const lv = c.stabilize
+        jobs.push(o => stabilize(m.id, lv, o))
+      }
+    }
+  }
+  for (let i = 0; i < jobs.length; i++) {
+    await jobs[i]({ signal, onProgress: q => onProgress && onProgress((i + q) / jobs.length) })
+  }
+  return jobs.length
+}
 
 // Genel çalıştırıcı: hata/iptal mesajını Türkçe toast'a çevirir
 export async function runTool(id, ctx = {}) {

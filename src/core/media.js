@@ -312,6 +312,13 @@ export function revalidateMedia() {
   const media = store.get().project.media
   for (const m of Object.values(media)) {
     if (m.type === 'image') continue
+    // artık var olmayan işlenmiş türevleri (arka plan silme, sabitleme) düşür
+    if (m.variants) {
+      const v = {}
+      let ch = false
+      for (const [k, p] of Object.entries(m.variants)) { if (p && exists(p)) v[k] = p; else ch = true }
+      if (ch) patchMedia(m.id, { variants: v })
+    }
     const stale = (m.audioPath && !exists(m.audioPath)) || (m.proxyPath && !exists(m.proxyPath)) || (m.thumbsDir && !exists(path.join(m.thumbsDir, 'done'))) || m.status !== 'ready'
     if (stale && exists(m.path)) {
       patchMedia(m.id, { status: 'processing', audioPath: null, proxyPath: null, peaksPath: null })
