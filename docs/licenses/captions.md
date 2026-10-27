@@ -6,13 +6,17 @@ Kapsam: `src/features/captions/`, `vendor/whisper/`, `scripts/test-captions.cjs`
 
 | Dosya | Sürüm / kaynak | Lisans |
 |---|---|---|
-| `bin/whisper-cli.exe`, `bin/whisper.dll`, `bin/ggml.dll`, `bin/ggml-base.dll`, `bin/ggml-cpu-*.dll` (9 işlemci çeşidi) | whisper.cpp v1.9.5, GitHub sürüm etiketi `b5454`, `whisper-bin-x64.zip` (sha256 `6ba69e34…16ccb`) — https://github.com/ggml-org/whisper.cpp | MIT, © The ggml authors |
+| `bin/whisper-cli.exe`, `bin/whisper.dll`, `bin/ggml.dll`, `bin/ggml-base.dll`, `bin/ggml-blas.dll`, `bin/ggml-cpu-*.dll` (9 işlemci çeşidi) | whisper.cpp v1.9.5, GitHub sürüm etiketi `b5454`, `whisper-blas-bin-x64.zip` (sha256 `b1158bd1…ffbf3`) — https://github.com/ggml-org/whisper.cpp | MIT, © The ggml authors |
+| `bin/libopenblas.dll` | OpenBLAS (aynı zip içinden; DYNAMIC_ARCH) — https://github.com/OpenMathLib/OpenBLAS | BSD-3-Clause, © OpenBLAS / Zhang Xianyi ve katkıcılar |
 | `bin/msvcp140.dll`, `bin/vcruntime140.dll`, `bin/vcruntime140_1.dll`, `bin/vcomp140.dll` | Microsoft Visual C++ 2015–2022 çalışma zamanı 14.44.35211 (VS 2022 `VC\Redist\MSVC\14.44.35112\x64`) | Microsoft yeniden dağıtılabilir kod (Visual Studio lisansı, "Distributable Code"); uygulama yanında dağıtım. VC++ yüklü olmayan bilgisayarlarda whisper-cli'nin açılması için. |
 | `vad/ggml-silero-v6.2.0.bin` | Silero VAD v6.2.0, ggml dönüşümü — https://huggingface.co/ggml-org/whisper-vad (sha256 `2aa269b7…6987`) | MIT, © Silero Team |
 
 `whisper-cli.exe` değiştirildi: gömülü manifeste `activeCodePage = UTF-8` eklendi (Windows SDK `mt.exe`), böylece
-Türkçe karakterli yollar ve istemler (prompt) bozulmadan iletilir. Orijinal exe sha256 `331dba46…4366`, yamalı `db750391…43c8`.
+Türkçe karakterli yollar ve istemler (prompt) bozulmadan iletilir. Orijinal exe sha256 `4e2940cf…f6d0`, yamalı `5afa15d2…5208`.
 Kod değişikliği yok; MIT lisansı değişikliğe izin verir.
+
+`ggml-blas.dll` + `libopenblas.dll` (≈51 MB) isteğe bağlıdır: silinirlerse whisper.cpp kendiliğinden saf CPU arka ucuna düşer
+(~%30 daha yavaş, kod değişikliği gerekmez).
 
 ## Kullanıcının indirdiği modeller (`<userData>/models/whisper/`)
 

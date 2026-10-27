@@ -30,7 +30,7 @@ export const WHISPER_MODELS = [
   {
     id: 'medium', name: 'Medium', label: 'Doğru', file: 'ggml-medium-q5_0.bin', size: 539212467,
     sha256: '19fea4b380c3a618ec4723c3eef2eb785ffba0d0538cf43f8f235e7b3b34220f', dtw: 'medium', dtwLag: 0.27,
-    speed: 1, quality: 4, desc: 'Daha doğru ama işlemcide yavaş. Turbo genelde hem daha hızlı hem daha iyi.',
+    speed: 2, quality: 4, desc: 'Çok doğru ama yavaş; işlemcide Turbo ile benzer süre.',
   },
   {
     id: 'large-v3-turbo', name: 'Large v3 Turbo', label: 'En doğru', file: 'ggml-large-v3-turbo-q5_0.bin', size: 574041195,

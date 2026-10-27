@@ -10,7 +10,7 @@ export {
 } from './whisper.js'
 export { parseWhisperJson, tokensToWords, distributeWords, isHallucination } from './parse.js'
 export {
-  buildCaptionClips, insertCaptions, removeCaptions, restyleCaptions, captionsToResult, groupWords, mapWords,
+  buildCaptionClips, insertCaptions, resolveOverlaps, removeCaptions, restyleCaptions, captionsToResult, groupWords, mapWords,
   sourceToTimeline, findFillers, fillerCutRanges, FILLERS, CAPTION_TRACK_NAME, upperTr,
 } from './build.js'
 export { autoEmoji, isKeyword, isGamingTerm, phraseEmoji, normWord, EMOJI_COUNT } from './emoji.js'

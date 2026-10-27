@@ -5,3 +5,7 @@ test-videos/out/
 *.log
 vendor/whisper/models/
 vendor/piper/voices/*.onnx
+vendor/whisper/bin/
+vendor/whisper/bin-gpu/
+vendor/piper/*
+!vendor/piper/NOTICE.txt
