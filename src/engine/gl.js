@@ -207,7 +207,11 @@ export class GL {
 function setUniform(gl, u, v) {
   const T = gl
   switch (u.type) {
-    case T.FLOAT: gl.uniform1f(u.loc, typeof v === 'boolean' ? (v ? 1 : 0) : +v || 0); break
+    case T.FLOAT:
+      // dizi uniformları (uA[17] gibi) da FLOAT türü bildirir
+      if (u.size > 1 && (Array.isArray(v) || v instanceof Float32Array)) gl.uniform1fv(u.loc, v)
+      else gl.uniform1f(u.loc, typeof v === 'boolean' ? (v ? 1 : 0) : +v || 0)
+      break
     case T.FLOAT_VEC2: gl.uniform2fv(u.loc, toArr(v, 2)); break
     case T.FLOAT_VEC3: gl.uniform3fv(u.loc, typeof v === 'string' ? hexToRgb(v) : toArr(v, 3)); break
     case T.FLOAT_VEC4: gl.uniform4fv(u.loc, typeof v === 'string' ? [...hexToRgb(v), 1] : ((Array.isArray(v) || v instanceof Float32Array) && v.length === 3 ? [v[0], v[1], v[2], 1] : toArr(v, 4))); break

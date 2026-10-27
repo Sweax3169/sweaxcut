@@ -396,7 +396,8 @@ export class Compositor {
         if (fx.enabled === false) continue
         const def = regGet('effects', fx.id)
         if (!def) continue
-        const res = this._effectPasses(cur, def, fx.params || {}, lt, clip, orig)
+        // uOrig = bu efektin girişi (önceki efektler korunur)
+        const res = this._effectPasses(cur, def, fx.params || {}, lt, clip, cur)
         if (res && res !== cur) {
           if (own && cur !== orig) glw.release(cur)
           else if (own && cur === orig) keepOrig = true
