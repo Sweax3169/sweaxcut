@@ -1,0 +1,19 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Dışa aktarma testi</title>
+<style>body{margin:0;background:#111;color:#ddd;font:12px/1.4 Consolas,monospace}pre{white-space:pre-wrap;padding:8px;margin:0}img{max-width:100%}#shots{display:flex;flex-wrap:wrap;gap:6px;padding:6px}#shots figure{margin:0;width:300px}#shots figcaption{font-size:11px}</style>
+<script>
+// devshot.cjs'de 'app:paths' işleyicisi yok → test için yolları burada ver (ana uygulamada main.cjs verir)
+(function () {
+  if (!window.require) return
+  const { ipcRenderer } = window.require('electron')
+  const path = window.require('path'), os = window.require('os')
+  const root = process.cwd()
+  const orig = ipcRenderer.sendSync.bind(ipcRenderer)
+  ipcRenderer.sendSync = (ch, ...a) => ch === 'app:paths' ? {
+    userData: path.join(os.tmpdir(), 'sweaxcut-test-ud'), documents: os.tmpdir(), temp: os.tmpdir(), videos: os.tmpdir(),
+    ffmpeg: path.join(root, 'node_modules', 'ffmpeg-static', 'ffmpeg.exe'),
+    ffprobe: path.join(root, 'node_modules', 'ffprobe-static', 'bin', 'win32', 'x64', 'ffprobe.exe'),
+    appRoot: root, resources: root, vendor: path.join(root, 'vendor'), isPackaged: false, version: 'test',
+  } : orig(ch, ...a)
+})()
+</script></head>
+<body><pre id="log"></pre><div id="shots"></div><script type="module" src="./export-test.js"></script></body></html>

@@ -17,6 +17,8 @@ export default function App() {
 
   useEffect(() => {
     initPacks().finally(() => setReady(true))
+    // donanım kodlayıcı tespitini arka planda önceden yap (ilk dışa aktarmada beklenmesin)
+    setTimeout(() => { import('../engine/export.js').then(m => m.getEncoders && m.getEncoders()).catch(() => {}) }, 4000)
     const off = installShortcuts()
     A.startAutosave()
     if (ipc) {
