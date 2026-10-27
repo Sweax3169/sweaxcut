@@ -11,6 +11,9 @@ import * as A from './actions.js'
 import { ipc } from '../platform/node.js'
 import { ALL_EXTS } from '../core/media.js'
 
+// test ve hata ayıklama kancası
+if (typeof window !== 'undefined') window.__sweaxActions = A
+
 export default function App() {
   const screen = useStore(s => s.ui.screen)
   const [ready, setReady] = useState(false)

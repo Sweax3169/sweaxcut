@@ -14,6 +14,8 @@ import { createTrack } from '../../core/model.js'
 
 const sfxMods = import.meta.glob('../../packs/sfx/render.js', { eager: true })
 const sfxRender = sfxMods['../../packs/sfx/render.js']
+const libMods = import.meta.glob('../library/insert.js', { eager: true })
+const libInsert = libMods['../library/insert.js']
 
 const EDGE_PX = 7
 
@@ -179,6 +181,21 @@ function TimelineBody() {
     for (const c of row.track.clips) {
       const x0 = c.start * z - s.ui.scrollX, x1 = (c.start + c.duration) * z - s.ui.scrollX
       if (x >= x0 - 2 && x <= x1 + 2) {
+        const yIn = yy - row.y
+        // ses yumuşatma tutamacı (seçili klipte, üst kenar)
+        const media = c.mediaId ? s.project.media[c.mediaId] : null
+        const au = c.audio
+        if (s.selection.clips.includes(c.id) && au && yIn <= 11 && (c.type === 'audio' || (c.type === 'video' && media && media.hasAudio && !au.muted))) {
+          const fx0 = x0 + 6 + (au.fadeIn || 0) * z, fx1 = x1 - 6 - (au.fadeOut || 0) * z
+          if (Math.abs(x - fx0) <= 6) return { zone: 'fade', row, clip: c, side: 'in', t }
+          if (Math.abs(x - fx1) <= 6) return { zone: 'fade', row, clip: c, side: 'out', t }
+        }
+        // anahtar kare elması (alt kenar) → oraya git
+        if (yIn >= row.h - 12 && c.keyframes) {
+          for (const k of Object.keys(c.keyframes)) for (const kf of c.keyframes[k]) {
+            if (Math.abs(x - (x0 + kf.t * z)) <= 5) return { zone: 'key', row, clip: c, time: c.start + kf.t, t }
+          }
+        }
         let edge = null
         const ew = Math.min(EDGE_PX, (x1 - x0) / 3)
         if (x - x0 <= ew) edge = 'start'
@@ -220,6 +237,16 @@ function TimelineBody() {
       st.drag = { mode: 'scrub', move: scrub }
       return
     }
+    if (h.zone === 'key') {
+      store.select([h.clip.id])
+      playback.pause()
+      playback.seek(h.time)
+      return
+    }
+    if (h.zone === 'fade') {
+      st.drag = { mode: 'fade', id: h.clip.id, side: h.side }
+      return
+    }
     if (h.zone === 'cut') {
       store.select([h.clip.id])
       store.setUI({ inspectorTab: 'transition' })
@@ -259,13 +286,22 @@ function TimelineBody() {
     if (!d) {
       const h = hit(x, y)
       const hv = h.zone === 'clip' ? { id: h.clip.id, edge: h.edge } : h.zone === 'cut' ? { cut: h.clip.id } : null
-      const cur = h.zone === 'clip' && h.edge ? 'ew-resize' : h.zone === 'clip' ? 'grab' : h.zone === 'ruler' ? 'text' : h.zone === 'cut' ? 'pointer' : 'default'
+      const cur = h.zone === 'clip' && h.edge ? 'ew-resize' : h.zone === 'fade' ? 'col-resize' : h.zone === 'key' ? 'pointer' : h.zone === 'clip' ? 'grab' : h.zone === 'ruler' ? 'text' : h.zone === 'cut' ? 'pointer' : 'default'
       baseRef.current.parentElement.style.cursor = cur
       const k = JSON.stringify(hv)
       if (k !== JSON.stringify(st.hover)) { st.hover = hv; redrawBase.current() }
       return
     }
     if (d.mode === 'scrub') { d.move(e); return }
+    if (d.mode === 'fade') {
+      const c = TL.getClip(s.project, d.id)
+      if (!c) return
+      const t = (x + s.ui.scrollX) / s.ui.zoom
+      const v = d.side === 'in' ? t - c.start - 6 / s.ui.zoom : c.start + c.duration - t - 6 / s.ui.zoom
+      const val = Math.max(0, Math.min(c.duration / 2, +v.toFixed(2)))
+      store.edit('Ses yumuşatma', dd => { const cc = TL.getClip(dd, d.id); cc.audio[d.side === 'in' ? 'fadeIn' : 'fadeOut'] = val }, { coalesce: 'fade:' + d.id + d.side })
+      return
+    }
     if (d.mode === 'trim') {
       if (!d.started && Math.abs(x - d.x0) < 2) return
       d.started = true
@@ -344,7 +380,7 @@ function TimelineBody() {
     st.marquee = null
     if (!d) return
     const s = store.get()
-    if (d.mode === 'trim') store.endCoalesce()
+    if (d.mode === 'trim' || d.mode === 'fade') store.endCoalesce()
     if (d.mode === 'pending-move') {
       // tıklama: oynatma kafasını oraya taşıma yok (CapCut gibi), sadece seçim
     }
@@ -523,7 +559,11 @@ function TimelineBody() {
       return
     }
     if (info.kind === 'media') {
-      const m = s.project.media[info.id]
+      // hazır arka planlar: içe aktarma bırakmadan önce bitmemiş olabilir
+      let mid = info.id
+      if (!s.project.media[mid] && info.path) mid = (await importFiles([info.path]))[0]
+      info.id = mid
+      const m = store.get().project.media[mid]
       if (!m) return
       if (m.type === 'audio') { A.addMediaToTimeline(info.id, t); return }
       const onMain = !row || row.track.main || !s.project.tracks.find(tr => tr.main).clips.length
@@ -570,15 +610,17 @@ function TimelineBody() {
     if (info.kind === 'text') { A.addText(regGet('textTemplates', info.id) || null, t); return }
     if (info.kind === 'sticker') { const def = regGet('stickers', info.id); if (def) A.addSticker(def, t); return }
     if (info.kind === 'sfx' || info.kind === 'music') {
+      // kütüphane ile aynı önbellek yolunu kullan (aynı ses iki kez medya olmasın)
       const def = regGet(info.kind, info.id)
-      if (!def || !sfxRender || !sfxRender.renderToFile) return
+      if (!def) return
+      if (libInsert && libInsert.insertAudioDef) { await libInsert.insertAudioDef(info.kind, def, t); return }
+      if (!sfxRender || !sfxRender.renderToFile) return
       store.busy('Ses hazırlanıyor…')
       try {
         const out = path.join(cacheDir('generated'), info.kind + '-' + def.id + '.wav')
         await sfxRender.renderToFile(def, out)
         const ids = await importFiles([out], { role: info.kind })
         if (ids[0]) {
-          store.edit('Ses ekle', d => { if (d.media[ids[0]]) { d.media[ids[0]].name = def.name; d.media[ids[0]].generated = true } }, { noHistory: true })
           let cid = null
           store.edit('Ses ekle', d => { const c = TL.addMedia(d, d.media[ids[0]], t, s.ui, { role: info.kind }); c.role = info.kind; c.name = def.name; cid = c.id })
           store.select([cid])
@@ -588,7 +630,7 @@ function TimelineBody() {
     }
     if (info.kind === 'layout') {
       const def = regGet('layouts', info.id)
-      if (def) store.edit('Düzen uygula', d => def.apply(d, { selectedClipIds: s.selection.clips, time: t, ui: s.ui }))
+      if (def) store.edit('Düzen uygula', d => def.apply(d, { selectedClipIds: s.selection.clips, selection: s.selection.clips, time: t, ui: s.ui, width: s.project.settings.width, height: s.project.settings.height }))
     }
   }
 

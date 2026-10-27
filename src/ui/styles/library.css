@@ -1,0 +1,369 @@
+/* SWEAXCUT — sol kütüphane paneli
+   Film kesim masası: perfore şeritli dikey ray, kenar kodu etiketleri, vizör köşe işaretleri, limon sinyal. */
+
+.lib {
+  display: grid; grid-template-columns: 58px minmax(0, 1fr);
+  min-width: 0; min-height: 0; height: 100%;
+  background: var(--bg-1); position: relative; overflow: hidden;
+}
+
+/* ---------------------------------------------------------------- ray */
+.lib-rail {
+  background: var(--bg-0); border-right: 1px solid var(--line);
+  display: flex; flex-direction: column; padding: 4px 0 8px;
+  position: relative; overflow-y: auto; overflow-x: hidden; scrollbar-width: none;
+}
+.lib-rail::-webkit-scrollbar { width: 0; }
+/* perfore delikleri — sol kenar */
+.lib-rail::before {
+  content: ''; position: absolute; left: 3px; top: 0; bottom: 0; width: 4px; pointer-events: none;
+  background: repeating-linear-gradient(180deg, var(--bg-3) 0 5px, transparent 5px 13px);
+  opacity: 0.8;
+}
+.lib-ri {
+  position: relative; flex-shrink: 0;
+  height: 52px; margin-left: 9px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  color: var(--tx-2); font: 600 9.5px/1 var(--font-ui); letter-spacing: 0.01em;
+  transition: color var(--t-fast), background var(--t-fast);
+}
+.lib-ri .no { position: absolute; top: 5px; right: 4px; font: 500 7px/1 var(--font-mono); color: var(--tx-3); letter-spacing: 0.05em; }
+.lib-ri:hover { color: var(--tx-0); background: var(--bg-2); }
+.lib-ri.on { color: var(--tx-0); background: var(--bg-1); }
+.lib-ri.on svg { color: var(--sig); }
+.lib-ri.on .no { color: var(--sig-dim); }
+/* aktif: limon sinyal çubuğu + panelle birleşen sekme */
+.lib-ri.on::before {
+  content: ''; position: absolute; left: 0; top: 7px; bottom: 7px; width: 3px; background: var(--sig);
+  animation: dropIn 120ms var(--ease) both;
+}
+.lib-ri.on::after { content: ''; position: absolute; right: -1px; top: 0; bottom: 0; width: 1px; background: var(--bg-1); }
+.lib-ri .rec-dot { position: absolute; top: 6px; left: 7px; width: 6px; height: 6px; background: var(--danger); animation: blink 1s steps(1) infinite; }
+.lib-ri .busy-dot { position: absolute; top: 6px; left: 7px; width: 6px; height: 2px; background: var(--sig); animation: blink 0.6s steps(1) infinite; }
+.lib-rail .sep { height: 1px; margin: 4px 8px 4px 16px; background: var(--line); flex-shrink: 0; }
+
+/* ---------------------------------------------------------------- içerik */
+.lib-main { display: flex; flex-direction: column; min-width: 0; min-height: 0; position: relative; }
+.lib-head {
+  height: 46px; flex-shrink: 0;
+  display: flex; align-items: flex-end; gap: 8px; padding: 0 12px 7px;
+  border-bottom: 1px solid var(--line);
+}
+.lib-title { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+.lib-code { font: 600 8.5px/1 var(--font-mono); letter-spacing: 0.18em; color: var(--tx-3); text-transform: uppercase; }
+.lib-title h3 { font: 400 22px/1.2 var(--font-display); margin-bottom: -3px; letter-spacing: 0.03em; text-transform: uppercase; color: var(--tx-0); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lib-count { font: 500 9.5px/1 var(--font-mono); color: var(--tx-2); letter-spacing: 0.06em; text-transform: uppercase; padding-bottom: 2px; white-space: nowrap; }
+.lib-count b { color: var(--sig); font-weight: 600; }
+
+.lib-tools { flex-shrink: 0; padding: 8px 10px 7px; display: flex; flex-direction: column; gap: 7px; border-bottom: 1px solid var(--line); }
+.lib-search { height: 28px; }
+.lib-search input::-webkit-search-cancel-button { display: none; }
+.lib-chips {
+  display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 18px), transparent);
+  padding-right: 14px;
+}
+.lib-chips::-webkit-scrollbar { height: 0; }
+.lib-chips .chip { flex-shrink: 0; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+.lib-chips .chip i { font-style: normal; font-size: 9px; color: var(--tx-3); }
+.lib-chips .chip.on i { color: var(--tx-3); }
+.lib-chips .chip.fav svg { color: var(--sig); }
+.lib-chips .chip.fav.on svg { color: var(--bg-0); }
+
+.lib-sub-tabs { padding: 0 6px; }
+.lib-sub-tabs .tab i { font-style: normal; font: 500 9px var(--font-mono); color: var(--tx-3); margin-left: 4px; }
+
+.lib-body { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; position: relative; }
+.lib-body > .edge { padding: 12px 10px 0; }
+.lib-sect { padding: 12px 10px 2px; }
+.lib-grid { padding: 10px; gap: 12px 8px; align-content: start; }
+.lib-grid.tight { gap: 4px; padding: 8px 10px; }
+.lib-more { padding: 10px; text-align: center; font-size: 10px; color: var(--tx-3); letter-spacing: 0.1em; }
+
+/* ---------------------------------------------------------------- kart */
+.lib-card { --kc: var(--sig); }
+.lib-card .thumb { background: var(--bg-0); }
+.lib-card .name { font-size: 10.5px; display: flex; align-items: center; gap: 5px; }
+.lib-card .name::before { content: ''; width: 4px; height: 4px; flex-shrink: 0; background: var(--kc); opacity: 0.85; }
+.lib-card .lib-sub { font-size: 9px; color: var(--tx-3); margin-top: -3px; letter-spacing: 0.04em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lib-card .add { z-index: 3; }
+/* vizör köşe işaretleri */
+.lib-card .thumb::before {
+  content: ''; position: absolute; inset: 6px; pointer-events: none; z-index: 2; opacity: 0;
+  background:
+    linear-gradient(var(--sig), var(--sig)) top left / 9px 1px no-repeat,
+    linear-gradient(var(--sig), var(--sig)) top left / 1px 9px no-repeat,
+    linear-gradient(var(--sig), var(--sig)) top right / 9px 1px no-repeat,
+    linear-gradient(var(--sig), var(--sig)) top right / 1px 9px no-repeat,
+    linear-gradient(var(--sig), var(--sig)) bottom left / 9px 1px no-repeat,
+    linear-gradient(var(--sig), var(--sig)) bottom left / 1px 9px no-repeat,
+    linear-gradient(var(--sig), var(--sig)) bottom right / 9px 1px no-repeat,
+    linear-gradient(var(--sig), var(--sig)) bottom right / 1px 9px no-repeat;
+  transition: opacity 80ms steps(2), inset 110ms var(--ease);
+}
+.lib-card:hover .thumb::before { opacity: 1; inset: 3px; }
+.lib-card:hover .thumb { border-color: var(--line-3); }
+.lib-card:active .thumb { transform: translateY(1px); }
+.lib-card.sel .thumb { border-color: var(--sig); box-shadow: inset 0 0 0 1px var(--sig); }
+
+.lib-star {
+  position: absolute; top: 3px; right: 3px; width: 18px; height: 18px; z-index: 3;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--tx-1); background: rgba(5, 6, 7, 0.7); opacity: 0;
+  transition: opacity var(--t-fast), color var(--t-fast);
+}
+.lib-card:hover .lib-star { opacity: 1; }
+.lib-star:hover { color: var(--tx-0); }
+.lib-star.on { opacity: 1; color: var(--sig); }
+
+.lib-gl { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.lib-gl img, .lib-gl canvas { width: 100%; height: 100%; object-fit: cover; display: block; }
+.lib-live { position: absolute; inset: 0; }
+.lib-nopv { font-size: 8px; color: var(--tx-3); letter-spacing: 0.1em; text-align: center; padding: 6px; }
+.lib-load {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(135deg, var(--bg-1) 0 6px, var(--bg-2) 6px 12px);
+  background-size: 17px 17px;
+  animation: libScan 0.8s steps(4) infinite;
+}
+@keyframes libScan { from { background-position: 0 0; } to { background-position: 17px 0; } }
+
+/* filtre renk örneği */
+.lib-swatch { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; display: flex; z-index: 1; }
+.lib-swatch i { flex: 1; }
+
+/* rozetler */
+.lib-badge {
+  position: absolute; left: 4px; bottom: 4px; z-index: 2; padding: 1px 4px;
+  background: rgba(0, 0, 0, 0.75); font: 600 9px/1.3 var(--font-mono); color: var(--tx-0); letter-spacing: 0.04em;
+}
+.lib-badge.r { left: auto; right: 4px; }
+.lib-badge.t { bottom: auto; top: 4px; }
+.lib-badge.sig { background: var(--sig); color: var(--sig-ink); }
+.lib-new { position: absolute; left: 0; top: 0; z-index: 2; padding: 1px 4px; background: var(--sig); color: var(--sig-ink); font: 700 8px/1.3 var(--font-mono); letter-spacing: 0.08em; }
+
+/* son kullanılanlar şeridi */
+.lib-recent { padding: 10px 10px 0; }
+.lib-recent-row { display: flex; gap: 6px; overflow-x: auto; padding: 8px 0 4px; scrollbar-width: thin; }
+.lib-recent-row .lib-card { width: 64px; flex-shrink: 0; }
+.lib-recent-row .lib-card .name { font-size: 9.5px; }
+
+/* sürükleme hayaleti (film etiketi) */
+.lib-ghost {
+  position: fixed; left: -1000px; top: -1000px; z-index: -1;
+  display: flex; align-items: center; height: 24px; background: var(--tx-0); color: var(--bg-0);
+  font: 600 11px var(--font-ui); border-left: 4px solid var(--sig); white-space: nowrap;
+}
+.lib-ghost b { font: 700 9px var(--font-mono); letter-spacing: 0.12em; padding: 0 7px; height: 100%; display: flex; align-items: center; background: var(--bg-0); color: var(--sig); }
+.lib-ghost span { padding: 0 10px 0 8px; }
+
+/* ---------------------------------------------------------------- boş durum / bilgi */
+.lib-empty { padding: 26px 18px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; color: var(--tx-2); }
+.lib-empty .big { font: 400 24px/1 var(--font-display); color: var(--tx-1); letter-spacing: 0.03em; text-transform: uppercase; }
+.lib-empty .mono { font-size: 10px; letter-spacing: 0.1em; color: var(--tx-3); }
+.lib-note { margin: 10px; padding: 8px 10px; border: 1px solid var(--line-2); border-left: 3px solid var(--sig); color: var(--tx-1); font-size: 11.5px; display: flex; gap: 8px; align-items: flex-start; }
+.lib-note.warn { border-left-color: var(--danger); }
+.lib-note svg { flex-shrink: 0; margin-top: 1px; }
+
+/* ---------------------------------------------------------------- medya */
+.lib-drop {
+  margin: 10px; padding: 12px; display: flex; align-items: center; gap: 12px;
+  border: 1px dashed var(--line-3); background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(255,255,255,0.012) 8px 16px);
+}
+.lib-drop .btn.sig { height: 40px; padding: 0 16px; font-size: 12.5px; }
+.lib-drop .hint { color: var(--tx-2); font-size: 11px; line-height: 1.35; }
+.lib-drop .hint b { color: var(--tx-1); font-weight: 600; }
+.lib-dropover {
+  position: absolute; inset: 6px; z-index: 20; pointer-events: none;
+  border: 2px dashed var(--sig); background: rgba(10, 11, 0, 0.82);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  animation: shutter 120ms var(--ease) both;
+}
+.lib-dropover .big { font: 400 34px/1 var(--font-display); color: var(--sig); letter-spacing: 0.04em; }
+.lib-dropover .mono { font-size: 10px; color: var(--tx-1); letter-spacing: 0.14em; }
+
+.media-card { --kc: var(--c-video); }
+.media-card.audio { --kc: var(--c-audio); }
+.media-card.image { --kc: var(--c-image); }
+.media-card .thumb { aspect-ratio: 16 / 11; }
+.media-card .thumb img { object-fit: cover; }
+.media-card .wave { position: absolute; inset: 0; width: 100%; height: 100%; }
+.media-card .type { position: absolute; left: 4px; top: 4px; z-index: 2; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.7); color: var(--kc); }
+.media-card .used { position: absolute; left: 24px; top: 4px; z-index: 2; height: 18px; padding: 0 4px; display: flex; align-items: center; background: var(--sig); color: var(--sig-ink); font: 700 8px var(--font-mono); letter-spacing: 0.08em; }
+.media-card .prog { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(0,0,0,0.6); z-index: 2; }
+.media-card .prog i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--sig); transition: width 160ms linear; }
+.media-card .proc { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 600 9px var(--font-mono); color: var(--tx-1); letter-spacing: 0.1em; background: rgba(0,0,0,0.35); z-index: 1; }
+.media-card .scrub { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--sig); z-index: 2; pointer-events: none; }
+.media-card .err { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--danger); z-index: 1; }
+
+.builtin-card { --kc: var(--tx-1); }
+.builtin-card .thumb { aspect-ratio: 1; }
+.builtin-card .sw { position: absolute; inset: 0; }
+
+/* ---------------------------------------------------------------- ses satırları */
+.lib-rows { padding: 4px 0 10px; }
+.arow {
+  position: relative; display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 10px; align-items: center;
+  height: 54px; padding: 0 10px; border-bottom: 1px solid var(--line); cursor: pointer;
+  transition: background var(--t-fast);
+}
+.arow:hover { background: var(--bg-2); }
+.arow.playing { background: var(--bg-2); }
+.arow.playing::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--sig); }
+.arow .cover { width: 40px; height: 40px; position: relative; display: flex; align-items: center; justify-content: center; border: 1px solid var(--line-2); overflow: hidden; }
+.arow .cover canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.arow .cover .pp { position: relative; z-index: 1; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.55); color: var(--tx-0); opacity: 0; transition: opacity var(--t-fast); }
+.arow:hover .cover .pp, .arow.playing .cover .pp { opacity: 1; }
+.arow.playing .cover .pp { background: var(--sig); color: var(--sig-ink); }
+.arow .meta { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.arow .meta .n { font-weight: 600; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.arow .meta .s { font: 500 9.5px var(--font-mono); color: var(--tx-2); letter-spacing: 0.05em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.arow .acts { display: flex; align-items: center; gap: 2px; }
+.arow .acts .ibtn { opacity: 0; }
+.arow:hover .acts .ibtn, .arow .acts .ibtn.on { opacity: 1; }
+.arow .acts .addb { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; background: var(--sig); color: var(--sig-ink); opacity: 0; transform: translateX(3px); transition: all var(--t-fast) var(--ease); }
+.arow:hover .acts .addb { opacity: 1; transform: none; }
+.arow .pbar { position: absolute; left: 0; bottom: -1px; height: 2px; background: var(--sig); }
+.arow.music { --kc: var(--c-audio); }
+
+/* ---------------------------------------------------------------- formlar (kayıt, tts, altyazı, araçlar) */
+.lib-form { padding: 10px 12px 16px; display: flex; flex-direction: column; gap: 10px; }
+.lib-form .prop > .lbl { width: 92px; }
+.lib-form textarea.field { min-height: 110px; width: 100%; font-size: 12.5px; }
+.lib-form .field { width: 100%; }
+.lib-label { font: 600 9.5px var(--font-mono); letter-spacing: 0.12em; color: var(--tx-2); text-transform: uppercase; }
+.lib-actions { display: flex; gap: 6px; }
+.lib-actions .btn { flex: 1; }
+.lib-hint { font-size: 11px; color: var(--tx-2); line-height: 1.4; }
+.lib-hint b { color: var(--tx-1); font-weight: 600; }
+
+/* kayıt */
+.rec-deck { margin: 10px; border: 1px solid var(--line-2); background: var(--bg-0); padding: 14px 12px 12px; display: flex; flex-direction: column; gap: 12px; position: relative; }
+.rec-deck::before { content: 'VO · KANAL 1'; position: absolute; top: -6px; left: 10px; padding: 0 6px; background: var(--bg-1); font: 600 8.5px var(--font-mono); letter-spacing: 0.16em; color: var(--tx-3); }
+.rec-top { display: flex; align-items: center; gap: 14px; }
+.rec-btn {
+  width: 68px; height: 68px; flex-shrink: 0; position: relative;
+  border: 1px solid var(--line-3); background: var(--bg-2);
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color var(--t-fast), background var(--t-fast);
+}
+.rec-btn i { width: 26px; height: 26px; border-radius: 50%; background: var(--danger); transition: all var(--t-mid) var(--ease); }
+.rec-btn:hover { border-color: var(--danger); }
+.rec-btn.on { border-color: var(--danger); background: rgba(255, 77, 94, 0.08); }
+.rec-btn.on i { border-radius: 1px; width: 22px; height: 22px; }
+.rec-btn .lb { position: absolute; bottom: -15px; left: 0; right: 0; text-align: center; font: 700 8.5px var(--font-mono); letter-spacing: 0.16em; color: var(--tx-2); }
+.rec-btn.on .lb { color: var(--danger); }
+.rec-time { font: 500 30px/1 var(--font-mono); letter-spacing: 0.02em; color: var(--tx-1); }
+.rec-time.on { color: var(--tx-0); }
+.rec-state { font: 600 9px var(--font-mono); letter-spacing: 0.16em; color: var(--tx-3); margin-top: 5px; display: flex; align-items: center; gap: 6px; }
+.rec-state.on { color: var(--danger); }
+.rec-state.on::before { content: ''; width: 6px; height: 6px; background: var(--danger); animation: blink 1s steps(1) infinite; }
+.rec-count { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(7, 8, 9, 0.88); font: 400 64px/1 var(--font-display); color: var(--sig); z-index: 3; animation: shutter 120ms var(--ease) both; }
+/* LED seviye göstergesi */
+.meter { display: grid; grid-template-columns: repeat(28, 1fr); gap: 2px; height: 10px; }
+.meter i { background: var(--bg-3); }
+.meter i.on { background: var(--ok); }
+.meter i.on.y { background: var(--sig); }
+.meter i.on.r { background: var(--danger); }
+.meter-scale { display: flex; justify-content: space-between; font: 500 8px var(--font-mono); color: var(--tx-3); letter-spacing: 0.05em; margin-top: -6px; }
+
+/* ses listesi (tts) */
+.voice-list { max-height: 168px; overflow-y: auto; border: 1px solid var(--line-2); background: var(--bg-0); }
+.voice-it { display: flex; align-items: center; gap: 8px; height: 28px; padding: 0 8px; cursor: pointer; border-bottom: 1px solid var(--line); font-size: 11.5px; }
+.voice-it:last-child { border-bottom: 0; }
+.voice-it:hover { background: var(--bg-2); }
+.voice-it.on { background: var(--bg-3); box-shadow: inset 3px 0 0 var(--sig); }
+.voice-it .lang { font: 600 9px var(--font-mono); color: var(--tx-2); width: 38px; letter-spacing: 0.06em; }
+.voice-it .vn { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.voice-it .tag { font: 600 8px var(--font-mono); padding: 1px 4px; border: 1px solid var(--line-3); color: var(--tx-2); letter-spacing: 0.08em; }
+.voice-it .tag.ok { border-color: var(--ok); color: var(--ok); }
+
+/* yazı */
+.text-default {
+  margin: 10px 10px 0; height: 64px; display: flex; align-items: center; gap: 12px; padding: 0 12px;
+  border: 1px solid var(--line-2); background: var(--bg-0); cursor: pointer; position: relative; overflow: hidden;
+  transition: border-color var(--t-fast);
+}
+.text-default:hover { border-color: var(--c-text); }
+.text-default .tt { font: 400 34px/1 var(--font-display); color: var(--tx-0); letter-spacing: 0.02em; }
+.text-default .td { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+.text-default .td b { font-size: 12px; }
+.text-default .td span { font: 500 9.5px var(--font-mono); color: var(--tx-2); letter-spacing: 0.08em; }
+.text-default .plus { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: var(--sig); color: var(--sig-ink); }
+.text-default::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--c-text); }
+.text-card { --kc: var(--c-text); }
+
+/* çıkartma */
+.stk-card { --kc: var(--c-sticker); }
+.emoji-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); gap: 2px; padding: 8px 10px 12px; }
+.emoji-cell {
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center; position: relative;
+  border: 1px solid transparent; cursor: pointer; transition: border-color var(--t-fast), background var(--t-fast);
+}
+.emoji-cell img { width: 72%; height: 72%; object-fit: contain; transition: transform 120ms var(--ease); }
+.emoji-cell:hover { border-color: var(--line-3); background: var(--bg-2); }
+.emoji-cell:hover img { transform: scale(1.18); }
+.emoji-cell .fv { position: absolute; top: 1px; right: 1px; width: 5px; height: 5px; background: var(--sig); }
+.stk-canvas { width: 100%; height: 100%; display: block; }
+.thumb.checker { background: repeating-conic-gradient(#16181b 0 25%, #101113 0 50%) 0 0 / 14px 14px; }
+
+/* efekt / filtre / geçiş */
+.fx-card { --kc: var(--c-effect); }
+.flt-card { --kc: var(--c-filter); }
+.tr-card { --kc: var(--sig); }
+.lib-opt { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-bottom: 1px solid var(--line); font-size: 11px; color: var(--tx-1); flex-shrink: 0; }
+.lib-opt .toggle { cursor: pointer; }
+.lib-opt .seg { display: flex; border: 1px solid var(--line-2); }
+.lib-opt .seg button { height: 20px; padding: 0 7px; font: 600 9.5px var(--font-mono); letter-spacing: 0.08em; color: var(--tx-2); }
+.lib-opt .seg button + button { border-left: 1px solid var(--line-2); }
+.lib-opt .seg button.on { background: var(--tx-0); color: var(--bg-0); }
+
+/* düzen */
+.lay-card { --kc: var(--c-adjust); }
+.lay-card .thumb { aspect-ratio: 1; background: var(--bg-0); }
+.lay-card svg.schema { width: 100%; height: 100%; display: block; }
+
+/* araçlar */
+.tool-list { padding: 8px 10px 16px; display: flex; flex-direction: column; gap: 8px; }
+.tool {
+  border: 1px solid var(--line-2); background: var(--bg-0); position: relative;
+  transition: border-color var(--t-fast);
+}
+.tool:hover { border-color: var(--line-3); }
+.tool.open { border-color: var(--line-3); }
+.tool-h { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 9px 10px; cursor: pointer; }
+.tool-h .ic { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--line-2); color: var(--sig); background: var(--bg-1); }
+.tool-h .tt { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.tool-h .tt b { font-size: 12px; font-weight: 700; }
+.tool-h .tt span { font-size: 10.5px; color: var(--tx-2); line-height: 1.3; }
+.tool-h .code { position: absolute; top: 4px; right: 6px; font: 500 7.5px var(--font-mono); color: var(--tx-3); letter-spacing: 0.12em; }
+.tool-b { padding: 2px 10px 10px 54px; display: flex; flex-direction: column; gap: 8px; animation: dropIn 120ms var(--ease) both; }
+.tool-b .prop > .lbl { width: 84px; }
+.tool-res { font: 500 10px var(--font-mono); color: var(--tx-1); letter-spacing: 0.04em; padding: 6px 8px; border: 1px dashed var(--line-3); }
+.tool-res b { color: var(--sig); font-weight: 600; }
+
+/* altyazı stil ızgarası */
+.cap-card { --kc: var(--c-text); }
+.cap-card .thumb { aspect-ratio: 16 / 9; }
+.cap-prev { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0 0.4em; padding: 4px; font-size: 13px; line-height: 1.1; text-align: center; }
+.cap-prev span { display: inline-block; padding: 0 1px; }
+.lib-progress { display: flex; flex-direction: column; gap: 6px; padding: 10px; border: 1px solid var(--line-2); background: var(--bg-0); }
+.lib-progress .row .mono { font-size: 10px; color: var(--tx-1); }
+
+/* çıkartma kartı: şeffaflık damalı zemini */
+.stk-card .thumb { background: repeating-conic-gradient(#15171a 0 25%, #0f1012 0 50%) 0 0 / 12px 12px; }
+
+/* ses alt sekmeleri: 4 eşit hücre (ikon + etiket) */
+.lib-subgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid var(--line); flex-shrink: 0; }
+.lib-subgrid button {
+  position: relative; height: 46px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  color: var(--tx-2); font: 600 10px/1 var(--font-ui); white-space: nowrap; overflow: hidden;
+  transition: color var(--t-fast), background var(--t-fast);
+}
+.lib-subgrid button + button { border-left: 1px solid var(--line); }
+.lib-subgrid button span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; padding: 0 3px; }
+.lib-subgrid button i { position: absolute; top: 4px; right: 5px; font-style: normal; font-size: 8px; color: var(--tx-3); }
+.lib-subgrid button:hover { color: var(--tx-0); background: var(--bg-2); }
+.lib-subgrid button.on { color: var(--tx-0); background: var(--bg-2); }
+.lib-subgrid button.on svg { color: var(--sig); }
+.lib-subgrid button.on::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--sig); }

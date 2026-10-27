@@ -91,7 +91,7 @@ export const store = {
     const entry = past[past.length - 1]
     state = {
       ...state,
-      project: entry.project,
+      project: keepMedia(entry.project, state.project),
       selection: sanitizeSelection(entry.project, entry.selection),
       rev: state.rev + 1,
       ui: { ...state.ui, dirty: true },
@@ -108,7 +108,7 @@ export const store = {
     const entry = future[0]
     state = {
       ...state,
-      project: entry.project,
+      project: keepMedia(entry.project, state.project),
       selection: sanitizeSelection(entry.project, entry.selection),
       rev: state.rev + 1,
       ui: { ...state.ui, dirty: true },
@@ -173,6 +173,12 @@ export const store = {
 
   openModal(type, props = {}) { store.setUI({ modal: { type, props } }) },
   closeModal() { store.setUI({ modal: null }) },
+}
+
+// Medya tablosu geri alınmaz: arka planda biten işlemler (vekil, ses, küçük resim) kaybolmasın
+function keepMedia(target, current) {
+  if (target.media === current.media) return target
+  return { ...target, media: { ...target.media, ...current.media } }
 }
 
 function sanitizeSelection(project, sel) {

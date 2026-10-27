@@ -16,6 +16,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms))
 ;(async () => {
   const env = { ...process.env, SWEAXCUT_DEV_URL: process.env.SWEAXCUT_DEV_URL || 'http://localhost:5199/', SWEAXCUT_DEBUG_PORT: String(PORT), SWEAXCUT_MAX: '0' }
   delete env.ELECTRON_RUN_AS_NODE
+  if (process.env.APPSHOT_PROD) delete env.SWEAXCUT_DEV_URL
   const app = spawn(path.join(root, 'node_modules/electron/dist/electron.exe'), ['.'], { cwd: root, env, stdio: 'ignore' })
   let target = null
   for (let i = 0; i < 60 && !target; i++) {
@@ -37,7 +38,13 @@ const sleep = ms => new Promise(r => setTimeout(r, ms))
   const send = (method, params = {}) => new Promise(r => { const i = ++id; pending.set(i, r); ws.send(JSON.stringify({ id: i, method, params })) })
   await send('Runtime.enable')
   await send('Page.enable')
-  await sleep(2500)
+  // uygulama kabuğu çizilene kadar bekle (soğuk vite yüklemesi uzun sürebilir)
+  for (let i = 0; i < 60; i++) {
+    const r = await send('Runtime.evaluate', { expression: "!!document.querySelector('.titlebar')", returnByValue: true })
+    if (r.result && r.result.result && r.result.result.value) break
+    await sleep(500)
+  }
+  await sleep(800)
   for (const s of steps) {
     if (s.wait) await sleep(s.wait)
     if (s.eval) {

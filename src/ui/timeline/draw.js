@@ -285,6 +285,14 @@ function drawClip(ctx, c, tr, r, X, zoom, project, selected, hover, ghost, ui) {
   ctx.lineWidth = selected ? 2 : 1
   ctx.strokeStyle = selected ? '#e4ff3a' : hexA(col, hover ? 0.9 : 0.55)
   ctx.stroke()
+  if (selected && w > 30 && au && (c.type === 'audio' || (c.type === 'video' && media && media.hasAudio && !au.muted))) {
+    // ses yumuşatma tutamaçları
+    const fx0 = x0 + 6 + (au.fadeIn || 0) * zoom, fx1 = x1 - 6 - (au.fadeOut || 0) * zoom
+    ctx.fillStyle = '#f1f1ec'
+    ctx.strokeStyle = '#070809'
+    ctx.lineWidth = 1
+    for (const fx of [fx0, fx1]) { ctx.fillRect(fx - 4, y + 1, 8, 8); ctx.strokeRect(fx - 3.5, y + 1.5, 7, 7) }
+  }
   if (selected && w > 14) {
     // kırpma tutamaçları (köşeli parantez)
     ctx.fillStyle = '#e4ff3a'

@@ -164,10 +164,12 @@ async function processMedia(id) {
     const count = Math.max(1, Math.ceil(m.duration / interval))
     if (!exists(path.join(thumbsDir, 'done'))) {
       fs.mkdirSync(thumbsDir, { recursive: true })
-      const r = await run(ffmpegBin(), ['-y', '-v', 'error', '-skip_frame', 'nokey', '-i', m.path, '-vf', `fps=1/${interval},scale=-2:96`, '-fps_mode', 'vfr', '-q:v', '6', path.join(thumbsDir, '%04d.jpg')])
-      if (r.code !== 0) {
-        // anahtar kare atlama bazı kodeklerde başarısız: tam çözümle tekrar
-        await run(ffmpegBin(), ['-y', '-v', 'error', '-i', m.path, '-vf', `fps=1/${interval},scale=-2:96`, '-q:v', '6', path.join(thumbsDir, '%04d.jpg')])
+      const jpgCount = () => fs.readdirSync(thumbsDir).filter(f => f.endsWith('.jpg')).length
+      // uzun kayıtlarda yalnız anahtar kareleri çöz (çok hızlı); kısa videolarda ya da sonuç boşsa tam çözüm
+      let r = { code: 1 }
+      if (m.duration > 60) r = await run(ffmpegBin(), ['-y', '-v', 'error', '-skip_frame', 'nokey', '-i', m.path, '-vf', `fps=1/${interval},scale=-2:96`, '-fps_mode', 'vfr', '-q:v', '6', path.join(thumbsDir, '%04d.jpg')])
+      if (r.code !== 0 || jpgCount() === 0) {
+        await run(ffmpegBin(), ['-y', '-v', 'error', '-hwaccel', 'auto', '-i', m.path, '-vf', `fps=1/${interval},scale=-2:96`, '-q:v', '6', path.join(thumbsDir, '%04d.jpg')])
       }
       fs.writeFileSync(path.join(thumbsDir, 'done'), String(interval))
     }
@@ -203,7 +205,8 @@ async function makeProxy(m, out, onProgress) {
   const scale = short > 720 ? (m.width >= m.height ? 'scale=-2:720' : 'scale=720:-2') : 'scale=trunc(iw/2)*2:trunc(ih/2)*2'
   const tmp = out + '.tmp.mp4'
   const vf = `${scale},format=yuv420p`
-  const common = ['-y', '-v', 'error', '-progress', 'pipe:2', '-i', m.path, '-vf', vf, '-map', '0:v:0', '-an', '-movflags', '+faststart']
+  // donanım çözme (varsa) vekil üretimini 2-4 kat hızlandırır; yoksa ffmpeg yazılıma düşer
+  const common = ['-y', '-v', 'error', '-progress', 'pipe:2', '-hwaccel', 'auto', '-i', m.path, '-vf', vf, '-map', '0:v:0', '-an', '-movflags', '+faststart']
   const parse = s => {
     const mm = /out_time_us=(\d+)/.exec(s) || /out_time_ms=(\d+)/.exec(s)
     if (mm && m.duration) onProgress(Math.min(1, (+mm[1] / 1e6) / m.duration))
@@ -253,6 +256,18 @@ export function loadPeaks(media) {
 // Önizlemede oynatılacak dosya
 export function previewPath(media) {
   return media.proxyPath || media.path
+}
+
+// Bir klibin gerçekte okunacağı kaynak dosya (işlenmiş türevler dahil).
+// media.variants: { bgremove: yol (VP9 alfa webm), stab1|stab2|stab3: yol (sabitlenmiş) } — süre/zaman orijinalle aynı.
+// reversed: true dönerse zaman ters eşlenir (t' = media.duration - t).
+export function clipSourcePath(clip, media, { preview = false } = {}) {
+  if (!media) return { path: null, reversed: false }
+  const v = media.variants || {}
+  if (clip.reverse && media.reversedPath) return { path: media.reversedPath, reversed: true }
+  if (clip.bgRemove && v.bgremove) return { path: v.bgremove, reversed: false, alpha: true }
+  if (clip.stabilize && v['stab' + clip.stabilize]) return { path: v['stab' + clip.stabilize], reversed: false }
+  return { path: preview ? (media.proxyPath || media.path) : media.path, reversed: false }
 }
 
 export function thumbPath(media, index) {

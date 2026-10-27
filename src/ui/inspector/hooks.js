@@ -1,7 +1,7 @@
 // Denetçi kancaları: dar store seçicileri, oynatma kafası zamanı, anahtar kare bağlayıcısı
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { store, useStore } from '../../core/store.js'
-import { prop, hasKeys, keyAt, upsertKey } from '../../core/keyframes.js'
+import { prop, hasKeys, keyAt, upsertKey, evalKeys } from '../../core/keyframes.js'
 import { setPath, getPath } from '../../core/model.js'
 import { playback } from '../../engine/playback.js'
 import { REG, onRegistry, registryVersion } from '../../engine/registry.js'
@@ -101,6 +101,12 @@ export function bind(clip, lt) {
     clip, lt,
     val: (p, fb) => { const v = prop(clip, p, lt); return v == null ? fb : v },
     raw: (p, fb) => { const v = getPath(clip, p); return v == null ? fb : v },
+    // efekt parametresi ('fx:<uid>:<key>'): anahtar varsa oynatma kafasındaki değer, yoksa temel değer
+    fxv: (p) => {
+      const base = A.baseValue ? A.baseValue(clip, p) : undefined
+      const keys = clip.keyframes && clip.keyframes[p]
+      return keys && keys.length ? evalKeys(keys, lt, base) : base
+    },
     has: p => hasKeys(clip, p),
     kf: p => ({ has: hasKeys(clip, p), on: keyAt(clip, p, lt) >= 0, onClick: () => A.toggleKey(id, p) }),
     set: (p, label) => (v, o) => { A.setProp(id, p, v, label || 'Özellik'); if (o && o.final) store.endCoalesce() },
@@ -133,11 +139,13 @@ export function setMany(ids, p, v, label, final) {
   if (final) store.endCoalesce()
 }
 
+const matchPx = (k, px) => k === px || k.startsWith(/[.:]$/.test(px) ? px : px + '.')
+
 // Ortak tetik: "anahtar kareleri temizle" — yol önekleri listesine göre
 export function clearKeysFor(clipId, prefixes, label = 'Anahtar kareleri temizle') {
   A.setProps(clipId, c => {
     if (!c.keyframes) return
-    for (const k of Object.keys(c.keyframes)) if (prefixes.some(px => k === px || k.startsWith(px.endsWith('.') ? px : px + '.'))) delete c.keyframes[k]
+    for (const k of Object.keys(c.keyframes)) if (prefixes.some(px => matchPx(k, px))) delete c.keyframes[k]
   }, label)
 }
 
@@ -145,7 +153,7 @@ export function countKeys(clip, prefixes) {
   if (!clip || !clip.keyframes) return 0
   let n = 0
   for (const k of Object.keys(clip.keyframes)) {
-    if (prefixes.some(px => k === px || k.startsWith(px.endsWith('.') ? px : px + '.'))) n += clip.keyframes[k].length
+    if (prefixes.some(px => matchPx(k, px))) n += clip.keyframes[k].length
   }
   return n
 }

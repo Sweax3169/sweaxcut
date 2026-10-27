@@ -225,9 +225,11 @@ export function TextIn({ label, value, onChange, placeholder, mono }) {
 
 // ---------------------------------------------------------------- şema → kontroller
 // schema: [{ key, label, type, min, max, step, default, options }] — efekt, geçiş, çıkartma, ses değiştirici
-export function ParamControls({ schema, values, onChange }) {
+// anim(key) → { value, onChange, kf } verilirse sayısal (range) satırlar anahtar karelenebilir olur
+export function ParamControls({ schema, values, onChange, anim }) {
   if (!schema || !schema.length) return <Note>Bu öğenin ayarlanabilir parametresi yok.</Note>
-  return schema.map(p => <Param key={p.key} p={p} value={values ? values[p.key] : undefined} onChange={(v, o) => onChange(p.key, v, o)} />)
+  return schema.map(p => <Param key={p.key} p={p} value={values ? values[p.key] : undefined} onChange={(v, o) => onChange(p.key, v, o)}
+    anim={anim && (p.type === 'range' || p.type === 'float' || p.type === 'int' || p.type === 'number' || !p.type) ? anim(p.key, p) : null} />)
 }
 
 function rangeOf(p) {
@@ -238,7 +240,7 @@ function rangeOf(p) {
   return [min, max]
 }
 
-function Param({ p, value, onChange }) {
+function Param({ p, value, onChange, anim }) {
   const v = value ?? p.default
   const label = p.label || p.key
   const t = p.type
@@ -276,6 +278,7 @@ function Param({ p, value, onChange }) {
       onChange={(nv, o) => { const n = arr.slice(); n[i] = nv; onChange(n, o) }} />)
   }
   // range / float / int / number
+  if (anim) return <Row label={label} value={+anim.value || 0} min={min} max={max} step={step} def={typeof p.default === 'number' ? p.default : undefined} onChange={anim.onChange} kf={anim.kf} />
   return <Row label={label} value={+v || 0} min={min} max={max} step={step} def={typeof p.default === 'number' ? p.default : undefined} onChange={onChange} />
 }
 

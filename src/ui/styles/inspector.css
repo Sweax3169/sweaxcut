@@ -472,3 +472,5 @@
   .tools2 { padding-left: 0; }
   .keyswatches { padding-left: 0; }
 }
+.fxh .fxk { display: inline-flex; align-items: center; gap: 3px; font-size: 9.5px; color: var(--sig); margin-right: 2px; }
+.fxh .fxk .dia, .fxb .btn .dia { width: 5px; height: 5px; margin: 0 2px 0 0; }

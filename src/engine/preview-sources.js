@@ -2,7 +2,7 @@
 // Oynatırken video öğeleri kendi hızlarında oynar ve saatten sapınca düzeltilir; dururken hedef kareye aranır.
 
 import { fileUrl } from '../platform/node.js'
-import { previewPath } from '../core/media.js'
+import { clipSourcePath } from '../core/media.js'
 import { sourceTime, instantSpeed } from '../core/time.js'
 
 const LOOKAHEAD = 1.6      // sn — yaklaşan klipleri önceden hazırla
@@ -20,13 +20,12 @@ export class PreviewSources {
   }
 
   _url(media, clip) {
-    if (clip && clip.reverse && media.reversedPath) return fileUrl(media.reversedPath)
-    return fileUrl(previewPath(media))
+    return fileUrl(clipSourcePath(clip, media, { preview: true }).path)
   }
 
   _mapTime(media, clip, srcTime) {
     // ters kopyada zaman ters akar
-    if (clip.reverse && media.reversedPath) return Math.max(0, (media.duration || 0) - srcTime)
+    if (clipSourcePath(clip, media, { preview: true }).reversed) return Math.max(0, (media.duration || 0) - srcTime)
     return srcTime
   }
 

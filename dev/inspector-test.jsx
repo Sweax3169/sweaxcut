@@ -207,7 +207,7 @@ const S = [
   ['yazi-degrade', async () => {
     sel('ct'); tab('text', 'text')
     store.edit('t', d => { for (const t of d.tracks) for (const c of t.clips) if (c.id === 'ct') c.text.fill = { type: 'linear', angle: 90, stops: [{ at: 0, color: '#ff3b5c' }, { at: 0.55, color: '#ffd400' }, { at: 1, color: '#2ee6a6' }] } }, { noHistory: true })
-    await wait(40); openSec('Metin', false); openSec('Yazı tipi', false); openSec('Yerleşim')
+    await wait(40); openSec('Yerleşim')
   }],
 ]
 window.__scenarios = S.map(s => s[0])
@@ -339,6 +339,7 @@ window.__verify = async () => {
   ok('egri_surukle', scv && scv.id === 'custom' && scv.points.some(q => q.y > 1.5), scv)
   store.undo(); await wait(40)
   // 17) onaltılık renk yazma + degrade aç
+  store.edit('t', d => { for (const t of d.tracks) for (const c of t.clips) if (c.id === 'ct') c.text.fill = null }, { noHistory: true })
   sel('ct'); tab('text', 'text'); await wait(80)
   const hx = rowByLabel('Renk').querySelector('.hex')
   typeNum(hx, 'FF0000'); await wait(40)
@@ -365,7 +366,30 @@ window.__verify = async () => {
     window.dispatchEvent(new PointerEvent('pointerup', { clientX: rr.left + 39, clientY: rr.top + 9 }))
   }
   await wait(60)
-  ok('maske_surukle', clip('cv').mask.x > 0.05 && store.get().history.past.length - h0 === 1, [clip('cv').mask.x, store.get().history.past.length - h0])
+  const mx = clip('cv').mask.x, mh = store.get().history.past.length - h0
+  // 21) efekt katmanı parametresi anahtar karelenir (fx:layer:<key>)
+  sel('ce'); tab('effect', 'params'); playback.seek(0.5); await wait(120)
+  const lp = (REG.effects.byId.get(clip('ce').effect.id).params || []).find(q => q.type === 'range')
+  const lrow = rowByLabel(lp.label)
+  lrow.querySelector('.kf').click(); await wait(60)
+  const lpath = 'fx:layer:' + lp.key
+  ok('efekt_katmani_elmas', (clip('ce').keyframes[lpath] || []).length === 1, Object.keys(clip('ce').keyframes))
+  playback.seek(1.5); await wait(120)
+  typeNum(rowByLabel(lp.label).querySelector('.num'), lp.max); await wait(60)
+  const lk = clip('ce').keyframes[lpath] || []
+  ok('efekt_katmani_ikinci_kare', lk.length === 2 && Math.abs(lk[1].v - lp.max) < 1e-6, lk)
+  playback.seek(1.0); await wait(120)
+  const mv = parseFloat(rowByLabel(lp.label).querySelector('.num').value)
+  ok('efekt_katmani_ara_deger', mv > Math.min(lk[0].v, lk[1].v) && mv < Math.max(lk[0].v, lk[1].v), [mv, lk.map(k => k.v)])
+  // 22) klip efekti parametresi (fx:<uid>:<key>)
+  sel('cv'); tab('video', 'effects'); playback.seek(2); await wait(120)
+  const fx0 = clip('cv').effects[0]
+  const fp = (REG.effects.byId.get(fx0.id).params || []).find(q => q.type === 'range')
+  if (!document.querySelector('.fxitem.open')) document.querySelector('.fxh').click()
+  await wait(60)
+  rowByLabel(fp.label).querySelector('.kf').click(); await wait(60)
+  ok('klip_efekti_elmas', (clip('cv').keyframes['fx:' + fx0.uid + ':' + fp.key] || []).length === 1)
+  ok('maske_surukle', mx > 0.05 && mh === 1, [mx, mh])
   return r
 }
 

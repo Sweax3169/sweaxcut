@@ -5,7 +5,13 @@ import { uid } from '../../core/model.js'
 import { get as regGet } from '../../engine/registry.js'
 import Icon from '../Icon.jsx'
 import { Sec, Row, ParamControls, Empty, Note, useOutside } from './common.jsx'
-import { useReg, useRegCats } from './hooks.js'
+import { useReg, useRegCats, countKeys, clearKeysFor } from './hooks.js'
+
+// taslak klipten önekli anahtar kareleri sil (efekt kaldırılınca / değişince yetim kalmasın)
+function dropKeys(c, px) {
+  if (!c.keyframes) return
+  for (const k of Object.keys(c.keyframes)) if (k.startsWith(px)) delete c.keyframes[k]
+}
 
 function defaultsOf(def) {
   const o = {}
@@ -63,6 +69,7 @@ function EffectItem({ fx, i, n, ctx, open, setOpen }) {
   const { clip, b } = ctx
   const def = regGet('effects', fx.id)
   const hasInt = def && (def.params || []).some(p => p.key === 'intensity')
+  const nk = fx.uid ? countKeys(clip, ['fx:' + fx.uid + ':']) : 0
   const upd = (fn, label, key) => b.edit(c => { const e = (c.effects || []).find(x => x.uid === fx.uid); if (e) fn(e, c) }, label, key)
   const move = (d) => b.edit(c => {
     const a = c.effects, j = a.findIndex(x => x.uid === fx.uid), k = j + d
@@ -76,9 +83,10 @@ function EffectItem({ fx, i, n, ctx, open, setOpen }) {
         <span className={'toggle' + (fx.enabled !== false ? ' on' : '')} data-tip={fx.enabled !== false ? 'Kapat' : 'Aç'}
           onClick={e => { e.stopPropagation(); upd(x => { x.enabled = x.enabled === false }, 'Efekt aç/kapa') }} />
         <span className="grow fxname">{def ? def.name : fx.id}{!def && <i className="faint"> · kayıtlı değil</i>}</span>
+        {nk > 0 && <span className="fxk mono" data-tip="Anahtar kare"><i className="dia on" />{nk}</span>}
         <button className="ibtn sm" disabled={i === 0} data-tip="Yukarı" onClick={e => { e.stopPropagation(); move(-1) }}><Icon name="chevU" size={12} /></button>
         <button className="ibtn sm" disabled={i === n - 1} data-tip="Aşağı" onClick={e => { e.stopPropagation(); move(1) }}><Icon name="chevD" size={12} /></button>
-        <button className="ibtn sm" data-tip="Kaldır" onClick={e => { e.stopPropagation(); b.edit(c => { c.effects = c.effects.filter(x => x.uid !== fx.uid) }, 'Efekti kaldır') }}><Icon name="x" size={12} /></button>
+        <button className="ibtn sm" data-tip="Kaldır" onClick={e => { e.stopPropagation(); b.edit(c => { c.effects = c.effects.filter(x => x.uid !== fx.uid); if (fx.uid) dropKeys(c, 'fx:' + fx.uid + ':') }, 'Efekti kaldır') }}><Icon name="x" size={12} /></button>
       </div>
       {open && def && (
         <div className="fxb">
@@ -87,9 +95,12 @@ function EffectItem({ fx, i, n, ctx, open, setOpen }) {
               onChange={(v, o) => { upd(x => { x.params = { ...(x.params || {}), intensity: v } }, 'Efekt yoğunluğu', 'fxi:' + fx.uid); if (o && o.final) store.endCoalesce() }} />
           )}
           <ParamControls schema={def.params} values={fx.params}
+            anim={fx.uid ? (k, p) => { const path = 'fx:' + fx.uid + ':' + k; return { value: b.fxv(path), kf: b.kf(path), onChange: b.set(path, (p.label || k)) } } : null}
             onChange={(k, v, o) => { upd(x => { x.params = { ...(x.params || {}), [k]: v } }, 'Efekt ayarı', 'fx:' + fx.uid + k); if (o && o.final) store.endCoalesce() }} />
           <div className="row" style={{ justifyContent: 'flex-end' }}>
-            <button className="btn sm ghost" onClick={() => upd(x => { x.params = defaultsOf(def) }, 'Efekti sıfırla')}><Icon name="undo" size={12} />Varsayılan</button>
+            {nk > 0 && <button className="btn sm ghost" onClick={() => clearKeysFor(clip.id, ['fx:' + fx.uid + ':'])}><i className="dia on" />{nk} kareyi temizle</button>}
+            <span className="grow" />
+            <button className="btn sm ghost" onClick={() => upd((x, c) => { x.params = defaultsOf(def); dropKeys(c, 'fx:' + fx.uid + ':') }, 'Efekti sıfırla')}><Icon name="undo" size={12} />Varsayılan</button>
           </div>
         </div>
       )}
@@ -110,8 +121,8 @@ export default function EffectsTab({ ctx }) {
   }
   return (
     <>
-      <Sec id="fxlist" code="01" title="Efekt yığını" sub={fxs.length ? fxs.length + ' efekt' : null}
-        right={fxs.length > 1 ? <button className="ibtn sm" data-tip="Hepsini kaldır" onClick={e => { e.stopPropagation(); b.edit(c => { c.effects = [] }, 'Efektleri kaldır') }}><Icon name="trash" size={12} /></button> : null}>
+      <Sec id="fxlist" code="01" title="Efekt yığını" sub={fxs.length ? fxs.length + ' efekt' : null} keys={{ clip, paths: ['fx:'] }}
+        right={fxs.length > 1 ? <button className="ibtn sm" data-tip="Hepsini kaldır" onClick={e => { e.stopPropagation(); b.edit(c => { c.effects = []; dropKeys(c, 'fx:') }, 'Efektleri kaldır') }}><Icon name="trash" size={12} /></button> : null}>
         {fxs.length ? (
           <div className="fxlist">
             {fxs.map((fx, i) => <EffectItem key={fx.uid || i} fx={fx} i={i} n={fxs.length} ctx={ctx} open={open === fx.uid} setOpen={setOpen} />)}
@@ -148,18 +159,20 @@ export function EffectLayerTab({ ctx }) {
           <div style={{ position: 'relative' }}>
             <button className="btn sm" onClick={() => setPick(!pick)}>Değiştir</button>
             {pick && <div className="picker-anchor"><EffectPicker current={e.id} onClose={() => setPick(false)} onPick={(d) => {
-              b.edit(c => { c.effect = { id: d.id, params: defaultsOf(d) }; c.name = d.name }, 'Efekti değiştir'); setPick(false)
+              b.edit(c => { c.effect = { id: d.id, params: defaultsOf(d) }; c.name = d.name; dropKeys(c, 'fx:layer:') }, 'Efekti değiştir'); setPick(false)
             }} /></div>}
           </div>
         </div>
       </Sec>
       {def && (
-        <Sec id="eflp" code="02" title="Parametreler" onReset={() => b.edit(c => { c.effect.params = defaultsOf(def) }, 'Efekti sıfırla')}>
+        <Sec id="eflp" code="02" title="Parametreler" keys={{ clip, paths: ['fx:layer:'] }}
+          onReset={() => b.edit(c => { c.effect.params = defaultsOf(def); dropKeys(c, 'fx:layer:') }, 'Efekti sıfırla')}>
           {!hasInt && (
             <Row label="Yoğunluk" value={e.params && e.params.intensity != null ? e.params.intensity : 1} min={0} max={1} step={1} scale={100} suffix="%" def={1}
               onChange={(v, o) => { b.edit(c => { c.effect.params = { ...(c.effect.params || {}), intensity: v } }, 'Efekt yoğunluğu', 'efli:' + clip.id); if (o && o.final) store.endCoalesce() }} />
           )}
           <ParamControls schema={def.params} values={e.params}
+            anim={(k, p) => { const path = 'fx:layer:' + k; return { value: b.fxv(path), kf: b.kf(path), onChange: b.set(path, (p.label || k)) } }}
             onChange={(k, v, o) => { b.edit(c => { c.effect.params = { ...(c.effect.params || {}), [k]: v } }, 'Efekt ayarı', 'efl:' + clip.id + k); if (o && o.final) store.endCoalesce() }} />
         </Sec>
       )}

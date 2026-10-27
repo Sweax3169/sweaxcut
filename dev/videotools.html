@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Video araçları testi</title>
+<!-- base: kök → document.baseURI kök olur, modeller ./models/mediapipe/ altından yüklenir (uygulamadaki gibi) -->
+<base href="../">
+<style>
+body{margin:0;background:#0d0d0e;color:#d8d8d8;font:12px "JetBrains Mono",Consolas,monospace}
+#log{position:absolute;right:0;top:0;width:520px;height:100vh;overflow:auto;white-space:pre-wrap;padding:8px;box-sizing:border-box;border-left:1px solid #2a2a2a;font-size:11px}
+#sheet{display:block}
+.ok{color:#2ee6a6}.bad{color:#ff5d5d}.hd{color:#e4ff3a}
+</style>
+<script>
+// devshot'ta ana süreçte 'app:paths' işleyicisi yok: renderer'da sahte yollar ver (modüller yüklenmeden ÖNCE)
+(function () {
+  if (typeof window.require !== 'function') return
+  const path = window.require('path')
+  const root = process.cwd()
+  const { ipcRenderer } = window.require('electron')
+  const orig = ipcRenderer.sendSync.bind(ipcRenderer)
+  const paths = {
+    userData: path.join(root, 'test-videos', 'out', 'videotools', 'userdata'),
+    documents: path.join(root, 'test-videos', 'out', 'videotools'),
+    temp: path.join(root, 'test-videos', 'out', 'videotools', 'tmp'),
+    ffmpeg: path.join(root, 'node_modules', 'ffmpeg-static', 'ffmpeg.exe'),
+    ffprobe: path.join(root, 'node_modules', 'ffprobe-static', 'bin', 'win32', 'x64', 'ffprobe.exe'),
+    appRoot: root, resources: root, vendor: path.join(root, 'vendor'), isPackaged: false, version: 'dev',
+  }
+  ipcRenderer.sendSync = (ch, ...a) => (ch === 'app:paths' ? paths : orig(ch, ...a))
+  window.__ROOT = root
+})()
+</script>
+</head>
+<body><canvas id="sheet"></canvas><div id="log"></div><script type="module" src="./dev/videotools-test.js"></script></body></html>

@@ -1,0 +1,16 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>Kütüphane testi</title>
+<base href="/">
+<script>
+// test sırasında başka ekip üyelerinin dosya değişiklikleri sayfayı yeniden yüklemesin: vite HMR soketini sustur
+(function () {
+  const WS = window.WebSocket
+  window.WebSocket = function (u, p) {
+    if (String(p).indexOf('vite') >= 0) return { readyState: 0, send() {}, close() {}, addEventListener() {}, removeEventListener() {} }
+    return new WS(u, p)
+  }
+  window.WebSocket.prototype = WS.prototype
+  Object.assign(window.WebSocket, { OPEN: 1, CLOSED: 3, CONNECTING: 0, CLOSING: 2 })
+})()
+</script>
+<style>#root{height:100%}.lt-shell{display:grid;grid-template-columns:360px 1px 1fr;height:100vh}.lt-split{background:var(--line)}.lt-right{display:flex;flex-direction:column;min-width:0;background:var(--bg-0)}.lt-right canvas{max-height:46vh;align-self:center;margin:10px;border:1px solid var(--line-2)}.lt-state{flex:1;overflow:auto;padding:10px 14px;font:11px/1.45 var(--font-mono);color:var(--tx-1);white-space:pre}</style>
+</head><body><div id="root"></div><script type="module" src="/dev/library-test.jsx"></script></body></html>

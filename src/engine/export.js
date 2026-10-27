@@ -16,16 +16,6 @@ import { spawnFF, runFF, killChild, AbortErr, makeTempDir, rmrf, unlinkQuiet, fi
 import { ExportSources } from './export/sources.js'
 import { YuvPacker, ownTarget, freeTarget, installFrameUpload } from './export/gpu.js'
 import { renderAudioWav } from './export/audio-mix.js'
-import { preloadStickerImages } from './sticker-render.js'
-
-const fontMods = import.meta.glob('../packs/fonts/index.js', { eager: true })
-const fontPack = fontMods['../packs/fonts/index.js'] || null
-
-// Yazı tipleri ve çıkartma görselleri hazır olmadan ilk kare çizilmesin (yedek yazı tipiyle çıkmasın)
-async function prepareAssets(project) {
-  try { if (fontPack && fontPack.ensureProjectFonts) await fontPack.ensureProjectFonts(project) } catch (e) { /* */ }
-  try { await preloadStickerImages(project) } catch (e) { /* */ }
-}
 import * as stickerRender from './sticker-render.js'
 
 // yazı tipi paketi yoksa derleme kırılmasın
@@ -220,7 +210,6 @@ async function renderVideo(project, o, enc, outFile, { muxer, extraOut = [], inp
 export async function exportProject(project, opts = {}, { onProgress, signal } = {}) {
   if (!isElectron) throw new Error('Dışa aktarma yalnız masaüstü uygulamasında çalışır')
   const T0 = performance.now()
-  await prepareAssets(project)
   const o = normalizeOpts(project, opts)
   const warnings = [...o.warnings]
   const warn = (m) => { if (!warnings.includes(m)) { warnings.push(m); console.warn('[dışa aktar]', m) } }
@@ -330,7 +319,6 @@ export async function exportProject(project, opts = {}, { onProgress, signal } =
 
 // ------------------------------------------------------------------ tek kare (PNG)
 export async function exportFrame(project, time, outPath, { scale = 1 } = {}) {
-  await prepareAssets(project)
   const W = even(project.settings.width * scale), H = even(project.settings.height * scale)
   const canvas = document.createElement('canvas')
   canvas.width = 16; canvas.height = 16
