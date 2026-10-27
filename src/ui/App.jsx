@@ -8,7 +8,7 @@ import Editor from './editor/Editor.jsx'
 import Modals from './Modals.jsx'
 import { installShortcuts } from './shortcuts.js'
 import * as A from './actions.js'
-import { ipc } from '../platform/node.js'
+import { ipc, droppedPaths } from '../platform/node.js'
 import { ALL_EXTS } from '../core/media.js'
 
 // test ve hata ayıklama kancası
@@ -55,7 +55,7 @@ export default function App() {
     const drop = e => {
       e.preventDefault()
       if (e.defaultPrevented && e.__handled) return
-      const files = [...(e.dataTransfer?.files || [])].map(f => f.path).filter(Boolean)
+      const files = droppedPaths(e.dataTransfer)
       if (files.length && !e.__handled) openFiles(files)
     }
     window.addEventListener('dragover', over)

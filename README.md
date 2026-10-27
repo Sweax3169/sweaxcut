@@ -5,7 +5,7 @@ Oyun içerikleri için **ücretsiz** video kurgu programı. Filigran yok, abonel
 
 ## Kurulum
 
-`release\SWEAXCUT-Kurulum-2.0.0.exe` dosyasına çift tıkla. Kurulur, masaüstüne kısayol koyar ve açılır.
+`release\SWEAXCUT-Kurulum-2.0.1.exe` dosyasına çift tıkla. Kurulur, masaüstüne kısayol koyar ve açılır.
 
 > Dosya imzasız olduğu için Windows SmartScreen mavi bir uyarı gösterebilir:
 > **Daha fazla bilgi → Yine de çalıştır**. Tek seferliktir, virüs değildir.
@@ -13,7 +13,7 @@ Oyun içerikleri için **ücretsiz** video kurgu programı. Filigran yok, abonel
 ## 30 saniyede ilk video
 
 1. Ana ekranda bir en-boy oranı seç (**9:16** = TikTok / Shorts / Reels, **16:9** = YouTube).
-2. Videonu pencereye sürükle. Zaman çizelgesine kendiliğinden yerleşir.
+2. Videonu pencereye sürükle ya da soldaki **İÇE AKTAR** düğmesiyle seç. Zaman çizelgesine kendiliğinden yerleşir (birden fazla dosya sırayla dizilir).
 3. Soldaki kütüphaneden istediğini seç: **tıkla** = oynatma kafasına ekle, **sürükle** = istediğin yere bırak.
 4. Bir klibe tıklayınca sağdaki panelde bütün ayarları çıkar (konum, renk, hız, ses, animasyon…).
 5. Sağ üstteki **DIŞA AKTAR** → MP4. Video `Videolar\SWEAXCUT` klasörüne kaydedilir.

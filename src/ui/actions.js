@@ -1,6 +1,6 @@
 // Düzenleme komutları — kısayollar, menüler, araç çubuğu ve sürükle-bırak hepsi buradan geçer.
 
-import { store, selectedClips, primarySelection } from '../core/store.js'
+import { store, selectedClips, primarySelection, findClip } from '../core/store.js'
 import * as TL from '../core/timeline.js'
 import { createTextClip, createStickerClip, createEffectClip, createFilterClip, createAdjustClip, createProject, uid, setPath, getPath, RATIOS } from '../core/model.js'
 import { upsertKey, removeKey, keyAt, evalKeys } from '../core/keyframes.js'
@@ -26,22 +26,43 @@ export async function pickAndImport(opts = {}) {
     ],
   })
   if (!files.length) return []
-  const ids = await importFiles(files, opts)
-  if (opts.addToTimeline) for (const id of ids) addMediaToTimeline(id)
-  return ids
+  // varsayılan: içe aktarılan her dosya zaman çizelgesine de girer (yalnız listeye almak için addToTimeline: false)
+  if (opts.addToTimeline === false) return importFiles(files, opts)
+  return importAndPlace(files)
 }
+
+// Görüntü dosyalarının yeri: kullanıcı oynatma kafasını içeriğin ortasına koyduysa orası, yoksa ana izin sonu.
+// Eklemeden sonra kafayı yeni klibe biz taşırız; o konum "kullanıcının seçimi" sayılmaz, yoksa sıradaki dosya öncekinin önüne girer.
+let autoSeekAt = -1
+function visualPlaceTime() {
+  const t = now()
+  const main = TL.mainTrack(store.get().project)
+  const end = main.clips.reduce((a, c) => Math.max(a, c.start + c.duration), 0)
+  const userPlaced = Math.abs(t - autoSeekAt) > 0.04
+  return userPlaced && t > 0.05 && t < end - 0.05 ? t : end
+}
+function seekToNew(t) { playback.seek(t); autoSeekAt = playback.time }
 
 export async function importAndPlace(paths, time) {
   const ids = await importFiles(paths)
   const t0 = time ?? now()
-  let t = t0
+  let t = time ?? visualPlaceTime()
+  let firstClip = null
   for (const id of ids) {
     const m = store.get().project.media[id]
     if (!m) continue
-    // ses dosyaları videoların yanına değil, bırakıldığı ana eklenir
-    addMediaToTimeline(id, m.type === 'audio' ? t0 : t)
-    if (m.type !== 'audio') t += m.type === 'image' ? 3 : m.duration
+    // ses dosyaları videoların yanına değil, bırakıldığı ana / oynatma kafasına eklenir
+    const cid = addMediaToTimeline(id, m.type === 'audio' ? t0 : t)
+    if (m.type !== 'audio') {
+      if (!firstClip) firstClip = cid
+      // sıradaki dosya, bu klibin yerleştiği yerin hemen arkasına (ana iz mıknatısı klibi en yakın kesime kaydırabilir)
+      const placed = cid && findClip(store.get().project, cid)
+      t = placed ? placed.clip.start + placed.clip.duration : t + (m.type === 'image' ? 3 : m.duration)
+    }
   }
+  // önizleme yeni eklenen ilk görüntüyü göstersin
+  const hit = firstClip && time == null && findClip(store.get().project, firstClip)
+  if (hit) seekToNew(hit.clip.start)
   return ids
 }
 
@@ -50,11 +71,14 @@ export function addMediaToTimeline(mediaId, time, opts = {}) {
   if (!media) return null
   let id = null
   store.edit('Zaman çizelgesine ekle', d => {
-    const t = time ?? (media.type === 'audio' ? now() : now())
+    const t = time ?? (media.type === 'audio' || opts.overlay ? now() : visualPlaceTime())
     const c = TL.addMedia(d, d.media[mediaId], t, ui(), opts)
     id = c.id
   })
   if (id) store.select([id])
+  // kütüphaneden tıklayarak eklendiyse önizleme yeni klibe atlasın
+  const hit = id && time == null && media.type !== 'audio' && findClip(store.get().project, id)
+  if (hit) seekToNew(hit.clip.start)
   return id
 }
 

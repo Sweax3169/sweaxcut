@@ -217,3 +217,5 @@ class Playback {
 }
 
 export const playback = new Playback()
+// test ve hata ayıklama kancası
+if (typeof window !== 'undefined' && window.__sweax) window.__sweax.playback = playback

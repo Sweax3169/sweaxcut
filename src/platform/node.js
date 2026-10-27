@@ -32,6 +32,15 @@ export function fileUrl(p) {
   return 'file:///' + encodeURI(p.replace(/\\/g, '/'))
 }
 
+// Sürükle-bırakla gelen dosyaların disk yolları. Electron 32+ File.path'i kaldırdı → webUtils.getPathForFile
+const webUtils = req ? req('electron').webUtils : null
+export function droppedPaths(dataTransfer) {
+  return [...(dataTransfer?.files || [])].map(f => {
+    try { if (webUtils && webUtils.getPathForFile) return webUtils.getPathForFile(f) || '' } catch (e) { /* eski Electron */ }
+    return f.path || ''
+  }).filter(Boolean)
+}
+
 export function ensureDir(dir) {
   if (!fs) return dir
   try { fs.mkdirSync(dir, { recursive: true }) } catch (e) { /* var */ }

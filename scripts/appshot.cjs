@@ -1,5 +1,5 @@
 // Gerçek uygulamayı (Electron + vite dev) CDP ile sürer: JS çalıştırır, ekran görüntüsü alır.
-// Kullanım: node scripts/appshot.cjs <adımlar.json|-> ; adımlar: [{eval:"..."}, {wait:ms}, {shot:"out.png"}]
+// Kullanım: node scripts/appshot.cjs <adımlar.json|-> ; adımlar: [{eval:"..."}, {wait:ms}, {shot:"out.png"}, {cdp:"Yöntem", params:{}}]
 // Ortam: SWEAXCUT_DEV_URL (varsayılan http://localhost:5199/), APPSHOT_KEEP=1 uygulamayı açık bırakır
 const { spawn } = require('child_process')
 const path = require('path')
@@ -55,6 +55,11 @@ const sleep = ms => new Promise(r => setTimeout(r, ms))
       const v = r.result && r.result.result
       console.log('EVAL>', s.label || s.eval.slice(0, 60).replace(/\s+/g, ' '), '=>', String(JSON.stringify(v && (v.value !== undefined ? v.value : v.description))).slice(0, 1500))
       if (r.result && r.result.exceptionDetails) console.log('  EXC', r.result.exceptionDetails.exception?.description || r.result.exceptionDetails.text)
+    }
+    // ham CDP komutu: {cdp: "Input.dispatchDragEvent", params: {...}} (ör. Gezgin'den dosya bırakma)
+    if (s.cdp) {
+      const r = await send(s.cdp, s.params || {})
+      console.log('CDP>', s.label || s.cdp, r.error ? 'HATA ' + JSON.stringify(r.error) : 'ok')
     }
     if (s.shot) {
       const r = await send('Page.captureScreenshot', { format: 'png' })

@@ -9,7 +9,7 @@ import Icon from '../Icon.jsx'
 import { openMenu } from '../controls.jsx'
 import * as A from '../actions.js'
 import { importFiles } from '../../core/media.js'
-import { cacheDir, path } from '../../platform/node.js'
+import { cacheDir, path, droppedPaths } from '../../platform/node.js'
 import { createTrack } from '../../core/model.js'
 
 const sfxMods = import.meta.glob('../../packs/sfx/render.js', { eager: true })
@@ -554,7 +554,7 @@ function TimelineBody() {
     const t = hint ? hint.time : Math.max(0, (x + s.ui.scrollX) / s.ui.zoom)
     const h = hit(x, y)
     if (info.kind === 'files') {
-      const files = [...e.dataTransfer.files].map(f => f.path).filter(Boolean)
+      const files = droppedPaths(e.dataTransfer)
       if (files.length) A.importAndPlace(files, t)
       return
     }

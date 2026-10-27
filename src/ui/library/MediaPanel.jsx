@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Icon from '../Icon.jsx'
 import { store, useStore } from '../../core/store.js'
 import { importFiles, thumbPath, loadPeaks, ALL_EXTS } from '../../core/media.js'
-import { fileUrl, ipc, isElectron } from '../../platform/node.js'
+import { fileUrl, ipc, isElectron, droppedPaths } from '../../platform/node.js'
 import { openMenu } from '../controls.jsx'
 import * as A from '../actions.js'
 import { PanelHead, SearchBox, useTabState, dragStart, dragEnd, useInView, norm } from './common.jsx'
@@ -57,16 +57,16 @@ export default function MediaPanel({ code }) {
     e.preventDefault(); e.stopPropagation()
     e.nativeEvent.__handled = true
     dragDepth.current = 0; setOver(false)
-    const files = [...e.dataTransfer.files].map(f => f.path).filter(p => p && ALL_EXTS.some(x => p.toLowerCase().endsWith(x)))
+    const files = droppedPaths(e.dataTransfer).filter(p => ALL_EXTS.some(x => p.toLowerCase().endsWith(x)))
     if (!files.length) { store.toast('Desteklenen medya dosyası yok', 'info'); return }
-    const ids = await importFiles(files)
-    if (ids.length) store.toast(ids.length + ' dosya içe aktarıldı', 'ok', 1500)
+    const ids = await A.importAndPlace(files)
+    if (ids.length) store.toast(ids.length + ' dosya zaman çizelgesine eklendi', 'ok', 1800)
   }
 
   const doImport = async () => {
     if (!isElectron) { store.toast('İçe aktarma yalnızca masaüstü uygulamasında', 'info'); return }
     const ids = await A.pickAndImport()
-    if (ids.length) store.toast(ids.length + ' dosya içe aktarıldı', 'ok', 1500)
+    if (ids.length) store.toast(ids.length + ' dosya zaman çizelgesine eklendi', 'ok', 1800)
   }
 
   return (
@@ -104,7 +104,7 @@ export default function MediaPanel({ code }) {
       {over && (
         <div className="lib-dropover">
           <div className="big">BIRAK</div>
-          <div className="mono">MEDYA İÇE AKTARILACAK</div>
+          <div className="mono">ZAMAN ÇİZELGESİNE EKLENECEK</div>
         </div>
       )}
     </div>
@@ -116,7 +116,7 @@ function MediaCard({ m, used, sel, onSelect }) {
   const vis = useInView(ref, '300px')
   const [scrub, setScrub] = useState(null)
   const proc = m.status === 'processing'
-  const add = (opts) => { A.addMediaToTimeline(m.id, now(), opts || {}) }
+  const add = (opts) => { A.addMediaToTimeline(m.id, undefined, opts || {}) }
   const menu = (e) => {
     onSelect()
     openMenu(e, [
@@ -144,8 +144,7 @@ function MediaCard({ m, used, sel, onSelect }) {
       draggable
       onDragStart={e => dragStart(e, 'media', m.id, m.name)}
       onDragEnd={dragEnd}
-      onClick={onSelect}
-      onDoubleClick={() => add()}
+      onClick={() => { onSelect(); add() }}
       onContextMenu={menu}>
       <div className="thumb"
         onMouseMove={m.type === 'video' ? (e => { const r = e.currentTarget.getBoundingClientRect(); setScrub(Math.min(0.999, Math.max(0, (e.clientX - r.left) / r.width))) }) : undefined}
@@ -200,7 +199,7 @@ function Builtins({ settings }) {
     const ids = await importFiles([p])
     if (!ids[0]) return
     store.edit('medya', d => { if (d.media[ids[0]]) { d.media[ids[0]].name = def.name; d.media[ids[0]].generated = true } }, { noHistory: true })
-    A.addMediaToTimeline(ids[0], now(), overlay ? { overlay: true } : {})
+    A.addMediaToTimeline(ids[0], undefined, overlay ? { overlay: true } : {})
   }
   return (
     <>
