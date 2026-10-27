@@ -53,7 +53,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms))
     if (s.eval) {
       const r = await send('Runtime.evaluate', { expression: s.eval, awaitPromise: true, returnByValue: true })
       const v = r.result && r.result.result
-      console.log('EVAL>', s.label || s.eval.slice(0, 60).replace(/\s+/g, ' '), '=>', JSON.stringify(v && (v.value !== undefined ? v.value : v.description)).slice(0, 1500))
+      console.log('EVAL>', s.label || s.eval.slice(0, 60).replace(/\s+/g, ' '), '=>', String(JSON.stringify(v && (v.value !== undefined ? v.value : v.description))).slice(0, 1500))
       if (r.result && r.result.exceptionDetails) console.log('  EXC', r.result.exceptionDetails.exception?.description || r.result.exceptionDetails.text)
     }
     if (s.shot) {
