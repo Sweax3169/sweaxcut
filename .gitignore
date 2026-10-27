@@ -4,3 +4,4 @@ release/
 test-videos/out/
 *.log
 vendor/whisper/models/
+vendor/piper/voices/*.onnx

@@ -1,0 +1,19 @@
+SWEAXCUT - vendor/piper
+
+piper.exe, piper_phonemize.dll
+  Piper TTS 2023.11.14-2 - https://github.com/rhasspy/piper - MIT License
+
+espeak-ng.dll, espeak-ng-data/
+  eSpeak NG (rhasspy fork) - https://github.com/rhasspy/espeak-ng
+  GNU General Public License v3.0 or later. Source code: https://github.com/rhasspy/espeak-ng
+  Full license text: https://www.gnu.org/licenses/gpl-3.0.txt
+  Dictionaries for languages not used by SWEAXCUT were removed (unmodified otherwise).
+
+onnxruntime.dll, onnxruntime_providers_shared.dll
+  ONNX Runtime - https://github.com/microsoft/onnxruntime - MIT License
+
+voices/tr_TR-fahrettin-medium.onnx (+ .json)
+  Piper voice "fahrettin" (medium). Dataset: NabuCasa voice-datasets, CC0.
+  https://huggingface.co/speaches-ai/piper-tr_TR-fahrettin-medium
+
+SWEAXCUT runs piper.exe as a separate process; it is not linked into the application.

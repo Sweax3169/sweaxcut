@@ -1,0 +1,5 @@
+SWEAXCUT - vendor/rnnoise (ffmpeg arnndn models)
+Source: https://github.com/richardpl/arnndn-models
+std.rnnn - original model bundled with Xiph RNNoise (BSD-3-Clause, https://github.com/xiph/rnnoise)
+bd.rnnn (beguiling-drafter), sh.rnnn (somnolent-hogwash) - Gregor Richards, https://github.com/GregorR/rnnoise-models
+  ("none of this work is creative and thus none of it is subject to copyright")

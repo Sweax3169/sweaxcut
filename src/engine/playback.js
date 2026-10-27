@@ -55,6 +55,8 @@ class Playback {
     this.comp = new Compositor(canvas, { desynchronized: false })
     this.requestRender()
     if (!this.raf) this._loop()
+    // ses aygıtını önceden aç (ilk oynatmada ~450 ms bekleme olmasın)
+    const ae = audioEngine(); if (ae && ae.warmup) ae.warmup()
   }
 
   detach() {
