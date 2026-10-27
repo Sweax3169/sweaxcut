@@ -103,4 +103,7 @@ export function M(id, name, category, o, fn) {
   const bar = (60 / o.bpm) * (o.beats || 4)
   const duration = +(o.duration || bar * o.bars).toFixed(4)
   return {
-    id, name, category, duration, bpm: o.bpm, bars: o.bars, key: o.key, tag
+    id, name, category, duration, bpm: o.bpm, bars: o.bars, key: o.key, tags: o.tags || [], seamless: o.seamless !== false, tail: o.tail ?? 3,
+    synth: (ctx, t0 = 0) => { const S = makeSong(ctx, o); scheduleLazy(ctx, () => fn(S, ctx)) },
+  }
+}

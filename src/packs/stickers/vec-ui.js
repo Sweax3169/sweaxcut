@@ -154,7 +154,7 @@ const frames = [
     const locked = q > 0.9
     const col = locked ? p.lockColor : p.color
     const r = lerp(46, 26, k)
-    ctx.save(); ctx.translate(50, 46); ctx.rotate(locked ? 0 : t * 3)
+    ctx.save(); ctx.translate(50, 43); ctx.rotate(locked ? 0 : t * 3)
     ctx.setLineDash([10, 6]); ctx.lineWidth = 2.5; ctx.strokeStyle = col; ctx.beginPath(); ctx.arc(0, 0, r, 0, TAU); ctx.stroke(); ctx.setLineDash([])
     for (let i = 0; i < 4; i++) {
       ctx.rotate(Math.PI / 2)
@@ -164,9 +164,9 @@ const frames = [
     if (locked) {
       const fl = Math.floor(q * 8) % 2
       ctx.globalAlpha = fl ? 1 : 0.6
-      ctx.strokeStyle = col; ctx.lineWidth = 3; ctx.strokeRect(50 - 16, 46 - 16, 32, 32)
+      ctx.strokeStyle = col; ctx.lineWidth = 3; ctx.strokeRect(50 - 16, 43 - 16, 32, 32)
       ctx.globalAlpha = 1
-      text(ctx, p.text, 50, 92, { size: 12, maxW: 90, fill: col, fam: F_MONO, weight: 800, sw: 3 })
+      text(ctx, p.text, 50, 91, { size: 11, maxW: 84, fill: col, fam: F_MONO, weight: 800, sw: 3 })
     }
   }),
 
@@ -182,7 +182,7 @@ const frames = [
     const y = 12 + tri(q * 2) * 76
     ctx.fillStyle = lin(ctx, 0, y - 14, 0, y, [rgba(p.color, 0), rgba(p.color, 0.35)]); ctx.fillRect(12, y - 14, W - 24, 14)
     ctx.strokeStyle = p.color; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(10, y); ctx.lineTo(W - 10, y); ctx.stroke()
-    text(ctx, 'TARANIYOR ' + Math.floor(q * 100) + '%', W - 12, 96, { size: 7, fill: p.color, align: 'right', fam: F_MONO, weight: 700 })
+    text(ctx, 'TARANIYOR %' + Math.floor(q * 100), W - 12, 94.5, { size: 6.5, fill: p.color, align: 'right', fam: F_MONO, weight: 700, sw: 2, stroke: 'rgba(0,0,0,0.5)' })
   }),
 
   V('film-seridi', 'Film Şeridi', 'cerceve', {

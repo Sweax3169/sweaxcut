@@ -56,7 +56,7 @@ export default function TtsTab({ ctx }) {
       store.busy(null)
       const file = r && (r.path || r.file)
       if (!file) throw new Error('ses dosyası üretilmedi')
-      const ids = await importFiles([file], { role: 'voice' })
+      const ids = await importFiles([file], { role: 'voice', generated: true, name: 'Seslendirme · ' + String((clip.text && clip.text.content) || '').replace(/\s+/g, ' ').slice(0, 28) })
       if (!ids.length) throw new Error('ses içe aktarılamadı')
       const textId = clip.id
       if (prevClip) store.edit('Eski seslendirmeyi kaldır', d => deleteClips(d, [tts.audioClipId], store.get().ui))

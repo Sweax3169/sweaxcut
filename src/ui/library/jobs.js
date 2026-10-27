@@ -123,7 +123,7 @@ export async function stopRecording() {
     if (usingModule) { const m = await feature('recorder'); const r = await m.stopRecording(); p = typeof r === 'string' ? r : r && r.path }
     else p = await fbStop()
     if (!p) throw new Error('kayıt dosyası oluşmadı')
-    const ids = await importFiles([p], { role: 'voice' })
+    const ids = await importFiles([p], { role: 'voice', generated: true, name: 'Ses kaydı · ' + new Date().toLocaleTimeString('tr-TR') })
     if (!ids[0]) throw new Error('içe aktarılamadı')
     const n = (store.get().project.media[ids[0]] || {}).name
     store.edit('medya', d => { if (d.media[ids[0]]) { d.media[ids[0]].name = 'Seslendirme ' + new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }); d.media[ids[0]].generated = true } }, { noHistory: true })

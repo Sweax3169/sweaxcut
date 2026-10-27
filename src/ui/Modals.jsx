@@ -39,7 +39,11 @@ function AboutModal({ onClose }) {
       <div className="col" style={{ gap: 12 }}>
         <Logo size={34} />
         <div className="dim">Sweax Studios yapımı, oyun içerik üreticileri için ücretsiz video kurgu programı. Filigran yok, ücretli özellik yok, hesap yok. Her şey bilgisayarında çalışır.</div>
-        <div className="faint" style={{ fontSize: 11 }}>Üçüncü parti lisanslar: docs/licenses klasöründe.</div>
+        <div className="faint" style={{ fontSize: 11, lineHeight: 1.5 }}>
+          Emoji grafikleri: Twemoji © Twitter, Inc. ve katkıda bulunanlar, CC-BY 4.0.<br />
+          Geçişlerin bir kısmı gl-transitions (MIT), yazı tipleri SIL OFL, altyazı whisper.cpp (MIT), seslendirme Piper (MIT),
+          görüntü işleme FFmpeg (GPL) ve MediaPipe (Apache-2.0) ile yapılır. Ayrıntılar: docs/licenses.
+        </div>
       </div>
     </Modal>
   )

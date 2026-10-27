@@ -255,4 +255,6 @@ export default [
     noise(ctx, S.m, { t: 20, pts: [[0, 0], [1.6, 0.15], [2, 0.7], [2.02, 0]], gain: 0.4, filter: { type: 'highpass', f: 2500 }, rev: 0.4 })
     for (const t of [8, 22, 34]) ['C#4', 'D4', 'G#4', 'A4'].forEach((n, i) => piano(ctx, S.m, t + i * 0.02, n, { gain: 0.2, len: 4, rev: 0.6 }))
     const fs = [1400, 2300, 1800, 3000, 2600]
-    fs.forEach((f, i) => noise(ctx, S.m, { t: 3 + i * 7.3, color:
+    fs.forEach((f, i) => noise(ctx, S.m, { t: 3 + i * 7.3, color: 'pink', pts: [[0, 0], [0.3, 0.5], [0.9, 0.2], [1.4, 0]], gain: 0.12, filter: { type: 'bandpass', f, q: 6 }, filter2: { type: 'bandpass', f: f * 1.7, q: 3 }, rev: 0.6, pan: i % 2 ? 0.7 : -0.7 }))
+  }),
+]

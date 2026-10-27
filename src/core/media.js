@@ -87,7 +87,7 @@ export async function importFiles(paths, opts = {}) {
       const id = uid('m')
       const key = mediaKey(p)
       const media = {
-        id, key, path: p, name: path.basename(p), ext, ...info,
+        id, key, path: p, name: opts.name || path.basename(p), ext, ...info, generated: !!opts.generated,
         status: info.type === 'image' ? 'ready' : 'processing', progress: 0,
         proxyPath: null, audioPath: null, peaksPath: null, thumbsDir: null, thumbInterval: 0, thumbCount: 0,
         addedAt: Date.now(), role: opts.role || null,

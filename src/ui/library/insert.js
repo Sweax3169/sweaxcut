@@ -73,7 +73,7 @@ export async function insertAudioDef(kind, def, time) {
   store.busy((kind === 'music' ? 'Müzik' : 'Ses efekti') + ' hazırlanıyor…', null)
   try {
     const file = await audioDefToFile(def, kind === 'music' ? 'music' : 'sfx')
-    const ids = await importFiles([file], { role: kind === 'music' ? 'music' : 'sfx' })
+    const ids = await importFiles([file], { role: kind === 'music' ? 'music' : 'sfx', generated: true, name: def.name })
     const id = ids[0]
     if (!id) return null
     store.edit('medya', d => { if (d.media[id]) { d.media[id].name = def.name; d.media[id].generated = true } }, { noHistory: true })

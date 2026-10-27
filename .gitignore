@@ -9,3 +9,4 @@ vendor/whisper/bin/
 vendor/whisper/bin-gpu/
 vendor/piper/*
 !vendor/piper/NOTICE.txt
+test-videos/uzun_oyun_1080p60.mp4

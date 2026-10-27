@@ -250,3 +250,8 @@ export default [
       subBass(ctx, bass, S.at(b, 0), r, S.len(6), { gain: 0.25 }); subBass(ctx, bass, S.at(b, 8), r + 7 - 12 < 36 ? r + 7 : r + 7 - 12, S.len(6), { gain: 0.22 })
       S.hits(b, b % 2 ? '..x..x...x..x...' : 'x..x..x...x..x..', (t) => rim(ctx, perc, t, { gain: 0.14, pan: -0.25 }))
       S.hits(b, 'xxxxxxxxxxxxxxxx', (t, c, i) => shaker(ctx, perc, t, { gain: i % 4 === 0 ? 0.09 : 0.05, pan: 0.3 }))
+      S.hits(b, 'x.......x.......', (t) => kick(ctx, perc, t, { gain: 0.35, f0: 100, f1: 50, d: 0.2, click: 0.05 }))
+      if (b >= 8) epiano(ctx, gtr, S.at(b, 0), v[v.length - 1] + 12, S.len(12), { gain: 0.06, rev: 0.35 })
+    })
+  }),
+]

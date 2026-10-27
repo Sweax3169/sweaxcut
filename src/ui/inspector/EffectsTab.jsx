@@ -68,7 +68,7 @@ export function EffectPicker({ onPick, onClose, current, kind = 'effects', libTa
 function EffectItem({ fx, i, n, ctx, open, setOpen }) {
   const { clip, b } = ctx
   const def = regGet('effects', fx.id)
-  const hasInt = def && (def.params || []).some(p => p.key === 'intensity')
+  const hasInt = (def && (def.params || []).some(p => ['intensity', 'amount', 'strength', 'amt'].includes(p.key) || p.label === 'Yoğunluk')) || (def && (def.params || []).some(p => p.key === 'intensity'))
   const nk = fx.uid ? countKeys(clip, ['fx:' + fx.uid + ':']) : 0
   const upd = (fn, label, key) => b.edit(c => { const e = (c.effects || []).find(x => x.uid === fx.uid); if (e) fn(e, c) }, label, key)
   const move = (d) => b.edit(c => {
@@ -146,7 +146,7 @@ export function EffectLayerTab({ ctx }) {
   const e = clip.effect || {}
   const def = e.id ? regGet('effects', e.id) : null
   const [pick, setPick] = useState(false)
-  const hasInt = def && (def.params || []).some(p => p.key === 'intensity')
+  const hasInt = (def && (def.params || []).some(p => ['intensity', 'amount', 'strength', 'amt'].includes(p.key) || p.label === 'Yoğunluk')) || (def && (def.params || []).some(p => p.key === 'intensity'))
   return (
     <>
       <Sec id="efl" code="01" title="Efekt" sub={def ? def.name : null}>

@@ -341,7 +341,7 @@ function TTS() {
     try {
       const r = await synth()
       setBusy({ label: 'Ekleniyor', p: null })
-      const ids = await importFiles([r.path], { role: 'voice' })
+      const ids = await importFiles([r.path], { role: 'voice', generated: true, name: 'Seslendirme · ' + String(text || '').replace(/\s+/g, ' ').slice(0, 28) })
       if (!ids[0]) throw new Error('ses içe aktarılamadı')
       store.edit('medya', d => { if (d.media[ids[0]]) { d.media[ids[0]].name = 'TTS · ' + text.slice(0, 28); d.media[ids[0]].generated = true } }, { noHistory: true })
       const aid = placeAudioOnNewTrack(ids[0], t0, 'voice', 'Metinden sese')
