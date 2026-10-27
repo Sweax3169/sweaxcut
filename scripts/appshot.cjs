@@ -17,7 +17,10 @@ const sleep = ms => new Promise(r => setTimeout(r, ms))
   const env = { ...process.env, SWEAXCUT_DEV_URL: process.env.SWEAXCUT_DEV_URL || 'http://localhost:5199/', SWEAXCUT_DEBUG_PORT: String(PORT), SWEAXCUT_MAX: '0' }
   delete env.ELECTRON_RUN_AS_NODE
   if (process.env.APPSHOT_PROD) delete env.SWEAXCUT_DEV_URL
-  const app = spawn(path.join(root, 'node_modules/electron/dist/electron.exe'), ['.'], { cwd: root, env, stdio: 'ignore' })
+  // APPSHOT_EXE: paketlenmiş uygulamayı (release/win-unpacked/SWEAXCUT.exe) sür
+  const exe = process.env.APPSHOT_EXE ? path.resolve(root, process.env.APPSHOT_EXE) : path.join(root, 'node_modules/electron/dist/electron.exe')
+  if (process.env.APPSHOT_EXE) delete env.SWEAXCUT_DEV_URL
+  const app = spawn(exe, process.env.APPSHOT_EXE ? [] : ['.'], { cwd: root, env, stdio: 'ignore' })
   let target = null
   for (let i = 0; i < 60 && !target; i++) {
     await sleep(500)

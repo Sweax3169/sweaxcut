@@ -12,7 +12,18 @@ import { ipc } from '../platform/node.js'
 import { ALL_EXTS } from '../core/media.js'
 
 // test ve hata ayıklama kancası
-if (typeof window !== 'undefined') window.__sweaxActions = A
+if (typeof window !== 'undefined') {
+  window.__sweaxActions = A
+  window.__sweaxMods = {
+    tts: () => import('../features/tts/index.js'),
+    captions: () => import('../features/captions/index.js'),
+    audio: () => import('../features/audio/index.js'),
+    video: () => import('../features/video/index.js'),
+    reg: () => import('../engine/registry.js'),
+    exp: () => import('../engine/export.js'),
+    text: () => import('../packs/text/index.js'),
+  }
+}
 
 export default function App() {
   const screen = useStore(s => s.ui.screen)
