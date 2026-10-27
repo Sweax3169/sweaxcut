@@ -1,282 +1,141 @@
 'use strict'
 
-// SWEAXCUT ana süreç — Sweax Studios
+// SWEAXCUT 2 — ana süreç. Renderer Node erişimli çalışır (yerel masaüstü aracı; medya işleri renderer'da).
 
-const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog, shell, screen, systemPreferences } = require('electron')
 const path = require('path')
 const fs = require('fs')
-const ff = require('./ffmpeg.cjs')
+
+if (process.env.SWEAXCUT_DEBUG_PORT) app.commandLine.appendSwitch('remote-debugging-port', process.env.SWEAXCUT_DEBUG_PORT)
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
+app.commandLine.appendSwitch('ignore-gpu-blocklist')
+app.commandLine.appendSwitch('enable-gpu-rasterization')
+app.commandLine.appendSwitch('enable-zero-copy')
+app.commandLine.appendSwitch('disable-renderer-backgrounding')
+app.commandLine.appendSwitch('disable-background-timer-throttling')
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
+app.commandLine.appendSwitch('force_high_performance_gpu')
+// enable/disable-features tek seferde verilmeli (sonraki çağrı öncekini ezer)
+app.commandLine.appendSwitch('enable-features', 'PlatformHEVCDecoderSupport,SharedArrayBuffer')
+app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion')
+
+function fixAsar(p) {
+  if (!p) return p
+  return p.replace('app.asar' + path.sep, 'app.asar.unpacked' + path.sep)
+}
+
+let ffmpegPath = 'ffmpeg'
+let ffprobePath = 'ffprobe'
+try { ffmpegPath = fixAsar(require('ffmpeg-static')) } catch (e) { /* yok */ }
+try { ffprobePath = fixAsar(require('ffprobe-static').path) } catch (e) { /* yok */ }
+
+const MEDIA_EXTS = ['.mp4', '.mov', '.mkv', '.avi', '.webm', '.m4v', '.ts', '.mts', '.m2ts', '.wmv', '.flv', '.3gp', '.mpg', '.mpeg',
+  '.mp3', '.wav', '.m4a', '.aac', '.ogg', '.opus', '.flac', '.wma', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', '.svg', '.sweax']
 
 let win = null
+const gotLock = app.requestSingleInstanceLock()
+if (!gotLock) app.quit()
 
-const settingsFile = () => path.join(app.getPath('userData'), 'sweaxcut-settings.json')
-
-function loadSettings() {
-  try {
-    return JSON.parse(fs.readFileSync(settingsFile(), 'utf8'))
-  } catch (e) {
-    return {}
-  }
-}
-
-function saveSettings(s) {
-  try {
-    fs.writeFileSync(settingsFile(), JSON.stringify(s || {}, null, 2), 'utf8')
-    return true
-  } catch (e) {
-    return false
-  }
-}
-
-// Komut satırıyla gelen video yolları ("Birlikte aç" / kısayola sürükleme)
-function argvVideoPaths(argv) {
-  return argv.filter(a =>
-    typeof a === 'string' &&
-    !a.startsWith('-') &&
-    ff.VIDEO_EXTS.includes(path.extname(a).toLowerCase()) &&
-    fs.existsSync(a)
-  )
+function argvFiles(argv) {
+  return argv.filter(a => typeof a === 'string' && !a.startsWith('-') && MEDIA_EXTS.includes(path.extname(a).toLowerCase()) && fs.existsSync(a))
 }
 
 function createWindow() {
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize
   win = new BrowserWindow({
-    width: 1480,
-    height: 920,
+    width: Math.min(1720, width),
+    height: Math.min(1020, height),
     minWidth: 1180,
-    minHeight: 740,
+    minHeight: 720,
     frame: false,
     show: false,
-    backgroundColor: '#0f0a18',
+    backgroundColor: '#0b0b0c',
     title: 'SWEAXCUT',
+    icon: path.join(__dirname, '..', 'build', 'icon.ico'),
     webPreferences: {
-      preload: path.join(__dirname, 'preload.cjs'),
-      contextIsolation: true,
-      nodeIntegration: false,
-      sandbox: true,
-      webSecurity: true,
+      nodeIntegration: true,
+      contextIsolation: false,
+      sandbox: false,
+      webSecurity: false,
+      backgroundThrottling: false,
+      spellcheck: false,
     },
   })
-
-  win.once('ready-to-show', () => win.show())
-
-  if (process.env.SWEAXCUT_DEV_URL) {
-    win.loadURL(process.env.SWEAXCUT_DEV_URL)
-  } else {
-    win.loadFile(path.join(__dirname, '..', 'dist', 'index.html'))
-  }
-
+  win.once('ready-to-show', () => { win.show(); if (process.env.SWEAXCUT_MAX !== '0') win.maximize() })
+  const dev = process.env.SWEAXCUT_DEV_URL
+  if (dev) win.loadURL(dev)
+  else win.loadFile(path.join(__dirname, '..', 'dist', 'index.html'))
   win.on('maximize', () => win && win.webContents.send('window:state', { maximized: true }))
   win.on('unmaximize', () => win && win.webContents.send('window:state', { maximized: false }))
-
-  win.webContents.once('did-finish-load', () => {
-    const paths = argvVideoPaths(process.argv.slice(1))
-    if (paths.length) safeSend(win.webContents, 'files:open', paths)
-  })
-}
-
-// ---------------------------------------------------------------- kuyruk
-
-const queueState = {
-  running: false,
-  cancelled: false,
-  current: { child: null },
-}
-
-ipcMain.handle('queue:start', async (event, payload) => {
-  if (queueState.running) return { ok: false, message: 'Zaten bir dönüştürme sürüyor.' }
-  const { jobs, options } = payload || {}
-  if (!Array.isArray(jobs) || jobs.length === 0) return { ok: false, message: 'Kuyrukta video yok.' }
-
-  queueState.running = true
-  queueState.cancelled = false
-  const wc = event.sender
-
-  ;(async () => {
-    for (const job of jobs) {
-      if (queueState.cancelled) {
-        safeSend(wc, 'job:state', { id: job.id, state: 'cancelled' })
-        continue
-      }
-      let output = null
-      let overlayPath = null
-      try {
-        const meta = await ff.probe(job.input)
-        output = job.output || ff.defaultOutput(job.input, options.outputDir)
-        safeSend(wc, 'job:state', { id: job.id, state: 'processing', output })
-
-        // Panel modu yazı PNG'si (renderer canvas'ından data URL olarak gelir)
-        const jobOptions = { ...options }
-        if (job.trim) jobOptions.trim = job.trim
-        if (job.overlayPng && typeof job.overlayPng === 'string' && job.overlayPng.startsWith('data:image/png;base64,')) {
-          overlayPath = path.join(app.getPath('temp'), `sweaxcut-overlay-${job.id}.png`)
-          fs.writeFileSync(overlayPath, Buffer.from(job.overlayPng.slice('data:image/png;base64,'.length), 'base64'))
-          jobOptions.overlayPngPath = overlayPath
-        }
-
-        // İlerleme mesajlarını 250 ms'de bire sınırla — IPC'yi ve arayüzü boğmasın
-        let lastSent = 0
-        const onProgress = p => {
-          const now = Date.now()
-          if (p.done || now - lastSent >= 250) {
-            lastSent = now
-            safeSend(wc, 'job:progress', { id: job.id, ...p })
-          }
-        }
-
-        const wantGpu = !!options.useGpu
-        try {
-          await ff.convertOne(meta, jobOptions, output, onProgress, queueState.current, wantGpu)
-        } catch (err) {
-          if (queueState.cancelled) throw new Error('cancelled')
-          if (wantGpu) {
-            // GPU kodlayıcı düştü — kullanıcıyı bilgilendir, işlemciyle sil baştan dene
-            safeSend(wc, 'job:note', { id: job.id, note: 'GPU kodlayıcı sorun çıkardı, işlemciyle yeniden deneniyor…' })
-            await ff.convertOne(meta, jobOptions, output, onProgress, queueState.current, false)
-          } else {
-            throw err
-          }
-        }
-        safeSend(wc, 'job:state', { id: job.id, state: 'done', output })
-      } catch (err) {
-        safeSend(wc, 'job:state', {
-          id: job.id,
-          state: queueState.cancelled ? 'cancelled' : 'error',
-          message: ff.turkceHata(String((err && err.message) || err)),
-        })
-      } finally {
-        if (overlayPath) { try { fs.unlinkSync(overlayPath) } catch (e) { /* önemsiz */ } }
-      }
+  win.on('close', (e) => {
+    if (win && !win.__forceClose) {
+      e.preventDefault()
+      win.webContents.send('app:before-close')
     }
-    queueState.running = false
-    safeSend(wc, 'queue:finished', { cancelled: queueState.cancelled })
-  })()
-
-  return { ok: true }
-})
-
-ipcMain.handle('queue:cancel', async () => {
-  if (!queueState.running) return { ok: true }
-  queueState.cancelled = true
-  ff.cancelChild(queueState.current.child)
-  return { ok: true }
-})
-
-function safeSend(wc, channel, data) {
-  try { if (!wc.isDestroyed()) wc.send(channel, data) } catch (e) { /* pencere kapanmış */ }
+  })
+  win.webContents.once('did-finish-load', () => {
+    const files = argvFiles(process.argv.slice(1))
+    if (files.length) win.webContents.send('files:open', files)
+  })
+  win.webContents.setWindowOpenHandler(({ url }) => { shell.openExternal(url); return { action: 'deny' } })
 }
+
+app.on('second-instance', (_e, argv) => {
+  if (!win) return
+  if (win.isMinimized()) win.restore()
+  win.focus()
+  const files = argvFiles(argv.slice(1))
+  if (files.length) win.webContents.send('files:open', files)
+})
+
+app.whenReady().then(() => {
+  if (process.platform === 'darwin' && systemPreferences.askForMediaAccess) systemPreferences.askForMediaAccess('microphone')
+  createWindow()
+})
+app.on('window-all-closed', () => app.quit())
 
 // ---------------------------------------------------------------- IPC
 
-ipcMain.handle('app:info', () => ({
-  version: app.getVersion(),
-  platform: process.platform,
-}))
-
-ipcMain.handle('probe', async (e, input) => {
-  try {
-    return { ok: true, meta: await ff.probe(input) }
-  } catch (err) {
-    return { ok: false, message: ff.turkceHata(String((err && err.message) || err)) }
+ipcMain.on('app:paths', (e) => {
+  const appRoot = path.join(__dirname, '..')
+  e.returnValue = {
+    userData: app.getPath('userData'),
+    documents: app.getPath('documents'),
+    videos: app.getPath('videos'),
+    music: app.getPath('music'),
+    desktop: app.getPath('desktop'),
+    temp: app.getPath('temp'),
+    ffmpeg: ffmpegPath,
+    ffprobe: ffprobePath,
+    appRoot,
+    resources: app.isPackaged ? process.resourcesPath : appRoot,
+    vendor: app.isPackaged ? path.join(process.resourcesPath, 'vendor') : path.join(appRoot, 'vendor'),
+    isPackaged: app.isPackaged,
+    version: app.getVersion(),
   }
 })
 
-ipcMain.handle('gpu:detect', async () => {
-  try { return await ff.detectNvenc() } catch (e) { return false }
+ipcMain.handle('dialog:open', async (_e, opts) => {
+  const r = await dialog.showOpenDialog(win, opts || {})
+  return r.canceled ? [] : r.filePaths
 })
 
-ipcMain.handle('thumbnail', async (e, { input, time }) => {
-  try {
-    return { ok: true, dataUrl: await ff.thumbnail(input, time) }
-  } catch (err) {
-    return { ok: false }
-  }
+ipcMain.handle('dialog:save', async (_e, opts) => {
+  const r = await dialog.showSaveDialog(win, opts || {})
+  return r.canceled ? null : r.filePath
 })
 
-ipcMain.handle('files:choose', async () => {
-  const res = await dialog.showOpenDialog(win, {
-    title: 'Video seç',
-    properties: ['openFile', 'multiSelections'],
-    filters: [
-      { name: 'Video dosyaları', extensions: ff.VIDEO_EXTS.map(x => x.slice(1)) },
-      { name: 'Tüm dosyalar', extensions: ['*'] },
-    ],
-  })
-  return res.canceled ? [] : res.filePaths
+ipcMain.handle('dialog:message', async (_e, opts) => {
+  const r = await dialog.showMessageBox(win, opts || {})
+  return r.response
 })
 
-ipcMain.handle('folder:choose', async () => {
-  const res = await dialog.showOpenDialog(win, {
-    title: 'Klasör seç',
-    properties: ['openDirectory'],
-  })
-  return res.canceled ? null : res.filePaths[0]
-})
-
-ipcMain.handle('music:choose', async () => {
-  const res = await dialog.showOpenDialog(win, {
-    title: 'Müzik seç',
-    properties: ['openFile'],
-    filters: [
-      { name: 'Ses dosyaları', extensions: ['mp3', 'wav', 'm4a', 'aac', 'ogg', 'opus', 'flac', 'wma'] },
-      { name: 'Tüm dosyalar', extensions: ['*'] },
-    ],
-  })
-  return res.canceled ? null : res.filePaths[0]
-})
-
-ipcMain.handle('folder:scan', async (e, dir) => {
-  try {
-    const files = fs.readdirSync(dir)
-      .filter(f => ff.VIDEO_EXTS.includes(path.extname(f).toLowerCase()))
-      .map(f => path.join(dir, f))
-    return { ok: true, files }
-  } catch (err) {
-    return { ok: false, message: 'Klasör okunamadı.', files: [] }
-  }
-})
-
-ipcMain.handle('path:show', async (e, p) => {
-  try { shell.showItemInFolder(p) } catch (err) { /* önemsiz */ }
-})
-
-ipcMain.handle('path:open', async (e, p) => {
-  try { await shell.openPath(p) } catch (err) { /* önemsiz */ }
-})
-
-ipcMain.handle('settings:get', () => loadSettings())
-ipcMain.handle('settings:set', (e, s) => saveSettings(s))
-
-ipcMain.on('window:control', (e, action) => {
-  if (!win) return
-  if (action === 'minimize') win.minimize()
-  else if (action === 'maximize') win.isMaximized() ? win.unmaximize() : win.maximize()
-  else if (action === 'close') win.close()
-})
-
-// ---------------------------------------------------------------- yaşam döngüsü
-
-const gotLock = app.requestSingleInstanceLock()
-if (!gotLock) {
-  app.quit()
-} else {
-  app.on('second-instance', (e, argv) => {
-    if (win) {
-      if (win.isMinimized()) win.restore()
-      win.focus()
-      const paths = argvVideoPaths(argv.slice(1))
-      if (paths.length) safeSend(win.webContents, 'files:open', paths)
-    }
-  })
-
-  app.whenReady().then(() => {
-    createWindow()
-    app.on('activate', () => {
-      if (BrowserWindow.getAllWindows().length === 0) createWindow()
-    })
-  })
-
-  app.on('window-all-closed', () => {
-    ff.killTree(queueState.current.child)
-    app.quit()
-  })
-}
+ipcMain.on('win:minimize', () => win && win.minimize())
+ipcMain.on('win:maximize', () => { if (!win) return; win.isMaximized() ? win.unmaximize() : win.maximize() })
+ipcMain.on('win:close', () => win && win.close())
+ipcMain.on('win:force-close', () => { if (win) { win.__forceClose = true; win.close() } })
+ipcMain.on('win:fullscreen', (_e, v) => win && win.setFullScreen(!!v))
+ipcMain.handle('shell:show', (_e, p) => { shell.showItemInFolder(p); return true })
+ipcMain.handle('shell:open', (_e, p) => shell.openPath(p))
+ipcMain.handle('shell:external', (_e, url) => shell.openExternal(url))
+ipcMain.on('win:progress', (_e, v) => win && win.setProgressBar(v == null ? -1 : v))

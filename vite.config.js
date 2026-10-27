@@ -6,7 +6,8 @@ export default defineConfig({
   plugins: [react()],
   build: {
     outDir: 'dist',
-    target: 'chrome120',
+    target: 'chrome128',
+    chunkSizeWarningLimit: 8000,
   },
   server: {
     port: 5199,
