@@ -219,16 +219,21 @@ function placeNew(clip, label) {
   return clip.id
 }
 
+const textMods = import.meta.glob('../packs/text/index.js', { eager: true })
+const textPack = textMods['../packs/text/index.js'] || null
+
 export function addText(template, time) {
   const t = time ?? now()
   const clip = createTextClip({ start: t, duration: 3 })
   if (template) {
-    clip.text = { ...clip.text, ...(template.text || {}) }
-    for (const k of ['stroke', 'stroke2', 'shadow', 'glow', 'bg']) if (template.text && template.text[k]) clip.text[k] = { ...createTextClip().text[k], ...template.text[k] }
-    if (template.sampleText) clip.text.content = template.sampleText
-    if (template.anim) clip.anim = { in: null, out: null, loop: null, ...JSON.parse(JSON.stringify(template.anim)) }
+    if (textPack && textPack.applyTextTemplate) textPack.applyTextTemplate(clip, template.id, { useSample: true, position: true })
+    else {
+      clip.text = { ...clip.text, ...(template.text || {}) }
+      if (template.sampleText) clip.text.content = template.sampleText
+      if (template.anim) clip.anim = { in: null, out: null, loop: null, ...JSON.parse(JSON.stringify(template.anim)) }
+      if (template.transform) clip.transform = { ...clip.transform, ...template.transform }
+    }
     if (template.effects) clip.effects = template.effects.map(e => ({ uid: uid('e'), enabled: true, ...e }))
-    if (template.transform) clip.transform = { ...clip.transform, ...template.transform }
     clip.templateId = template.id
     clip.name = template.name
   }
@@ -426,3 +431,27 @@ export function setRatio(ratioId) {
 }
 
 export { now }
+
+// Ritme göre kes: seçili ses klibinin vuruşlarında ana izdeki klipleri böl (every: kaç vuruşta bir)
+export function splitAtBeats(every = 1) {
+  const s = store.get()
+  const audio = selectedClips(s).find(c => c.type === 'audio' && c.beats && c.beats.length)
+    || s.project.tracks.flatMap(t => t.clips).find(c => c.type === 'audio' && c.beats && c.beats.length)
+  if (!audio) { store.toast('Önce bir müzik klibinde "Vuruşları bul" çalıştır', 'info', 3000); return }
+  const rate = (audio.out - audio.in) / audio.duration
+  const times = audio.beats
+    .map(b => audio.start + (b - audio.in) / rate)
+    .filter(t => t > audio.start && t < audio.start + audio.duration)
+    .filter((_, i) => i % Math.max(1, every) === 0)
+  const main = TL.mainTrack(s.project)
+  const ids = main.clips.map(c => c.id)
+  let n = 0
+  store.edit('Ritme göre kes', d => {
+    for (const t of times) {
+      const m = TL.mainTrack(d)
+      const target = m.clips.filter(c => ids.includes(c.id) || true).map(c => c.id)
+      n += TL.splitAt(d, t, target, ui()).length
+    }
+  })
+  store.toast(n + ' kesim yapıldı', 'ok')
+}

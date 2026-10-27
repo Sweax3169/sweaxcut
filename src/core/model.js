@@ -82,7 +82,7 @@ export function defaultTextStyle() {
   return {
     content: 'Yazı ekle',
     font: 'Archivo Black',
-    size: 96,           // 1080 genişlikli tuvalde px; tuval genişliğine göre ölçeklenir
+    size: 96,           // kısa kenarı 1080 olan tuvalde px; tuvalin kısa kenarına göre ölçeklenir
     weight: 900,
     italic: false,
     underline: false,
