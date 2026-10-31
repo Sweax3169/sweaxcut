@@ -153,7 +153,7 @@ function QuickActs({ clip, media, setTab }) {
   if (t === 'text' && clip.caption) return (
     <div className="quick-acts">
       <button className="qa hot" onClick={() => store.setUI({ leftTab: 'captions' })} data-tip="Bütün altyazıları metin gibi düzenle, böl, birleştir"><Icon name="caption" size={14} /><span>Altyazı düzenleyici</span></button>
-      <button className="qa" onClick={() => setTab('caption')}><Icon name="sparkle" size={14} /><span>Stil</span></button>
+      <button className="qa" onClick={() => store.setUI(u => ({ leftTab: 'captions', capView: { v: 'style', n: ((u.capView && u.capView.n) || 0) + 1 } }))} data-tip="Soldaki altyazı panelinde stil düzenleyiciyi aç"><Icon name="sparkle" size={14} /><span>Stil paneli</span></button>
     </div>
   )
   return null

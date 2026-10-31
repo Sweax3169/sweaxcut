@@ -40,6 +40,9 @@ export default function CaptionsPanel() {
   const [st, set] = useTabState('captions', { view: null, gid: null })
   const view = st.view && (st.view === 'create' || groups.length) ? st.view : (groups.length ? 'text' : 'create')
   const group = groups.find(g => g.groupId === st.gid) || groups[groups.length - 1] || null
+  // başka bir panel belirli görünümü isteyebilir (denetçideki Stil paneli düğmesi)
+  const want = useStore(s => s.ui.capView)
+  useEffect(() => { if (want && want.v) set({ view: want.v }) }, [want]) // eslint-disable-line
   // yeni altyazı bitince Metin görünümüne geç
   useEffect(() => { if (job.done && !job.running && groups.length) set({ view: 'text', gid: groups[groups.length - 1].groupId }) }, [job.done]) // eslint-disable-line
 
