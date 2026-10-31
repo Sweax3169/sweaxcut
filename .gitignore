@@ -1,12 +1,61 @@
+# Bağımlılıklar ve derleme çıktıları
 node_modules/
 dist/
 release/
-test-videos/out/
+out/
+
+# Günlükler
 *.log
-vendor/whisper/models/
-vendor/piper/voices/*.onnx
+
+# Yerel araç ayarları ve iç notlar (diskte kalır, yayımlanmaz)
+.claude/
+.private/
+docs/AGENT-BRIEF.md
+docs/research/
+
+# Test videoları: test-videos/make-tests.cjs yeniden üretir; küçük sabit girdiler hariç
+test-videos/*
+!test-videos/*.cjs
+!test-videos/bozuk.mp4
+!test-videos/muzik.mp3
+!test-videos/overlay_test.png
+
+# Üçüncü parti ikililer ve modeller (npm run prepare:vendor indirir ya da elle konur, bkz. README)
 vendor/whisper/bin/
 vendor/whisper/bin-gpu/
+vendor/whisper/models/
 vendor/piper/*
 !vendor/piper/NOTICE.txt
-test-videos/uzun_oyun_1080p60.mp4
+# MediaPipe wasm çalışma zamanı (13 MB): npm install sırasında scripts/copy-mediapipe.cjs kopyalar
+public/models/mediapipe/wasm/
+
+# Büyük medya ve ikililer hiçbir yerde izlenmez (docs/media seçilmiş, küçük tutulan istisnadır)
+*.mp4
+*.mov
+*.mkv
+*.avi
+*.webm
+*.wav
+*.exe
+*.dll
+*.onnx
+*.zip
+*.7z
+*.blockmap
+*.bin
+!vendor/whisper/vad/*.bin
+!docs/media/*.mp4
+!test-videos/bozuk.mp4
+
+# Gizli ayarlar
+.env
+.env.*
+*.pem
+*.key
+
+# İşletim sistemi / düzenleyici
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/

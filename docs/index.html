@@ -1,0 +1,1239 @@
+<!doctype html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SWEAXCUT · Free video editor for Windows</title>
+<meta name="description" content="SWEAXCUT is a free video editor for Windows. Captions, voice-over and the AI tools run on your PC, without the internet.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="SWEAXCUT">
+<meta property="og:description" content="Free video editor for Windows by Sweax Studios.">
+<meta property="og:image" content="https://sweax3169.github.io/sweaxcut/media/transitions.png">
+<link rel="icon" type="image/png" href="media/icon.png">
+<script>
+// dil: kayıtlı seçim > tarayıcı dili; ilk boyamadan önce uygula
+(function () {
+  var l = null
+  try { l = localStorage.getItem('sweaxcut.lang') } catch (e) {}
+  if (l !== 'en' && l !== 'tr') l = /^tr\b/i.test(navigator.language || '') ? 'tr' : 'en'
+  document.documentElement.setAttribute('data-lang', l)
+  document.documentElement.lang = l
+})()
+</script>
+<style>
+/* fonts:start */
+@font-face{font-family:"Bodoni Moda";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/bodoni-moda-latin-ext-400-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Bodoni Moda";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/bodoni-moda-latin-400-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Bodoni Moda";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/bodoni-moda-latin-ext-500-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Bodoni Moda";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/bodoni-moda-latin-500-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Bodoni Moda";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/bodoni-moda-latin-ext-600-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Bodoni Moda";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/bodoni-moda-latin-600-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Bodoni Moda";font-style:italic;font-weight:400;font-display:swap;src:url(fonts/bodoni-moda-latin-ext-400-italic.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Bodoni Moda";font-style:italic;font-weight:400;font-display:swap;src:url(fonts/bodoni-moda-latin-400-italic.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Manrope";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/manrope-latin-ext-400-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Manrope";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/manrope-latin-400-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Manrope";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/manrope-latin-ext-500-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Manrope";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/manrope-latin-500-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Manrope";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/manrope-latin-ext-600-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Manrope";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/manrope-latin-600-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Manrope";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/manrope-latin-ext-700-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Manrope";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/manrope-latin-700-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/jetbrains-mono-latin-ext-400-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/jetbrains-mono-latin-400-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/jetbrains-mono-latin-ext-500-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/jetbrains-mono-latin-500-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+/* fonts:end */
+
+:root {
+  --bench: #ECEEF0; --glass: #F8FAFB; --ink: #121518; --ink-2: #4A5159; --ink-3: #6B737C; --line: #C9CED4; --line-2: #DDE1E5;
+  --tape: rgba(255, 255, 255, .66); --tape-hole: rgba(18, 21, 24, .10); --tape-edge: rgba(18, 21, 24, .07);
+  --mon: #0F1113; --mon-line: #24282D; --mon-ink: #E9ECEF; --mon-ink-2: #8E97A1;
+  --v: #3FA9F5; --a: #2EE6A6; --t: #FF5DA2; --s: #B98CFF; --e: #FFD23F; --mark: #E5383B;
+  --glow: rgba(255, 255, 255, .95); --shadow: 0 30px 60px -32px rgba(20, 28, 36, .45), 0 2px 6px -2px rgba(20, 28, 36, .18);
+  --serif: "Bodoni Moda", "Bodoni 72", Didot, "Times New Roman", serif;
+  --sans: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", Consolas, monospace;
+  --gut: clamp(16px, 4vw, 56px); --max: 1240px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bench: #0E1012; --glass: #1A1E22; --ink: #E9ECEF; --ink-2: #9AA3AD; --ink-3: #7A838D; --line: #2A3036; --line-2: #20252A;
+    --tape: rgba(255, 255, 255, .11); --tape-hole: rgba(0, 0, 0, .45); --tape-edge: rgba(255, 255, 255, .06);
+    --mon: #07080A; --mon-line: #22262B;
+    --glow: rgba(140, 165, 190, .13); --shadow: 0 30px 60px -30px rgba(0, 0, 0, .8), 0 2px 6px -2px rgba(0, 0, 0, .6);
+  }
+}
+:root[data-lang="en"] [lang="tr"]:not(html), :root[data-lang="tr"] [lang="en"]:not(html) { display: none !important; }
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--bench); color: var(--ink); font: 400 17px/1.6 var(--sans); overflow-x: hidden; }
+img, video, canvas { display: block; max-width: 100%; }
+a { color: inherit; }
+::selection { background: var(--e); color: #121518; }
+:focus-visible { outline: 2px solid var(--v); outline-offset: 2px; }
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gut); }
+h1, h2, h3 { font-family: var(--serif); font-weight: 500; letter-spacing: -.01em; margin: 0; }
+h2 { font-size: clamp(2.1rem, 4.4vw, 3.6rem); line-height: 1.12; }
+h3 { font-size: 1.5rem; line-height: 1.2; }
+p { margin: 0; }
+.lead { color: var(--ink-2); font-size: clamp(1.05rem, 1.4vw, 1.2rem); line-height: 1.6; }
+.dim { color: var(--ink-2); }
+.small { font-size: .9rem; color: var(--ink-3); line-height: 1.5; }
+.tc { font-family: var(--mono); font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+code, kbd { font-family: var(--mono); font-size: .88em; }
+code { background: var(--glass); border: 1px solid var(--line-2); padding: .05em .35em; border-radius: 2px; }
+
+/* ---------------------------------------------------------------- üst çubuk + kaydırma cetveli */
+.bar { position: sticky; top: 0; z-index: 30; background: var(--bench); border-bottom: 1px solid var(--line); }
+.bar-in { display: flex; align-items: center; gap: 24px; height: 60px; max-width: var(--max); margin: 0 auto; padding: 0 var(--gut); }
+.mark { display: inline-flex; align-items: center; text-decoration: none; font-family: var(--serif); font-weight: 600; font-size: 1.32rem; letter-spacing: .06em; line-height: 1; }
+.mark .sp { position: relative; width: 16px; height: 1.4em; margin: 0 2px; }
+.mark .sp::before { content: ""; position: absolute; inset: 2px 2px; background: var(--tape); border: 1px solid var(--tape-edge); }
+.mark .sp::after { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--mark); }
+.nav { display: flex; gap: 22px; margin-left: auto; font-size: .95rem; }
+.nav a { text-decoration: none; color: var(--ink-2); }
+.nav a:hover { color: var(--ink); }
+.langs { display: flex; border: 1px solid var(--line); border-radius: 2px; }
+.langs button { appearance: none; border: 0; background: none; color: var(--ink-2); font: 600 .8rem var(--sans); padding: 6px 9px; cursor: pointer; }
+.langs button[aria-pressed="true"] { background: var(--ink); color: var(--bench); }
+.btn { position: relative; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font: 600 1rem var(--sans); padding: 13px 20px 13px 18px; border-radius: 2px; background: var(--ink); color: var(--bench); overflow: hidden; isolation: isolate; border: 0; cursor: pointer; }
+.btn::before { content: ""; position: absolute; inset: 0; background: var(--v); transform: scaleX(0); transform-origin: 0 50%; transition: transform .38s cubic-bezier(.7, 0, .2, 1); z-index: -1; }
+.btn:hover::before, .btn:focus-visible::before { transform: scaleX(1); }
+.btn:hover, .btn:focus-visible { color: #0E1012; }
+.btn svg { flex: none; }
+.btn.sm { padding: 8px 13px; font-size: .9rem; }
+.btn.ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+.ruler { position: relative; height: 16px; max-width: var(--max); margin: 0 auto; }
+.ruler .ticks { position: absolute; left: var(--gut); right: calc(var(--gut) + 110px); top: 0; bottom: 0;
+  background: repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 12px) 0 9px / 100% 7px no-repeat,
+              repeating-linear-gradient(90deg, var(--ink-3) 0 1px, transparent 1px 120px) 0 4px / 100% 12px no-repeat; opacity: .8; }
+.ruler .head { position: absolute; top: 0; bottom: -1px; width: 2px; margin-left: -1px; background: var(--mark); left: var(--gut); }
+.ruler .head::before { content: ""; position: absolute; top: 0; left: -4px; border: 5px solid transparent; border-top-color: var(--mark); }
+.ruler .tc { position: absolute; right: var(--gut); top: 0; font-size: .74rem; line-height: 16px; color: var(--ink-2); }
+
+/* ---------------------------------------------------------------- ortak parçalar */
+section { position: relative; }
+.sec { padding: clamp(56px, 7vw, 104px) 0; }
+.sec + .sec { border-top: 1px solid var(--line-2); }
+/* bölümler arası ek yeri: bant + kırmızı kesim çizgisi */
+.sec + .sec::before { content: ""; position: absolute; top: -10px; left: 50%; width: 74px; height: 20px; margin-left: -37px; transform: rotate(-2deg);
+  background:
+    linear-gradient(90deg, transparent 36px, var(--mark) 36px 38px, transparent 38px),
+    repeating-linear-gradient(90deg, var(--tape-hole) 0 4px, transparent 4px 10px) 5px 3px / calc(100% - 10px) 3px no-repeat,
+    repeating-linear-gradient(90deg, var(--tape-hole) 0 4px, transparent 4px 10px) 5px calc(100% - 3px) / calc(100% - 10px) 3px no-repeat,
+    var(--tape);
+  border-left: 1px solid var(--tape-edge); border-right: 1px solid var(--tape-edge); }
+.head2 { display: grid; gap: 18px; max-width: 760px; margin-bottom: clamp(32px, 4vw, 56px); }
+.tape { position: absolute; z-index: 3; width: 108px; height: 30px; pointer-events: none;
+  background:
+    repeating-linear-gradient(90deg, var(--tape-hole) 0 5px, transparent 5px 12px) 6px 4px / calc(100% - 12px) 4px no-repeat,
+    repeating-linear-gradient(90deg, var(--tape-hole) 0 5px, transparent 5px 12px) 6px calc(100% - 4px) / calc(100% - 12px) 4px no-repeat,
+    var(--tape);
+  border-left: 1px solid var(--tape-edge); border-right: 1px solid var(--tape-edge); box-shadow: 0 1px 2px rgba(0, 0, 0, .06); }
+.tape.l { top: -13px; left: 28px; transform: rotate(-4deg); }
+.tape.r { top: -12px; right: 36px; transform: rotate(3deg); }
+.mon { position: relative; background: var(--mon); padding: clamp(6px, .8vw, 10px); border-radius: 3px; box-shadow: var(--shadow); }
+.mon > img, .mon > video { width: 100%; height: auto; border: 1px solid var(--mon-line); background: #000; }
+.cap { margin-top: 12px; font-size: .86rem; color: var(--ink-3); line-height: 1.45; }
+.strip { height: 26px; background:
+  repeating-linear-gradient(90deg, transparent 0 7px, var(--bench) 7px 15px, transparent 15px 22px) 0 5px / 100% 6px repeat-x,
+  repeating-linear-gradient(90deg, transparent 0 7px, var(--bench) 7px 15px, transparent 15px 22px) 0 15px / 100% 6px repeat-x,
+  var(--ink); opacity: .92; }
+.chip { display: inline-flex; align-items: center; gap: 8px; font-size: .86rem; font-weight: 600; color: var(--ink-2); }
+.chip::before { content: ""; width: 14px; height: 10px; border-radius: 1px; background: var(--c, var(--v)); }
+
+/* kaydırınca silme geçişiyle açılan görseller (masaüstü, hareket izni varsa) */
+html.js-wipe .wipe { clip-path: inset(0 100% 0 0); transition: clip-path 1s cubic-bezier(.7, 0, .2, 1); }
+html.js-wipe .wipe.in { clip-path: inset(0 0 0 0); }
+html.js-wipe .wipe::after { content: ""; position: absolute; z-index: 4; top: 0; bottom: 0; left: 0; width: 3px; background: var(--wc, var(--v)); opacity: 0; pointer-events: none; }
+html.js-wipe .wipe.in::after { animation: wipebar 1s cubic-bezier(.7, 0, .2, 1); }
+@keyframes wipebar { 0% { left: 0; opacity: 1 } 92% { left: calc(100% - 3px); opacity: 1 } 100% { left: calc(100% - 3px); opacity: 0 } }
+
+/* ---------------------------------------------------------------- giriş */
+.hero { padding: clamp(40px, 6vw, 88px) 0 clamp(56px, 7vw, 96px); background: radial-gradient(70% 70% at 72% 30%, var(--glow), transparent 70%); }
+.hero-g { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 4.5vw, 72px); align-items: center; }
+.hero h1 { font-size: clamp(2.6rem, 5.3vw, 4.9rem); line-height: 1.1; padding-top: .06em; }
+.hero h1 em { font-style: italic; font-weight: 400; }
+.hero .lead { margin-top: 24px; max-width: 34em; }
+.cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; margin-top: 32px; }
+.meta { margin-top: 18px; font-size: .9rem; color: var(--ink-3); line-height: 1.6; }
+.meta b { color: var(--ink-2); font-weight: 600; }
+.src-link { font-weight: 600; font-size: .95rem; color: var(--ink-2); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 2px; }
+.src-link:hover { color: var(--ink); border-color: var(--ink); }
+.hero .mon { margin-top: 14px; }
+.hero-strip { margin-top: clamp(48px, 6vw, 80px); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; background: var(--ink); padding: 22px 0; position: relative; }
+.hero-strip::before, .hero-strip::after { content: ""; position: absolute; left: 0; right: 0; height: 6px; background: repeating-linear-gradient(90deg, transparent 0 8px, var(--bench) 8px 16px, transparent 16px 24px); }
+.hero-strip::before { top: 8px; } .hero-strip::after { bottom: 8px; }
+.hero-strip figure { margin: 0 6px; position: relative; }
+.hero-strip canvas { width: 100%; aspect-ratio: 16 / 9; background: #000; }
+.hero-strip figcaption { position: absolute; left: 8px; bottom: 6px; font: 500 .72rem var(--mono); color: rgba(255, 255, 255, .85); text-shadow: 0 1px 2px rgba(0, 0, 0, .7); }
+
+/* ---------------------------------------------------------------- koddan sayılanlar */
+.bin { border-top: 1px solid var(--line); }
+.trk { display: grid; grid-template-columns: 210px minmax(0, 1fr); align-items: center; min-height: 46px; border-bottom: 1px solid var(--line-2); }
+.trk .nm { font-weight: 600; font-size: .95rem; padding-right: 14px; }
+.trk .nm small { display: block; font-weight: 400; color: var(--ink-3); font-size: .78rem; line-height: 1.35; }
+.lane { position: relative; height: 30px; }
+.clipbar { position: absolute; left: 0; top: 3px; bottom: 3px; width: var(--w); background: color-mix(in srgb, var(--c) 30%, var(--glass)); border: 1px solid var(--c); border-left-width: 4px; border-radius: 2px; display: flex; align-items: center; padding-left: 10px; font: 500 .86rem var(--mono); color: var(--ink); transform-origin: 0 50%; }
+html.js-wipe .bin .clipbar { transform: scaleX(0); transition: transform 1.1s cubic-bezier(.7, 0, .2, 1); }
+html.js-wipe .bin.in .clipbar { transform: scaleX(1); }
+.bin-ph { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--mark); left: 210px; opacity: 0; pointer-events: none; }
+html.js-wipe .bin.in .bin-ph { animation: binph 2.4s cubic-bezier(.5, 0, .3, 1) .2s 1 both; }
+@keyframes binph { 0% { opacity: 1; left: 210px } 90% { opacity: 1; left: 100% } 100% { opacity: 0; left: 100% } }
+.bin-wrap { position: relative; }
+
+/* ---------------------------------------------------------------- kesim dene */
+.cut { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 20px; align-items: start; }
+.cut-mon { background: var(--mon); padding: 10px; border-radius: 3px; box-shadow: var(--shadow); }
+.cut-mon canvas { width: 100%; aspect-ratio: 16 / 9; background: #000; border: 1px solid var(--mon-line); touch-action: none; }
+.cut-mon .fallback { display: none; }
+.cut-mon.nogl canvas { display: none; } .cut-mon.nogl .fallback { display: block; }
+.cut-ctl { display: flex; align-items: center; gap: 14px; padding: 10px 2px 2px; color: var(--mon-ink); }
+.cut-ctl .tc { font-size: 1.02rem; color: var(--e); }
+.cut-ctl .tc span { color: var(--mon-ink-2); }
+.cut-ctl .nowfx { margin-left: auto; font-size: .82rem; color: var(--mon-ink-2); text-align: right; }
+.pbtn { appearance: none; width: 40px; height: 32px; display: grid; place-items: center; border: 1px solid var(--mon-line); background: #EDEFF1; color: #0E1012; border-radius: 2px; cursor: pointer; }
+.pbtn:hover { background: #fff; }
+.tl { position: relative; margin-top: 10px; padding: 0 0 6px; user-select: none; touch-action: none; cursor: col-resize; }
+.tl-ruler { position: relative; height: 18px; color: var(--mon-ink-2); font: 500 .7rem var(--mono); }
+.tl-ruler i { position: absolute; top: 0; height: 18px; border-left: 1px solid #3A4047; padding-left: 4px; font-style: normal; line-height: 12px; }
+.tl-fx { position: relative; height: 20px; margin-top: 4px; }
+.tl-fx .fxbar { position: absolute; left: 0; right: 0; top: 0; bottom: 0; border-radius: 2px; background: color-mix(in srgb, var(--e) 26%, #14171a); border: 1px solid var(--e); border-left-width: 4px; color: var(--mon-ink); font: 600 .74rem var(--sans); display: flex; align-items: center; padding-left: 8px; }
+.tl-fx .fxbar[hidden] { display: none; }
+.tl-v { position: relative; height: 62px; margin-top: 6px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; }
+.tl-v .clp { position: relative; background: #1b1f23 center / auto 100% repeat-x; border: 1px solid var(--v); border-radius: 2px; overflow: hidden; }
+.tl-v .clp b { position: absolute; left: 6px; top: 4px; font: 600 .7rem var(--sans); color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, .8); }
+.cutmk { position: absolute; top: -2px; bottom: -2px; width: 26px; margin-left: -13px; appearance: none; border: 0; padding: 0; background: none; cursor: pointer; z-index: 2; }
+.cutmk::before { content: ""; position: absolute; left: 4px; right: 4px; top: 16px; bottom: 16px; background: rgba(14, 16, 18, .85); border: 1px solid #5C646D; border-radius: 2px; }
+.cutmk::after { content: ""; position: absolute; left: 9px; right: 9px; top: 25px; bottom: 25px; background: #8E97A1; clip-path: polygon(0 0, 50% 50%, 0 100%, 100% 100%, 50% 50%, 100% 0); }
+.cutmk[aria-pressed="true"]::before { background: var(--e); border-color: var(--e); }
+.cutmk[aria-pressed="true"]::after { background: #0E1012; }
+.tl-a { position: relative; height: 24px; margin-top: 6px; border-radius: 2px; border: 1px solid color-mix(in srgb, var(--a) 70%, transparent); background: color-mix(in srgb, var(--a) 14%, #0f1214); overflow: hidden; }
+.tl-a canvas { width: 100%; height: 100%; }
+.tl-ph { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--mark); pointer-events: none; z-index: 3; }
+.tl-ph::before { content: ""; position: absolute; top: 0; left: -5px; border: 6px solid transparent; border-top-color: var(--mark); }
+.tl-names { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 10px; font-size: .8rem; color: var(--mon-ink-2); }
+.tl-names button { appearance: none; text-align: left; border: 1px solid var(--mon-line); background: transparent; color: var(--mon-ink-2); padding: 6px 8px; border-radius: 2px; font: 500 .78rem var(--sans); cursor: pointer; }
+.tl-names button b { display: block; color: var(--mon-ink); font-weight: 600; font-size: .84rem; }
+.tl-names button[aria-pressed="true"] { border-color: var(--e); }
+.picker { background: var(--glass); border: 1px solid var(--line); border-radius: 3px; padding: 14px; }
+.picker h3 { font: 600 .95rem var(--sans); margin: 0 0 4px; letter-spacing: 0; }
+.picker .small { margin-bottom: 10px; }
+.opts { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.opts button { appearance: none; text-align: left; border: 1px solid var(--line-2); background: var(--bench); color: var(--ink); padding: 7px 8px; border-radius: 2px; font: 500 .82rem var(--sans); cursor: pointer; position: relative; overflow: hidden; }
+.opts button:hover { border-color: var(--line); }
+.opts button[aria-pressed="true"] { background: var(--ink); color: var(--bench); border-color: var(--ink); }
+.opts button i { font-style: normal; color: var(--ink-3); font-size: .7rem; margin-left: 4px; }
+.opts button[aria-pressed="true"] i { color: inherit; opacity: .7; }
+.picker + .picker { margin-top: 12px; }
+.cut-note { margin-top: 16px; }
+
+/* ---------------------------------------------------------------- özellik bölümleri */
+.feat { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(32px, 4.5vw, 72px); align-items: center; }
+.feat.flip { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); }
+.wide-head { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(28px, 4vw, 64px); align-items: end; margin-bottom: clamp(28px, 3.5vw, 48px); }
+.wide-head .feat-txt { gap: 14px; }
+.feat.flip .feat-txt { order: 2; }
+.feat-txt { display: grid; gap: 18px; align-content: start; }
+.feat .feat-txt h2 { font-size: clamp(2rem, 3.3vw, 3rem); }
+.feat-txt ul { margin: 6px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.feat-txt li { position: relative; padding-left: 22px; color: var(--ink-2); line-height: 1.5; }
+.feat-txt li::before { content: ""; position: absolute; left: 0; top: .62em; width: 12px; height: 2px; background: var(--c, var(--v)); }
+.stack { position: relative; padding-bottom: 12%; }
+.stack .mon.back { width: 82%; }
+.stack .mon.front { position: absolute; right: 0; bottom: 0; width: 58%; }
+.pair { display: grid; grid-template-columns: minmax(0, 320px) minmax(0, 1fr); gap: clamp(24px, 3vw, 44px); align-items: start; }
+.pair .phone { position: sticky; top: 100px; }
+.phone { background: var(--mon); padding: 8px; border-radius: 3px; box-shadow: var(--shadow); position: relative; }
+.phone img { width: 100%; border: 1px solid var(--mon-line); }
+.tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; margin-top: 40px; border-top: 1px solid var(--line); }
+.tools div { padding: 14px 0; border-bottom: 1px solid var(--line-2); }
+.tools b { display: block; font-weight: 600; }
+.tools span { color: var(--ink-2); font-size: .95rem; }
+.tools em { font-style: normal; color: var(--ink-3); font-size: .84rem; display: block; margin-top: 2px; }
+
+/* dışa aktarma hattı */
+.pipe { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0; margin-top: 48px; border: 1px solid var(--line); background: var(--glass); position: relative; overflow: hidden; }
+.pipe > div { padding: 18px 16px 20px; border-right: 1px solid var(--line-2); position: relative; }
+.pipe > div:last-child { border-right: 0; }
+.pipe b { display: block; font-weight: 700; margin-bottom: 6px; }
+.pipe b::before { content: ""; display: block; width: 26px; height: 4px; background: var(--c); margin-bottom: 12px; border-radius: 1px; }
+.pipe span { color: var(--ink-2); font-size: .9rem; line-height: 1.45; display: block; }
+.pipe .run { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--v) 40%, var(--e) 60%, transparent); width: 30%; animation: run 3.2s linear infinite; }
+@keyframes run { from { transform: translateX(-100%) } to { transform: translateX(340%) } }
+@media (prefers-reduced-motion: reduce) { .pipe .run { animation: none; display: none; } }
+.spec { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin-top: 40px; border-top: 1px solid var(--line); }
+.spec div { padding: 16px 16px 16px 0; border-bottom: 1px solid var(--line-2); }
+.spec b { display: block; font-size: .82rem; color: var(--ink-3); font-weight: 600; margin-bottom: 4px; }
+.spec span { font-size: .98rem; }
+.result { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(28px, 4vw, 64px); align-items: center; margin-top: 64px; }
+.result .num { font-family: var(--serif); font-size: clamp(3rem, 7vw, 5.6rem); line-height: 1.05; }
+.result .num small { font-family: var(--sans); font-size: 1rem; color: var(--ink-2); margin-left: 8px; }
+
+/* kısayollar */
+.keys { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 36px; border-top: 1px solid var(--line); }
+.keys div { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--line-2); }
+.keys span { color: var(--ink-2); font-size: .95rem; }
+kbd { display: inline-block; min-width: 1.9em; text-align: center; padding: 2px 7px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 3px; background: var(--glass); color: var(--ink); font-size: .8rem; white-space: nowrap; }
+
+/* gizlilik, dosyalar, kurulum */
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); }
+.tbl { width: 100%; border-collapse: collapse; font-size: .95rem; }
+.tbl th { text-align: left; font-weight: 600; color: var(--ink-3); font-size: .82rem; padding: 0 12px 10px 0; border-bottom: 1px solid var(--line); }
+.tbl td { padding: 12px 12px 12px 0; border-bottom: 1px solid var(--line-2); vertical-align: top; color: var(--ink-2); }
+.tbl td:first-child { color: var(--ink); font-weight: 500; }
+.steps { counter-reset: s; display: grid; gap: 0; border-top: 1px solid var(--line); }
+.steps li { list-style: none; counter-increment: s; display: grid; grid-template-columns: 48px minmax(0, 1fr); padding: 16px 0; border-bottom: 1px solid var(--line-2); }
+.steps li { padding-left: 0; }
+.steps li::before { content: counter(s); position: static; width: auto; height: auto; background: none; font-family: var(--serif); font-size: 1.6rem; line-height: 1; color: var(--ink-3); }
+.steps { padding: 0; margin: 0; }
+.note { border-left: 3px solid var(--e); background: var(--glass); padding: 14px 16px; margin-top: 18px; font-size: .95rem; color: var(--ink-2); }
+pre { margin: 18px 0 0; background: var(--mon); color: var(--mon-ink); padding: 18px 20px; border-radius: 3px; overflow-x: auto; font: 400 .86rem/1.7 var(--mono); }
+pre .c { color: var(--mon-ink-2); }
+
+footer { border-top: 1px solid var(--line); padding: 56px 0 72px; font-size: .9rem; color: var(--ink-2); }
+.foot { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr); gap: 40px; }
+.foot p + p { margin-top: 10px; }
+.foot a { color: var(--ink); }
+
+/* ---------------------------------------------------------------- dar ekran */
+@media (max-width: 1080px) {
+  .cut { grid-template-columns: minmax(0, 1fr); }
+  .pickers { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .picker + .picker { margin-top: 0; }
+  .opts { grid-template-columns: 1fr 1fr; }
+  .pipe { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .pipe > div:nth-child(3) { border-right: 0; }
+  .pipe > div:nth-child(-n+3) { border-bottom: 1px solid var(--line-2); }
+}
+@media (max-width: 900px) {
+  .nav { display: none; }
+  .langs { margin-left: auto; }
+  .hero-g, .feat, .feat.flip, .two, .result, .foot { grid-template-columns: minmax(0, 1fr); }
+  .feat.flip .feat-txt { order: 0; }
+  .wide-head { grid-template-columns: minmax(0, 1fr); }
+  .pair .phone { position: relative; top: 0; }
+  .keys { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .spec { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .trk { grid-template-columns: 150px minmax(0, 1fr); }
+  .bin-ph { left: 150px; }
+  .tools { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .bar-in { gap: 12px; height: 54px; }
+  .bar .btn.sm { display: none; }
+  .ruler .ticks { right: calc(var(--gut) + 96px); }
+  .pickers { grid-template-columns: minmax(0, 1fr); }
+  .hero-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 12px; padding: 22px 0; }
+  .keys { grid-template-columns: minmax(0, 1fr); }
+  .pipe { grid-template-columns: minmax(0, 1fr); }
+  .pipe > div { border-right: 0; border-bottom: 1px solid var(--line-2); }
+  .pair { grid-template-columns: minmax(0, 1fr); }
+  .pair .phone { max-width: 300px; }
+  .stack { padding-bottom: 0; }
+  .stack .mon.back { width: 100%; }
+  .stack .mon.front { position: relative; width: 78%; margin: -14% 0 0 auto; }
+  .tl-names { grid-template-columns: minmax(0, 1fr); }
+  .trk { grid-template-columns: 116px minmax(0, 1fr); }
+  .bin-ph { left: 116px; }
+  .cut-ctl .nowfx { display: none; }
+  .trk .nm small { display: none; }
+  .tbl { font-size: .9rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="bar-in">
+    <a class="mark" href="#top" aria-label="SWEAXCUT">SWEAX<span class="sp" aria-hidden="true"></span>CUT</a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#try"><span lang="en">Try a cut</span><span lang="tr">Kesim dene</span></a>
+      <a href="#features"><span lang="en">Features</span><span lang="tr">Özellikler</span></a>
+      <a href="#export"><span lang="en">Export</span><span lang="tr">Dışa aktarma</span></a>
+      <a href="#privacy"><span lang="en">Privacy</span><span lang="tr">Gizlilik</span></a>
+      <a href="#install"><span lang="en">Install</span><span lang="tr">Kurulum</span></a>
+    </nav>
+    <div class="langs" role="group" aria-label="Language">
+      <button type="button" data-set="en" aria-pressed="true">EN</button>
+      <button type="button" data-set="tr" aria-pressed="false">TR</button>
+    </div>
+    <a class="btn sm" href="https://github.com/Sweax3169/sweaxcut/releases/latest"><span lang="en">Download</span><span lang="tr">İndir</span></a>
+  </div>
+  <div class="ruler" aria-hidden="true"><div class="ticks"></div><div class="head" id="rul-head"></div><span class="tc" id="rul-tc">00:00:00:00</span></div>
+</header>
+
+<main id="top">
+
+<!-- ================================================================ giriş -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-g">
+      <div>
+        <h1><span lang="en">A free video editor for&nbsp;Windows.</span><span lang="tr">Windows için ücretsiz video kurgu programı.</span></h1>
+        <p class="lead">
+          <span lang="en">Cut, add transitions, effects, text and captions, then export with your graphics card. Captions, voice-over and the AI tools run on your PC, without the internet.</span>
+          <span lang="tr">Kes, geçiş, efekt, yazı ve altyazı ekle, sonra ekran kartınla dışa aktar. Altyazı, seslendirme ve yapay zekâ araçları internet olmadan, kendi bilgisayarında çalışır.</span>
+        </p>
+        <div class="cta">
+          <a class="btn" href="https://github.com/Sweax3169/sweaxcut/releases/latest">
+            <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 2v9m0 0l-3.6-3.6M9 11l3.6-3.6M3 15h12" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+            <span lang="en">Download for Windows</span><span lang="tr">Windows için indir</span>
+          </a>
+          <a class="src-link" href="https://github.com/Sweax3169/sweaxcut"><span lang="en">Source code on GitHub</span><span lang="tr">Kaynak kodu GitHub'da</span></a>
+        </div>
+        <p class="meta">
+          <span lang="en"><b>Version 2.0.1</b> · Windows 10 and 11, 64-bit · 207 MB installer · The interface is in Turkish</span>
+          <span lang="tr"><b>Sürüm 2.0.1</b> · Windows 10 ve 11, 64 bit · 207 MB kurulum dosyası · Arayüz Türkçe</span>
+        </p>
+      </div>
+      <figure style="margin:0">
+        <div class="mon">
+          <i class="tape l" aria-hidden="true"></i><i class="tape r" aria-hidden="true"></i>
+          <video src="media/tour.mp4" poster="media/transitions.webp" autoplay muted loop playsinline preload="metadata" aria-label="Screen recording of SWEAXCUT"></video>
+        </div>
+        <figcaption class="cap">
+          <span lang="en">Screen recording of SWEAXCUT 2.0.1: a title and a cross-zoom transition, a shockwave transition, a snow effect, then auto captions on a vertical video. The clips were generated for this page.</span>
+          <span lang="tr">SWEAXCUT 2.0.1 ekran kaydı: başlık ve çapraz zum geçişi, şok dalgası geçişi, kar efekti, sonra dikey videoda otomatik altyazı. Klipler bu sayfa için üretildi.</span>
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="hero-strip" aria-hidden="true">
+      <figure><canvas data-thumb="0" width="320" height="180"></canvas><figcaption class="tc">00:00:00:00</figcaption></figure>
+      <figure><canvas data-thumb="1" width="320" height="180"></canvas><figcaption class="tc">00:00:04:00</figcaption></figure>
+      <figure><canvas data-thumb="2" width="320" height="180"></canvas><figcaption class="tc">00:00:08:00</figcaption></figure>
+      <figure><canvas data-thumb="3" width="320" height="180"></canvas><figcaption class="tc">00:00:12:00</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ kesim dene -->
+<section class="sec" id="try">
+  <div class="wrap">
+    <div class="head2">
+      <h2><span lang="en">Try a cut</span><span lang="tr">Bir kesim dene</span></h2>
+      <p class="lead">
+        <span lang="en">Four generated clips and three cuts. Pick a cut, then a transition, and lay an effect over everything if you like. These are 16 of the app's 197 transitions and 9 of its 161 effects, running the same GLSL code in your browser.</span>
+        <span lang="tr">Dört üretilmiş klip, üç kesim. Bir kesim seç, sonra bir geçiş seç; istersen hepsinin üstüne bir efekt koy. Buradakiler uygulamadaki 197 geçişin 16'sı ve 161 efektin 9'u; tarayıcında aynı GLSL koduyla çalışıyorlar.</span>
+      </p>
+    </div>
+    <div class="cut">
+      <div>
+        <div class="cut-mon" id="cut-mon">
+          <canvas id="cut-gl" aria-label="Live preview"></canvas>
+          <img class="fallback" src="media/transitions.webp" alt="Transitions library in SWEAXCUT">
+          <div class="cut-ctl">
+            <button class="pbtn" id="cut-play" type="button" aria-label="Play">
+              <svg id="ico-play" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9-5.5z" fill="currentColor"/></svg>
+              <svg id="ico-pause" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" style="display:none"><path d="M3 1.5h3v11H3zM8 1.5h3v11H8z" fill="currentColor"/></svg>
+            </button>
+            <span class="tc" id="cut-tc">00:00:00 <span>/ 00:16:00</span></span>
+            <span class="nowfx" id="cut-now"></span>
+          </div>
+          <div class="tl" id="cut-tl">
+            <div class="tl-ruler" id="tl-ruler"></div>
+            <div class="tl-fx"><div class="fxbar" id="tl-fx" hidden></div></div>
+            <div class="tl-v" id="tl-v">
+              <div class="clp" data-c="0"><b lang="en">Grid drive</b><b lang="tr">Izgara yol</b></div>
+              <div class="clp" data-c="1"><b lang="en">Blocks</b><b lang="tr">Bloklar</b></div>
+              <div class="clp" data-c="2"><b lang="en">Tunnel</b><b lang="tr">Tünel</b></div>
+              <div class="clp" data-c="3"><b lang="en">Aurora</b><b lang="tr">Kuzey ışıkları</b></div>
+              <button class="cutmk" type="button" data-k="0" style="left:25%" aria-label="Cut 1"></button>
+              <button class="cutmk" type="button" data-k="1" style="left:50%" aria-label="Cut 2"></button>
+              <button class="cutmk" type="button" data-k="2" style="left:75%" aria-label="Cut 3"></button>
+            </div>
+            <div class="tl-a"><canvas id="tl-wave" width="800" height="48"></canvas></div>
+            <div class="tl-ph" id="tl-ph" style="left:0"></div>
+          </div>
+          <div class="tl-names" id="tl-names"></div>
+        </div>
+        <p class="small cut-note">
+          <span lang="en">Drag on the timeline to scrub. The clips are drawn live by small shaders written for this page; the audio lane is only a picture. In the app the same transitions run on your own footage, in preview and in export.</span>
+          <span lang="tr">Zaman çizelgesinde sürükleyerek gez. Klipleri bu sayfa için yazılmış küçük gölgelendiriciler canlı çiziyor; ses izi yalnızca görsel. Uygulamada aynı geçişler senin görüntünde, hem önizlemede hem dışa aktarmada çalışır.</span>
+        </p>
+      </div>
+      <div class="pickers">
+        <div class="picker">
+          <h3><span lang="en">Transition</span><span lang="tr">Geçiş</span></h3>
+          <p class="small"><span lang="en">Applies to the selected cut.</span><span lang="tr">Seçili kesime uygulanır.</span></p>
+          <div class="opts" id="tr-opts" role="group" aria-label="Transitions"></div>
+        </div>
+        <div class="picker">
+          <h3><span lang="en">Effect layer</span><span lang="tr">Efekt katmanı</span></h3>
+          <p class="small"><span lang="en">Sits above all four clips.</span><span lang="tr">Dört klibin de üstünde durur.</span></p>
+          <div class="opts" id="fx-opts" role="group" aria-label="Effects"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ koddan sayılanlar -->
+<section class="sec">
+  <div class="wrap">
+    <div class="head2">
+      <h2><span lang="en">Counted from the code</span><span lang="tr">Koddan sayıldı</span></h2>
+      <p class="lead">
+        <span lang="en">Each number was read from the app's content registry while version 2.0.1 was running. The bars use a log scale so the small ones stay visible.</span>
+        <span lang="tr">Her sayı, 2.0.1 sürümü çalışırken uygulamanın içerik kayıt defterinden okundu. Küçükler de görünsün diye çubuklar logaritmik ölçekte.</span>
+      </p>
+    </div>
+    <div class="bin-wrap">
+      <div class="bin" id="bin"></div>
+      <div class="bin-ph" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ özellikler -->
+<section class="sec" id="features">
+  <div class="wrap">
+    <div class="wide-head">
+      <div class="feat-txt">
+        <span class="chip" style="--c:var(--v)"><span lang="en">Transitions</span><span lang="tr">Geçişler</span></span>
+        <h2><span lang="en">197 ways to get from one clip to the next</span><span lang="tr">Bir klipten ötekine 197 geçiş</span></h2>
+      </div>
+      <div class="feat-txt" style="--c:var(--v)">
+        <p class="lead">
+          <span lang="en">Slides, zooms, light flashes, glitch cuts, shapes, 3D cubes and page turns, in 12 groups. 125 come from the open gl-transitions collection and 72 were written for SWEAXCUT.</span>
+          <span lang="tr">Kaydırma, zum, ışık flaşı, glitch kesme, şekiller, 3B küpler ve sayfa çevirme; 12 grupta. 125'i açık kaynak gl-transitions koleksiyonundan, 72'si SWEAXCUT için yazıldı.</span>
+        </p>
+        <ul>
+          <li><span lang="en">Each thumbnail can play on a sample frame or on your own frame.</span><span lang="tr">Küçük resimler örnek karede ya da kendi karende oynayabilir.</span></li>
+          <li><span lang="en">Duration and parameters are set per cut; one click applies a transition to every cut.</span><span lang="tr">Süre ve ayarlar her kesim için ayrı; tek tıkla bir geçiş bütün kesimlere uygulanır.</span></li>
+        </ul>
+      </div>
+    </div>
+    <figure style="margin:0">
+      <div class="mon wipe" style="--wc:var(--v)"><i class="tape l" aria-hidden="true"></i><i class="tape r" aria-hidden="true"></i><img src="media/transitions.webp" width="1720" height="1020" loading="lazy" alt="SWEAXCUT editor with the transitions library open and a cross-zoom transition in the preview"></div>
+      <figcaption class="cap"><span lang="en">Cross zoom between the first two clips, half way through. On the left, the transitions library; on the right, the transition's duration and strength.</span><span lang="tr">İlk iki klip arasında, yarısına gelmiş çapraz zum. Solda geçiş kütüphanesi, sağda geçişin süresi ve gücü.</span></figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="feat flip">
+      <div class="feat-txt" style="--c:var(--e)">
+        <span class="chip" style="--c:var(--e)"><span lang="en">Effects and colour</span><span lang="tr">Efekt ve renk</span></span>
+        <h2><span lang="en">161 effects, 93 colour filters</span><span lang="tr">161 efekt, 93 renk filtresi</span></h2>
+        <p class="lead">
+          <span lang="en">Game-style hit flashes, VHS, CRT, film grain, weather, light leaks and party lights, in 11 groups. Put an effect on one clip, or on its own layer so it changes everything below it.</span>
+          <span lang="tr">Oyun tarzı vuruş flaşları, VHS, tüplü ekran, film greni, hava durumu, ışık sızıntısı ve parti ışıkları; 11 grupta. Efekti tek bir klibe koy ya da kendi katmanına koy, altındaki her şeyi değiştirsin.</span>
+        </p>
+        <ul>
+          <li><span lang="en">Effect parameters and colour sliders can be keyframed.</span><span lang="tr">Efekt ayarları ve renk kaydırıcıları anahtar kareyle canlandırılabilir.</span></li>
+          <li><span lang="en">Exposure, contrast, temperature, highlights, shadows, HSL for 8 colour ranges, sharpness, vignette and grain.</span><span lang="tr">Pozlama, kontrast, sıcaklık, vurgular, gölgeler, 8 renk aralığı için HSL, keskinlik, vinyet ve gren.</span></li>
+          <li><span lang="en">24 blend modes, 8 mask shapes with soft edges, chroma key.</span><span lang="tr">24 karışım modu, yumuşak kenarlı 8 maske şekli, krom anahtar.</span></li>
+        </ul>
+      </div>
+      <div class="stack">
+        <div class="mon back wipe" style="--wc:var(--e)"><i class="tape l" aria-hidden="true"></i><img src="media/effects.webp" width="1720" height="1020" loading="lazy" alt="VHS effect layer over the tunnel clip, with its parameters in the inspector"></div>
+        <div class="mon front wipe" style="--wc:var(--e)"><img src="media/filters.webp" width="1720" height="1020" loading="lazy" alt="Colour filters library with the colour inspector open"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="feat">
+      <div class="feat-txt" style="--c:var(--t)">
+        <span class="chip" style="--c:var(--t)"><span lang="en">Text</span><span lang="tr">Yazı</span></span>
+        <h2><span lang="en">Titles that move</span><span lang="tr">Hareket eden başlıklar</span></h2>
+        <p class="lead">
+          <span lang="en">126 ready-made text styles, 88 text animations and 101 fonts, every one checked for Turkish letters.</span>
+          <span lang="tr">126 hazır yazı stili, 88 yazı animasyonu ve 101 yazı tipi; her birinde Türkçe harfler denetlendi.</span>
+        </p>
+        <ul>
+          <li><span lang="en">Outline, second outline, shadow, glow and a background box, each with its own switch.</span><span lang="tr">Kontur, ikinci kontur, gölge, parlama ve arka plan kutusu; her birinin kendi düğmesi var.</span></li>
+          <li><span lang="en">Gradient fill and curved text.</span><span lang="tr">Degrade dolgu ve kavisli yazı.</span></li>
+          <li><span lang="en">Separate in, out and loop animations, for text and for clips (137 clip animations).</span><span lang="tr">Giriş, çıkış ve döngü animasyonları ayrı; yazı için de klip için de (137 klip animasyonu).</span></li>
+        </ul>
+      </div>
+      <figure style="margin:0">
+        <div class="mon wipe" style="--wc:var(--t)"><img src="media/text.webp" width="1720" height="1020" loading="lazy" alt="Text templates and the style inspector with a title on the preview"></div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="head2">
+      <span class="chip" style="--c:var(--t)"><span lang="en">Captions and voice</span><span lang="tr">Altyazı ve ses</span></span>
+      <h2><span lang="en">Captions and voice-over, made on your PC</span><span lang="tr">Altyazı ve seslendirme, bilgisayarında</span></h2>
+      <p class="lead">
+        <span lang="en">The voice in this clip was made with the app's text-to-speech, and the captions on it were written by its speech recognition. Neither step used the internet.</span>
+        <span lang="tr">Bu klipteki ses uygulamanın metinden sese aracıyla yapıldı, üstündeki altyazıları da konuşma tanıma yazdı. İkisi de internet kullanmadı.</span>
+      </p>
+    </div>
+    <div class="pair">
+      <figure style="margin:0">
+        <div class="phone wipe" style="--wc:var(--t)"><img src="media/captions.gif" width="288" height="513" loading="lazy" alt="Vertical video with word-by-word captions"></div>
+      </figure>
+      <div>
+        <div class="two" style="gap:28px 40px">
+          <div class="feat-txt" style="--c:var(--t)">
+            <h3><span lang="en">Auto captions</span><span lang="tr">Otomatik altyazı</span></h3>
+            <ul>
+              <li><span lang="en">whisper.cpp runs on your CPU. On first use you pick a model and it is downloaded once; the default, Small, is 190 MB.</span><span lang="tr">whisper.cpp işlemcide çalışır. İlk kullanımda bir model seçilir ve bir kez indirilir; varsayılan Small 190 MB.</span></li>
+              <li><span lang="en">45 caption styles with word-by-word highlighting, keyword colours and optional emoji.</span><span lang="tr">Kelime kelime vurgulu 45 altyazı stili, anahtar kelime rengi ve isteğe bağlı emoji.</span></li>
+              <li><span lang="en">Fix a word by typing; timing stays. Import SRT, VTT and ASS, export SRT.</span><span lang="tr">Yanlış kelimeyi yazarak düzelt, zamanlama kalır. SRT, VTT ve ASS içe aktarılır, SRT dışa aktarılır.</span></li>
+            </ul>
+          </div>
+          <div class="feat-txt" style="--c:var(--a)">
+            <h3><span lang="en">Text to speech</span><span lang="tr">Metinden sese</span></h3>
+            <ul>
+              <li><span lang="en">Piper voices: Turkish "Fahrettin" comes with the installer, 21 more in 10 languages can be downloaded.</span><span lang="tr">Piper sesleri: Türkçe "Fahrettin" kurulumla gelir, 10 dilde 21 ses daha indirilebilir.</span></li>
+              <li><span lang="en">The Windows voices on your PC work too.</span><span lang="tr">Bilgisayarındaki Windows sesleri de kullanılabilir.</span></li>
+              <li><span lang="en">Record your own voice from the microphone.</span><span lang="tr">Mikrofondan kendi sesini kaydedebilirsin.</span></li>
+            </ul>
+          </div>
+        </div>
+        <figure style="margin:28px 0 0">
+          <div class="mon wipe" style="--wc:var(--a)"><img src="media/voice.webp" width="1720" height="1020" loading="lazy" alt="Text to speech panel with the voice list and the captioned vertical project"></div>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="feat flip">
+      <div class="feat-txt" style="--c:var(--a)">
+        <span class="chip" style="--c:var(--a)"><span lang="en">Sound</span><span lang="tr">Ses</span></span>
+        <h2><span lang="en">Music and sound effects, synthesized</span><span lang="tr">Müzik ve ses efekti, sentezle</span></h2>
+        <p class="lead">
+          <span lang="en">The 22 music tracks and 102 sound effects are generated by the app from oscillators, noise and filters. There are no samples inside, so there is nothing to license.</span>
+          <span lang="tr">22 müzik parçası ve 102 ses efektini uygulama osilatör, gürültü ve süzgeçlerle kendisi üretir. İçinde hazır ses örneği yok, lisanslanacak bir şey de yok.</span>
+        </p>
+        <ul>
+          <li><span lang="en">40 voice changers: chipmunk, monster, robot, radio and more.</span><span lang="tr">40 ses değiştirici: sincap, canavar, robot, telsiz ve dahası.</span></li>
+          <li><span lang="en">Noise reduction, speech clarity, loudness levelling, 3-band EQ.</span><span lang="tr">Gürültü azaltma, konuşmayı netleştirme, ses seviyesi eşitleme, 3 bantlı EQ.</span></li>
+          <li><span lang="en">Music ducks under speech by itself; beats can be found and marked.</span><span lang="tr">Konuşma olunca müzik kendiliğinden kısılır; vuruşlar bulunup işaretlenebilir.</span></li>
+        </ul>
+      </div>
+      <figure style="margin:0">
+        <div class="mon wipe" style="--wc:var(--a)"><img src="media/audio.webp" width="1720" height="1020" loading="lazy" alt="Music library and the audio inspector"></div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="feat">
+      <div class="feat-txt" style="--c:var(--s)">
+        <span class="chip" style="--c:var(--s)"><span lang="en">Stickers</span><span lang="tr">Çıkartmalar</span></span>
+        <h2><span lang="en">777 stickers</span><span lang="tr">777 çıkartma</span></h2>
+        <p class="lead">
+          <span lang="en">649 Twemoji emoji, 117 animated stickers drawn in code and 11 shapes. Your own images can be stickers too.</span>
+          <span lang="tr">649 Twemoji emojisi, kodla çizilmiş 117 animasyonlu çıkartma ve 11 şekil. Kendi görsellerin de çıkartma olabilir.</span>
+        </p>
+        <ul>
+          <li><span lang="en">Subscribe and like buttons, view counters, crosshairs, hit markers, health and XP bars, trophies, comic bursts, speech bubbles, arrows and lower thirds.</span><span lang="tr">Abone ol ve beğen düğmeleri, izlenme sayacı, nişangâh, vuruş işareti, can ve XP barları, kupa, çizgi roman patlamaları, konuşma balonları, oklar ve alt bantlar.</span></li>
+        </ul>
+      </div>
+      <figure style="margin:0">
+        <div class="mon wipe" style="--wc:var(--s)"><img src="media/stickers.webp" width="1720" height="1020" loading="lazy" alt="Sticker library with a subscribe button on the aurora clip"></div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="feat flip">
+      <div class="feat-txt" style="--c:var(--v)">
+        <span class="chip" style="--c:var(--v)"><span lang="en">Tools</span><span lang="tr">Araçlar</span></span>
+        <h2><span lang="en">The tedious parts, automated</span><span lang="tr">Uğraştıran işler, otomatik</span></h2>
+        <p class="lead">
+          <span lang="en">Background removal, stabilising, reframing and the rest run locally, with MediaPipe models and ffmpeg filters that come with the installer.</span>
+          <span lang="tr">Arka plan silme, sabitleme, yeniden kadrajlama ve diğerleri yerelde çalışır; MediaPipe modelleri ve ffmpeg süzgeçleri kurulumla gelir.</span>
+        </p>
+      </div>
+      <figure style="margin:0">
+        <div class="mon wipe" style="--wc:var(--v)"><img src="media/tools.webp" width="1720" height="1020" loading="lazy" alt="Tools panel with silence cutting, captions, highlights, beats, scene detection and stabilisation"></div>
+      </figure>
+    </div>
+    <div class="tools">
+      <div><b lang="en">Remove background</b><b lang="tr">Arka planı sil</b><span lang="en">Separates a person from the background without a green screen.</span><span lang="tr">Yeşil perde olmadan kişiyi arka plandan ayırır.</span><em>MediaPipe Selfie Segmenter</em></div>
+      <div><b lang="en">Stabilise</b><b lang="tr">Sabitle</b><span lang="en">Smooths shaky footage and zooms in slightly to hide the edges.</span><span lang="tr">Titrek görüntüyü yumuşatır, kenarları gizlemek için hafifçe yaklaştırır.</span><em>ffmpeg vidstab, two passes</em></div>
+      <div><b lang="en">Auto reframe</b><b lang="tr">Otomatik kadraj</b><span lang="en">Turns 16:9 into 9:16, or the other way, while following the subject.</span><span lang="tr">16:9'u 9:16'ya (ya da tersine) çevirirken konuyu takip eder.</span><em>MediaPipe face detection, or motion</em></div>
+      <div><b lang="en">Split into scenes</b><b lang="tr">Sahnelere böl</b><span lang="en">Cuts a clip at every scene change.</span><span lang="tr">Klibi her sahne değişiminde keser.</span><em>ffmpeg scene detection</em></div>
+      <div><b lang="en">Find highlights</b><b lang="tr">Öne çıkanları bul</b><span lang="en">Marks sudden loud moments and can add zooms on them.</span><span lang="tr">Ani yüksek sesli anları işaretler, istersen oralara zum ekler.</span><em lang="en">short-term loudness</em><em lang="tr">kısa süreli ses yüksekliği</em></div>
+      <div><b lang="en">Cut silences</b><b lang="tr">Sessizlikleri kes</b><span lang="en">Finds pauses in speech and removes them.</span><span lang="tr">Konuşmadaki boşlukları bulur ve çıkarır.</span><em>ffmpeg silencedetect</em></div>
+      <div><b lang="en">Find beats</b><b lang="tr">Vuruşları bul</b><span lang="en">Marks the beats of the music so cuts snap to them.</span><span lang="tr">Müziğin vuruşlarını işaretler, kesimler onlara yapışır.</span><em lang="en">onset detection</em><em lang="tr">başlangıç tespiti</em></div>
+      <div><b lang="en">Split for Shorts</b><b lang="tr">Shorts için böl</b><span lang="en">Splits a long video into equal parts or around its highlights.</span><span lang="tr">Uzun videoyu eşit parçalara ya da öne çıkan anların çevresinden böler.</span><em lang="en">timeline markers</em><em lang="tr">zaman çizelgesi işaretleri</em></div>
+      <div><b lang="en">Layouts</b><b lang="tr">Düzenler</b><span lang="en">13 one-click layouts: facecam over gameplay, corner camera, split screen, blurred background.</span><span lang="tr">13 tek tık düzen: oyunun üstünde facecam, köşe kamera, bölünmüş ekran, bulanık arka plan.</span><em lang="en">compositor transforms</em><em lang="tr">bileşimci dönüşümleri</em></div>
+      <div><b lang="en">Even out loudness</b><b lang="tr">Ses seviyesini eşitle</b><span lang="en">Brings every clip to the same loudness on export.</span><span lang="tr">Dışa aktarırken her klibi aynı ses yüksekliğine getirir.</span><em>ffmpeg loudnorm</em></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ dışa aktarma -->
+<section class="sec" id="export">
+  <div class="wrap">
+    <div class="feat">
+      <div class="feat-txt" style="--c:var(--e)">
+        <span class="chip" style="--c:var(--e)"><span lang="en">Export</span><span lang="tr">Dışa aktarma</span></span>
+        <h2><span lang="en">What you see is what gets exported</span><span lang="tr">Önizlemede ne görüyorsan o çıkar</span></h2>
+        <p class="lead">
+          <span lang="en">The preview and the export use the same WebGL2 compositor, so effects, transitions and text look the same in the file. Your graphics card encodes the video when it can.</span>
+          <span lang="tr">Önizleme ile dışa aktarma aynı WebGL2 bileşimciyi kullanır; efekt, geçiş ve yazı dosyada da aynı görünür. Ekran kartın uygunsa videoyu o kodlar.</span>
+        </p>
+        <ul>
+          <li><span lang="en">NVIDIA NVENC, AMD AMF and Intel Quick Sync are tested once with a short encode and remembered for three days. If none works, the CPU encoders take over.</span><span lang="tr">NVIDIA NVENC, AMD AMF ve Intel Quick Sync kısa bir deneme kodlamasıyla bir kez sınanır ve üç gün hatırlanır. Hiçbiri çalışmazsa işlemci kodlayıcıları devreye girer.</span></li>
+          <li><span lang="en">No watermark and no length limit.</span><span lang="tr">Filigran ve süre sınırı yok.</span></li>
+        </ul>
+      </div>
+      <figure style="margin:0">
+        <div class="mon wipe" style="--wc:var(--e)"><i class="tape r" aria-hidden="true"></i><img src="media/export.webp" width="1720" height="1020" loading="lazy" alt="Export dialog with format, resolution, frame rate, quality, codec and hardware options"></div>
+      </figure>
+    </div>
+
+    <div class="pipe" aria-label="Export pipeline">
+      <div style="--c:var(--v)"><b lang="en">Decode</b><b lang="tr">Çöz</b><span lang="en">One ffmpeg process per clip sends raw YUV frames over a pipe.</span><span lang="tr">Her klip için bir ffmpeg süreci ham YUV kareleri boruyla yollar.</span></div>
+      <div style="--c:var(--s)"><b lang="en">Upload</b><b lang="tr">Yükle</b><span lang="en">The planes become a texture on the GPU.</span><span lang="tr">Düzlemler GPU'da dokuya dönüşür.</span></div>
+      <div style="--c:var(--t)"><b lang="en">Composite</b><b lang="tr">Birleştir</b><span lang="en">The preview's compositor draws the frame.</span><span lang="tr">Önizlemenin bileşimcisi kareyi çizer.</span></div>
+      <div style="--c:var(--e)"><b lang="en">Pack</b><b lang="tr">Paketle</b><span lang="en">A shader converts it to BT.709 YUV 4:2:0, 2.67 times less data to read back.</span><span lang="tr">Bir gölgelendirici BT.709 YUV 4:2:0'a çevirir; geri okunan veri 2,67 kat azalır.</span></div>
+      <div style="--c:var(--v)"><b lang="en">Encode</b><b lang="tr">Kodla</b><span lang="en">ffmpeg reads the frames from stdin and encodes them.</span><span lang="tr">ffmpeg kareleri stdin'den okuyup kodlar.</span></div>
+      <div style="--c:var(--a)"><b lang="en">Audio</b><b lang="tr">Ses</b><span lang="en">Mixed to WAV alongside, then muxed into the file.</span><span lang="tr">Yanında WAV'a karılır, sonra dosyaya eklenir.</span></div>
+      <i class="run" aria-hidden="true"></i>
+    </div>
+
+    <div class="spec">
+      <div><b lang="en">Formats</b><b lang="tr">Biçimler</b><span>MP4 · MOV · WebM · GIF · MP3 · WAV</span></div>
+      <div><b lang="en">Codecs</b><b lang="tr">Kodekler</b><span>H.264 · HEVC · AV1 · VP9 · ProRes</span></div>
+      <div><b lang="en">Resolution</b><b lang="tr">Çözünürlük</b><span lang="en">Project, 480p to 4K</span><span lang="tr">Proje, 480p'den 4K'ya</span></div>
+      <div><b lang="en">Frame rate</b><b lang="tr">Kare hızı</b><span>24 · 25 · 30 · 50 · 60</span></div>
+    </div>
+
+    <div class="result">
+      <figure style="margin:0">
+        <div class="mon wipe" style="--wc:var(--e)"><video src="media/export-sample.mp4" muted loop playsinline preload="none" controls poster="media/transitions.webp" aria-label="The exported file"></video></div>
+        <figcaption class="cap"><span lang="en">The file this export produced, re-encoded smaller for the web.</span><span lang="tr">Bu dışa aktarmanın ürettiği dosya; web için küçültülerek yeniden kodlandı.</span></figcaption>
+      </figure>
+      <div>
+        <p class="num">12.5 <small lang="en">seconds</small><small lang="tr">saniye</small></p>
+        <p class="lead" style="margin-top:12px">
+          <span lang="en">to export the 32-second 1080p30 project from the recording above (four clips, three transitions, a title, a sticker, an effect layer and music) with h264_nvenc on the author's PC with an RTX 4070 SUPER. One run, development build; other hardware will differ.</span>
+          <span lang="tr">Yukarıdaki kayıttaki 32 saniyelik 1080p30 projeyi (dört klip, üç geçiş, başlık, çıkartma, efekt katmanı ve müzik) yazarın RTX 4070 SUPER'li bilgisayarında h264_nvenc ile dışa aktarma süresi. Tek ölçüm, geliştirme sürümü; başka donanımda farklı olur.</span>
+        </p>
+        <div class="mon" style="margin-top:24px"><img src="media/export-progress.webp" width="780" height="490" loading="lazy" alt="Export progress at 14 percent, 96 frames per second"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ kısayollar -->
+<section class="sec" id="keys">
+  <div class="wrap">
+    <div class="head2">
+      <h2><span lang="en">Keyboard shortcuts</span><span lang="tr">Klavye kısayolları</span></h2>
+      <p class="lead"><span lang="en">Close to what CapCut and Premiere users already know. The full list is under Help in the app.</span><span lang="tr">CapCut ve Premiere alışkanlıklarına yakın. Tam listesi uygulamada Yardım menüsünde.</span></p>
+    </div>
+    <div class="keys" id="keys-grid"></div>
+  </div>
+</section>
+
+<!-- ================================================================ gizlilik -->
+<section class="sec" id="privacy">
+  <div class="wrap two">
+    <div class="feat-txt">
+      <h2><span lang="en">Your videos stay on your PC</span><span lang="tr">Videoların bilgisayarında kalır</span></h2>
+      <p class="lead">
+        <span lang="en">Nothing is uploaded. There is no account, and the code has no analytics, telemetry or update check. The app goes online in two cases, and only when you start them:</span>
+        <span lang="tr">Hiçbir şey yüklenmez. Hesap yok; kodda analiz, telemetri ya da güncelleme denetimi yok. Uygulama yalnızca iki durumda, o da sen başlatınca internete çıkar:</span>
+      </p>
+      <table class="tbl">
+        <thead><tr><th lang="en">When</th><th lang="tr">Ne zaman</th><th lang="en">From</th><th lang="tr">Nereden</th></tr></thead>
+        <tbody>
+          <tr><td><span lang="en">You make captions with a speech model that is not on your disk yet</span><span lang="tr">Diskinde olmayan bir konuşma modeliyle altyazı çıkarırken</span></td><td>huggingface.co <span lang="en">(hf-mirror.com if that fails twice)</span><span lang="tr">(iki kez olmazsa hf-mirror.com)</span></td></tr>
+          <tr><td><span lang="en">You choose a Piper voice that is not installed yet</span><span lang="tr">Kurulu olmayan bir Piper sesi seçtiğinde</span></td><td>huggingface.co</td></tr>
+        </tbody>
+      </table>
+      <p class="small"><span lang="en">Downloads are checked against their size and checksum.</span><span lang="tr">İndirilen dosyalar boyut ve sağlama toplamıyla doğrulanır.</span></p>
+    </div>
+    <div class="feat-txt">
+      <h3><span lang="en">Where your files live</span><span lang="tr">Dosyaların nerede</span></h3>
+      <table class="tbl">
+        <tbody>
+          <tr><td><span lang="en">Projects (.sweax)</span><span lang="tr">Projeler (.sweax)</span></td><td><code>Documents\SWEAXCUT\Projeler</code></td></tr>
+          <tr><td><span lang="en">Autosave, every 45 s</span><span lang="tr">Otomatik kayıt, 45 sn'de bir</span></td><td><code>%APPDATA%\SWEAXCUT\autosave</code></td></tr>
+          <tr><td><span lang="en">Speech models and voices</span><span lang="tr">Konuşma modelleri ve sesler</span></td><td><code>%APPDATA%\SWEAXCUT\models</code></td></tr>
+          <tr><td><span lang="en">Exports</span><span lang="tr">Dışa aktarılanlar</span></td><td><code>Videos\SWEAXCUT</code> <span lang="en">or any folder you pick</span><span lang="tr">ya da seçtiğin klasör</span></td></tr>
+          <tr><td><span lang="en">The program</span><span lang="tr">Program</span></td><td><code>%LOCALAPPDATA%\Programs\sweaxcut</code></td></tr>
+        </tbody>
+      </table>
+      <p class="small"><span lang="en">A project remembers where its videos are. If you move them, it will ask for them.</span><span lang="tr">Proje, videoların yerini hatırlar. Taşırsan onları bulamaz ve sorar.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ kurulum -->
+<section class="sec" id="install">
+  <div class="wrap two">
+    <div class="feat-txt">
+      <h2><span lang="en">Install</span><span lang="tr">Kurulum</span></h2>
+      <ol class="steps">
+        <li><div><span lang="en">Download <b>SWEAXCUT-Kurulum-2.0.1.exe</b> from the latest release on GitHub.</span><span lang="tr">GitHub'daki son sürümden <b>SWEAXCUT-Kurulum-2.0.1.exe</b> dosyasını indir.</span></div></li>
+        <li><div><span lang="en">Run it. It installs for your user only, adds a desktop shortcut and opens the app.</span><span lang="tr">Çalıştır. Yalnızca senin kullanıcın için kurulur, masaüstüne kısayol koyar ve programı açar.</span></div></li>
+        <li><div><span lang="en">Pick an aspect ratio on the start screen and drop a video on the window.</span><span lang="tr">Başlangıç ekranında bir en-boy oranı seç ve videoyu pencereye bırak.</span></div></li>
+      </ol>
+      <p class="note">
+        <span lang="en">The installer is not code-signed, so Windows SmartScreen may show a blue warning. Choose <b>More info</b>, then <b>Run anyway</b>.</span>
+        <span lang="tr">Kurulum dosyası imzalı olmadığı için Windows SmartScreen mavi bir uyarı gösterebilir. <b>Ek bilgi</b>, ardından <b>Yine de çalıştır</b>'ı seç.</span>
+      </p>
+      <p class="small" style="margin-top:14px"><span lang="en">Windows 10 or 11, 64-bit. A graphics card with WebGL2 is needed for the preview; hardware encoders are used when present.</span><span lang="tr">Windows 10 ya da 11, 64 bit. Önizleme için WebGL2 destekli bir ekran kartı gerekir; donanım kodlayıcıları varsa kullanılır.</span></p>
+      <p style="margin-top:22px"><a class="btn" href="https://github.com/Sweax3169/sweaxcut/releases/latest"><span lang="en">Download for Windows</span><span lang="tr">Windows için indir</span></a></p>
+    </div>
+    <div class="feat-txt">
+      <h3><span lang="en">Build from source</span><span lang="tr">Kaynaktan derle</span></h3>
+      <p class="dim"><span lang="en">Electron 33, React 18 and Vite 6, plain JavaScript. The whisper.cpp binaries are not in the repository; the README explains where they come from.</span><span lang="tr">Electron 33, React 18 ve Vite 6, düz JavaScript. whisper.cpp ikilileri depoda yok; nereden alınacakları README'de yazıyor.</span></p>
+<pre><span class="c"># </span><span class="c" lang="en">dependencies, MediaPipe runtime</span><span class="c" lang="tr">bağımlılıklar, MediaPipe çalışma zamanı</span>
+npm install
+<span class="c"># </span><span class="c" lang="en">Piper and RNNoise models into vendor/</span><span class="c" lang="tr">Piper ve RNNoise modelleri vendor/ içine</span>
+npm run prepare:vendor
+<span class="c"># </span><span class="c" lang="en">development: vite, then Electron</span><span class="c" lang="tr">geliştirme: vite, sonra Electron</span>
+npm run dev
+npm run start:dev
+<span class="c"># </span><span class="c" lang="en">installer into release/</span><span class="c" lang="tr">kurulum dosyası release/ içine</span>
+npm run dist</pre>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <a class="mark" href="#top" style="text-decoration:none">SWEAX<span class="sp" aria-hidden="true"></span>CUT</a>
+      <p style="margin-top:14px"><span lang="en">Made by Sweax Studios. The app's own code is under the MIT license.</span><span lang="tr">Sweax Studios yapımı. Uygulamanın kendi kodu MIT lisanslı.</span></p>
+      <p><a href="https://github.com/Sweax3169/sweaxcut">github.com/Sweax3169/sweaxcut</a></p>
+    </div>
+    <div>
+      <p><span lang="en">Emoji graphics: Twemoji, © Twitter, Inc and other contributors, licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0</a> (<a href="https://github.com/jdecked/twemoji">jdecked/twemoji</a>).</span><span lang="tr">Emoji grafikleri: Twemoji, © Twitter, Inc ve diğer katkıda bulunanlar, <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0</a> lisanslı (<a href="https://github.com/jdecked/twemoji">jdecked/twemoji</a>).</span></p>
+      <p><span lang="en">Transitions whose id starts with gl- come from <a href="https://github.com/gl-transitions/gl-transitions">gl-transitions</a> (MIT). Captions use <a href="https://github.com/ggml-org/whisper.cpp">whisper.cpp</a> (MIT), voices use <a href="https://github.com/rhasspy/piper">Piper</a> (MIT), video work uses <a href="https://ffmpeg.org">FFmpeg</a> (GPL, run as a separate program) and <a href="https://github.com/google-ai-edge/mediapipe">MediaPipe</a> (Apache-2.0). Full list: <a href="https://github.com/Sweax3169/sweaxcut/blob/main/THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES.md</a>.</span><span lang="tr">Kimliği gl- ile başlayan geçişler <a href="https://github.com/gl-transitions/gl-transitions">gl-transitions</a> koleksiyonundan (MIT). Altyazı <a href="https://github.com/ggml-org/whisper.cpp">whisper.cpp</a> (MIT), seslendirme <a href="https://github.com/rhasspy/piper">Piper</a> (MIT), görüntü işleme <a href="https://ffmpeg.org">FFmpeg</a> (GPL, ayrı program olarak çalışır) ve <a href="https://github.com/google-ai-edge/mediapipe">MediaPipe</a> (Apache-2.0) ile yapılır. Tam liste: <a href="https://github.com/Sweax3169/sweaxcut/blob/main/THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES.md</a>.</span></p>
+      <p><span lang="en">This page uses Bodoni Moda, Manrope and JetBrains Mono (SIL Open Font License), served from this site.</span><span lang="tr">Bu sayfa Bodoni Moda, Manrope ve JetBrains Mono yazı tiplerini (SIL Open Font License) bu siteden yükler.</span></p>
+    </div>
+  </div>
+</footer>
+
+<script id="fx-data" type="application/json">{"transitions":[{"id":"gl-cross-zoom","en":"Cross zoom","tr":"Çapraz Zum","d":0.7,"gl":true,"p":{"strength":0.4},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uFrom;\nuniform sampler2D uTo;\nuniform float progress;\nuniform float ratio;\nuniform float uTime;\nvec4 getFromColor(vec2 uv){ return texture(uFrom, uv); }\nvec4 getToColor(vec2 uv){ return texture(uTo, uv); }\n#define texture2D texture\n// License: MIT\n// Author: rectalogic\n// Description: A crossfade through a strong zoom blur\n// Tags: zoom, blur, blend\n// ported by gre from https://gist.github.com/rectalogic/b86b90161503a0023231\n\n// Converted from https://github.com/rectalogic/rendermix-basic-effects/blob/master/assets/com/rendermix/CrossZoom/CrossZoom.frag\n// Which is based on https://github.com/evanw/glfx.js/blob/master/src/filters/blur/zoomblur.js\n// With additional easing functions from https://github.com/rectalogic/rendermix-basic-effects/blob/master/assets/com/rendermix/Easing/Easing.glsllib\n\n// @range(0, 1) Blur strength\nuniform float strength; // = 0.4\n\nconst float PI = 3.141592653589793;\n\nfloat Linear_ease(in float begin, in float change, in float duration, in float time) {\n    return change * time / duration + begin;\n}\n\nfloat Exponential_easeInOut(in float begin, in float change, in float duration, in float time) {\n    if (time == 0.0)\n        return begin;\n    else if (time == duration)\n        return begin + change;\n    time = time / (duration / 2.0);\n    if (time \u003c 1.0)\n        return change / 2.0 * pow(2.0, 10.0 * (time - 1.0)) + begin;\n    return change / 2.0 * (-pow(2.0, -10.0 * (time - 1.0)) + 2.0) + begin;\n}\n\nfloat Sinusoidal_easeInOut(in float begin, in float change, in float duration, in float time) {\n    return -change / 2.0 * (cos(PI * time / duration) - 1.0) + begin;\n}\n\nfloat rand (vec2 co) {\n  return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);\n}\n\nvec4 crossFade(in vec2 uv, in float dissolve) {\n    return mix(getFromColor(uv), getToColor(uv), dissolve);\n}\n\nvec4 transition(vec2 uv) {\n    vec2 texCoord = uv.xy / vec2(1.0).xy;\n\n    // Linear interpolate center across center half of the image\n    vec2 center = vec2(Linear_ease(0.25, 0.5, 1.0, progress), 0.5);\n    float dissolve = Exponential_easeInOut(0.0, 1.0, 1.0, progress);\n\n    // Mirrored sinusoidal loop. 0->strength then strength->0\n    float strength = Sinusoidal_easeInOut(0.0, strength, 0.5, progress);\n\n    vec4 color = vec4(0.0);\n    float total = 0.0;\n    vec2 toCenter = center - texCoord;\n\n    /* randomize the lookup values to hide the fixed number of samples */\n    float offset = rand(uv);\n\n    for (float t = 0.0; t \u003c= 40.0; t++) {\n        float percent = (t + offset) / 40.0;\n        float weight = 4.0 * (percent - percent * percent);\n        color += crossFade(texCoord + toCenter * percent * strength, dissolve) * weight;\n        total += weight;\n    }\n    return color / total;\n}\n\nvoid main(){ fragColor = transition(vUv); }"},{"id":"kirbac-sol","en":"Whip left","tr":"Kırbaç Sola","d":0.45,"gl":false,"p":{"strength":1},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uFrom;\nuniform sampler2D uTo;\nuniform float progress;\nuniform float ratio;\nuniform float uTime;\nvec4 getFromColor(vec2 uv){ return texture(uFrom, uv); }\nvec4 getToColor(vec2 uv){ return texture(uTo, uv); }\n#define texture2D texture\nuniform float strength;\n\nconst float T_PI = 3.14159265;\nvec2 t_mirror(vec2 uv){ vec2 m = mod(uv, 2.0); return mix(m, 2.0 - m, step(1.0, m)); }\nfloat t_inside(vec2 uv){ return step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0); }\nvec4 t_fromM(vec2 uv){ return getFromColor(t_mirror(uv)); }\nvec4 t_toM(vec2 uv){ return getToColor(t_mirror(uv)); }\nvec2 t_rot(vec2 p, float a){ float c = cos(a); float s = sin(a); return vec2(c * p.x - s * p.y, s * p.x + c * p.y); }\n// en-boy düzeltmeli merkez koordinatı (y birimi = yükseklik)\nvec2 t_ac(vec2 uv){ vec2 q = uv - 0.5; q.x *= ratio; return q; }\nvec2 t_uv(vec2 q){ q.x /= ratio; return q + 0.5; }\n\nfloat t_cubicIn(float x){ return x * x * x; }\nfloat t_cubicOut(float x){ float y = 1.0 - x; return 1.0 - y * y * y; }\nfloat t_cubicInOut(float x){ return x \u003c 0.5 ? 4.0 * x * x * x : 1.0 - pow(max(-2.0 * x + 2.0, 0.0), 3.0) / 2.0; }\nfloat t_quintInOut(float x){ return x \u003c 0.5 ? 16.0 * x * x * x * x * x : 1.0 - pow(max(-2.0 * x + 2.0, 0.0), 5.0) / 2.0; }\nfloat t_expoInOut(float x){ if (x \u003c= 0.0) return 0.0; if (x >= 1.0) return 1.0;\n  return x \u003c 0.5 ? pow(2.0, 20.0 * x - 10.0) / 2.0 : (2.0 - pow(2.0, -20.0 * x + 10.0)) / 2.0; }\n\n\nconst vec2 D = vec2(-1.0, 0.0);\nvec4 strip(vec2 s){\n  return t_inside(s) > 0.5 ? getFromColor(s) : getToColor(clamp(s + D, 0.0, 1.0));\n}\nfloat E(float x){ x = clamp(x, 0.0, 1.0); return t_expoInOut(x); }\nvec4 transition(vec2 uv){\n  float o = E(progress);\n  float vel = (E(progress + 0.01) - E(progress - 0.01)) / 0.02;\n  float bl = strength * 0.07 * vel * min(1.0, min(progress, 1.0 - progress) * 40.0);\n  vec4 acc = vec4(0.0);\n  for (int i = 0; i \u003c 24; i++){\n    float f = float(i) / 23.0 - 0.5;\n    acc += strip(uv - D * (o + bl * f));\n  }\n  return acc / 24.0;\n}\nvoid main(){ fragColor = transition(vUv); }"},{"id":"isik-patlamasi","en":"Light burst","tr":"Işık Patlaması","d":0.7,"gl":false,"p":{"tint":[1,0.9490196078431372,0.7843137254901961],"strength":1},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uFrom;\nuniform sampler2D uTo;\nuniform float progress;\nuniform float ratio;\nuniform float uTime;\nvec4 getFromColor(vec2 uv){ return texture(uFrom, uv); }\nvec4 getToColor(vec2 uv){ return texture(uTo, uv); }\n#define texture2D texture\nuniform vec3 tint;\nuniform float strength;\n\nconst float T_PI = 3.14159265;\nvec2 t_mirror(vec2 uv){ vec2 m = mod(uv, 2.0); return mix(m, 2.0 - m, step(1.0, m)); }\nfloat t_inside(vec2 uv){ return step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0); }\nvec4 t_fromM(vec2 uv){ return getFromColor(t_mirror(uv)); }\nvec4 t_toM(vec2 uv){ return getToColor(t_mirror(uv)); }\nvec2 t_rot(vec2 p, float a){ float c = cos(a); float s = sin(a); return vec2(c * p.x - s * p.y, s * p.x + c * p.y); }\n// en-boy düzeltmeli merkez koordinatı (y birimi = yükseklik)\nvec2 t_ac(vec2 uv){ vec2 q = uv - 0.5; q.x *= ratio; return q; }\nvec2 t_uv(vec2 q){ q.x /= ratio; return q + 0.5; }\n\nfloat t_cubicIn(float x){ return x * x * x; }\nfloat t_cubicOut(float x){ float y = 1.0 - x; return 1.0 - y * y * y; }\nfloat t_cubicInOut(float x){ return x \u003c 0.5 ? 4.0 * x * x * x : 1.0 - pow(max(-2.0 * x + 2.0, 0.0), 3.0) / 2.0; }\nfloat t_quintInOut(float x){ return x \u003c 0.5 ? 16.0 * x * x * x * x * x : 1.0 - pow(max(-2.0 * x + 2.0, 0.0), 5.0) / 2.0; }\nfloat t_expoInOut(float x){ if (x \u003c= 0.0) return 0.0; if (x >= 1.0) return 1.0;\n  return x \u003c 0.5 ? pow(2.0, 20.0 * x - 10.0) / 2.0 : (2.0 - pow(2.0, -20.0 * x + 10.0)) / 2.0; }\n\n\nvec4 transition(vec2 uv){\n  float p = progress;\n  float k = sin(T_PI * p);\n  vec2 q = t_ac(uv);\n  float r = length(q);\n  float a = atan(q.y, q.x);\n  float z = 1.0 + 0.18 * k;\n  vec2 s = 0.5 + (uv - 0.5) / z;\n  vec4 c = p \u003c 0.5 ? getFromColor(s) : getToColor(s);\n  float rays = 0.5 + 0.5 * sin(a * 13.0 + p * 6.0) * sin(a * 7.0 - p * 4.0);\n  float glow = k * (0.12 / (r + 0.12)) * (0.5 + 0.8 * rays * rays);\n  float ring = exp(-pow((r - p * 1.4) * 9.0, 2.0)) * k;\n  vec3 col = c.rgb + tint * (glow * 1.6 + ring * 0.8) * strength;\n  col = mix(col, vec3(1.0), pow(k, 8.0) * strength);\n  return vec4(clamp(col, 0.0, 1.0), c.a);\n}\nvoid main(){ fragColor = transition(vUv); }"},{"id":"kup-sola","en":"Cube left","tr":"Küp Sola","d":0.8,"gl":false,"p":{"persp":2,"unzoom":0.35},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uFrom;\nuniform sampler2D uTo;\nuniform float progress;\nuniform float ratio;\nuniform float uTime;\nvec4 getFromColor(vec2 uv){ return texture(uFrom, uv); }\nvec4 getToColor(vec2 uv){ return texture(uTo, uv); }\n#define texture2D texture\nuniform float persp;\nuniform float unzoom;\n\nconst float T_PI = 3.14159265;\nvec2 t_mirror(vec2 uv){ vec2 m = mod(uv, 2.0); return mix(m, 2.0 - m, step(1.0, m)); }\nfloat t_inside(vec2 uv){ return step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0); }\nvec4 t_fromM(vec2 uv){ return getFromColor(t_mirror(uv)); }\nvec4 t_toM(vec2 uv){ return getToColor(t_mirror(uv)); }\nvec2 t_rot(vec2 p, float a){ float c = cos(a); float s = sin(a); return vec2(c * p.x - s * p.y, s * p.x + c * p.y); }\n// en-boy düzeltmeli merkez koordinatı (y birimi = yükseklik)\nvec2 t_ac(vec2 uv){ vec2 q = uv - 0.5; q.x *= ratio; return q; }\nvec2 t_uv(vec2 q){ q.x /= ratio; return q + 0.5; }\n\nfloat t_cubicIn(float x){ return x * x * x; }\nfloat t_cubicOut(float x){ float y = 1.0 - x; return 1.0 - y * y * y; }\nfloat t_cubicInOut(float x){ return x \u003c 0.5 ? 4.0 * x * x * x : 1.0 - pow(max(-2.0 * x + 2.0, 0.0), 3.0) / 2.0; }\nfloat t_quintInOut(float x){ return x \u003c 0.5 ? 16.0 * x * x * x * x * x : 1.0 - pow(max(-2.0 * x + 2.0, 0.0), 5.0) / 2.0; }\nfloat t_expoInOut(float x){ if (x \u003c= 0.0) return 0.0; if (x >= 1.0) return 1.0;\n  return x \u003c 0.5 ? pow(2.0, 20.0 * x - 10.0) / 2.0 : (2.0 - pow(2.0, -20.0 * x + 10.0)) / 2.0; }\n\nconst float DIR = 1.0;\n\nvec4 face(vec3 C, vec3 dir, vec3 f, vec3 n, vec3 tg, bool isFrom, float shade, inout float best){\n  float dn = dot(dir, n);\n  if (dn >= 0.0) return vec4(-1.0);\n  float t = dot(f - C, n) / dn;\n  vec3 H = C + t * dir;\n  float u = dot(H - f, tg) + 0.5;\n  float v = H.y * ratio + 0.5;\n  if (u \u003c 0.0 || u > 1.0 || v \u003c 0.0 || v > 1.0 || t >= best) return vec4(-1.0);\n  best = t;\n  vec4 c = isFrom ? getFromColor(vec2(u, v)) : getToColor(vec2(u, v));\n  return vec4(c.rgb * shade, c.a);\n}\nvec4 transition(vec2 uv){\n  float p = progress;\n  float th = t_cubicInOut(p) * 1.5707963 * DIR;\n  float push = unzoom * sin(T_PI * p);\n  vec3 C = vec3(0.0, 0.0, -persp);\n  vec3 dir = vec3(uv.x - 0.5, (uv.y - 0.5) / ratio, persp);\n  vec3 Cc = vec3(0.0, 0.0, 0.5 + push);\n  float ca = cos(th), sa = sin(th);\n  vec3 nA = vec3(-sa, 0.0, -ca), tA = vec3(ca, 0.0, -sa);\n  vec3 nB = vec3(ca, 0.0, -sa) * DIR, tB = vec3(sa, 0.0, ca) * DIR;\n  float best = 1e9;\n  vec4 col = vec4(0.0, 0.0, 0.0, 1.0);\n  vec4 r = face(C, dir, Cc + nA * 0.5, nA, tA, true, 1.0 - 0.5 * abs(sa), best);\n  if (r.x >= 0.0) col = r;\n  r = face(C, dir, Cc + nB * 0.5, nB, tB, false, 1.0 - 0.5 * abs(ca), best);\n  if (r.x >= 0.0) col = r;\n  return col;\n}\nvoid main(){ fragColor = transition(vUv); }"},{"id":"sok-dalgasi","en":"Shockwave","tr":"Şok Dalgası","d":0.8,"gl":false,"p":{"strength":1},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uFrom;\nuniform sampler2D uTo;\nuniform float progress;\nuniform float ratio;\nuniform float uTime;\nvec4 getFromColor(vec2 uv){ return texture(uFrom, uv); }\nvec4 getToColor(vec2 uv){ return texture(uTo, uv); }\n#define texture2D texture\nuniform float strength;\n\nconst float T_PI = 3.14159265;\nvec2 t_mirror(vec2 uv){ vec2 m = mod(uv, 2.0); return mix(m, 2.0 - m, step(1.0, m)); }\nfloat t_inside(vec2 uv){ return step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0); }\nvec4 t_fromM(vec2 uv){ return getFromColor(t_mirror(uv)); }\nvec4 t_toM(vec2 uv){ return getToColor(t_mirror(uv)); }\nvec2 t_rot(vec2 p, float a){ float c = cos(a); float s = sin(a); return vec2(c * p.x - s * p.y, s * p.x + c * p.y); }\n// en-boy düzeltmeli merkez koordinatı (y birimi = yükseklik)\nvec2 t_ac(vec2 uv){ vec2 q = uv - 0.5; q.x *= ratio; return q; }\nvec2 t_uv(vec2 q){ q.x /= ratio; return q + 0.5; }\n\nfloat t_cubicIn(float x){ return x * x * x; }\nfloat t_cubicOut(float x){ float y = 1.0 - x; return 1.0 - y * y * y; }\nfloat t_cubicInOut(float x){ return x \u003c 0.5 ? 4.0 * x * x * x : 1.0 - pow(max(-2.0 * x + 2.0, 0.0), 3.0) / 2.0; }\nfloat t_quintInOut(float x){ return x \u003c 0.5 ? 16.0 * x * x * x * x * x : 1.0 - pow(max(-2.0 * x + 2.0, 0.0), 5.0) / 2.0; }\nfloat t_expoInOut(float x){ if (x \u003c= 0.0) return 0.0; if (x >= 1.0) return 1.0;\n  return x \u003c 0.5 ? pow(2.0, 20.0 * x - 10.0) / 2.0 : (2.0 - pow(2.0, -20.0 * x + 10.0)) / 2.0; }\n\n\nvec4 transition(vec2 uv){\n  float p = progress;\n  vec2 q = t_ac(uv);\n  float r = length(q);\n  float maxR = length(vec2(0.5 * ratio, 0.5));\n  float rr = (0.55 * p + 0.45 * t_cubicOut(p)) * (maxR + 0.25) - 0.1;\n  float x = (r - rr) / 0.08;\n  float w = exp(-x * x);\n  vec2 dn = r > 1e-4 ? q / r : vec2(0.0);\n  float k = sin(T_PI * p);\n  vec2 off = dn * 0.06 * w * k * strength; off.x /= ratio;\n  float m = 1.0 - smoothstep(-0.015, 0.015, r - rr);\n  vec2 s = uv - off;\n  vec4 c = mix(getFromColor(s), getToColor(s), m);\n  vec2 co = dn * w * 0.014 * k * strength; co.x /= ratio;\n  float rch = mix(getFromColor(s + co), getToColor(s + co), m).r;\n  float bch = mix(getFromColor(s - co), getToColor(s - co), m).b;\n  return vec4(clamp(vec3(rch, c.g, bch) + w * 0.3 * k, 0.0, 1.0), c.a);\n}\nvoid main(){ fragColor = transition(vUv); }"},{"id":"film-yanmasi","en":"Film burn","tr":"Film Yanması","d":1,"gl":false,"p":{"smoothness":0.05},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uFrom;\nuniform sampler2D uTo;\nuniform float progress;\nuniform float ratio;\nuniform float uTime;\nvec4 getFromColor(vec2 uv){ return texture(uFrom, uv); }\nvec4 getToColor(vec2 uv){ return texture(uTo, uv); }\n#define texture2D texture\nuniform float smoothness;\n\nconst float T_PI = 3.14159265;\nvec2 t_mirror(vec2 uv){ vec2 m = mod(uv, 2.0); return mix(m, 2.0 - m, step(1.0, m)); }\nfloat t_inside(vec2 uv){ return step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0); }\nvec4 t_fromM(vec2 uv){ return getFromColor(t_mirror(uv)); }\nvec4 t_toM(vec2 uv){ return getToColor(t_mirror(uv)); }\nvec2 t_rot(vec2 p, float a){ float c = cos(a); float s = sin(a); return vec2(c * p.x - s * p.y, s * p.x + c * p.y); }\n// en-boy düzeltmeli merkez koordinatı (y birimi = yükseklik)\nvec2 t_ac(vec2 uv){ vec2 q = uv - 0.5; q.x *= ratio; return q; }\nvec2 t_uv(vec2 q){ q.x /= ratio; return q + 0.5; }\n\nfloat t_cubicIn(float x){ return x * x * x; }\nfloat t_cubicOut(float x){ float y = 1.0 - x; return 1.0 - y * y * y; }\nfloat t_cubicInOut(float x){ return x \u003c 0.5 ? 4.0 * x * x * x : 1.0 - pow(max(-2.0 * x + 2.0, 0.0), 3.0) / 2.0; }\nfloat t_quintInOut(float x){ return x \u003c 0.5 ? 16.0 * x * x * x * x * x : 1.0 - pow(max(-2.0 * x + 2.0, 0.0), 5.0) / 2.0; }\nfloat t_expoInOut(float x){ if (x \u003c= 0.0) return 0.0; if (x >= 1.0) return 1.0;\n  return x \u003c 0.5 ? pow(2.0, 20.0 * x - 10.0) / 2.0 : (2.0 - pow(2.0, -20.0 * x + 10.0)) / 2.0; }\n\nfloat t_hash(vec2 p){ vec3 p3 = fract(vec3(p.xyx) * 0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }\n\nfloat t_noise(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); vec2 u = f * f * (3.0 - 2.0 * f);\n  return mix(mix(t_hash(i), t_hash(i + vec2(1.0, 0.0)), u.x), mix(t_hash(i + vec2(0.0, 1.0)), t_hash(i + vec2(1.0, 1.0)), u.x), u.y); }\nfloat t_fbm(vec2 p){ float v = 0.0; float a = 0.5; for (int i = 0; i \u003c 5; i++){ v += a * t_noise(p); p = p * 2.03 + 17.1; a *= 0.5; } return v; }\n\n\nvec4 transition(vec2 uv){\n  float p = progress;\n  vec2 q = uv * vec2(ratio, 1.0) / max(ratio, 1.0);\n  float n = t_fbm(q * 3.0 + vec2(0.0, p * 0.6));\n  vec2 m = vec2(ratio, 1.0) / max(ratio, 1.0);\n  float d = min(length(q - vec2(0.2, 0.3) * m), length(q - vec2(0.85, 0.75) * m));\n  float field = n * 0.65 + d * 0.5;\n  float t = mix(0.15, 0.82, p);\n  float s = smoothness;\n  float keep = smoothstep(t - s, t + s, field);\n  vec4 A = getFromColor(uv), B = getToColor(uv);\n  A.rgb *= mix(1.0, 0.35 + 0.65 * smoothstep(t, t + 0.15, field), smoothstep(0.0, 0.1, p));\n  vec4 c = mix(B, A, keep);\n  float e = 1.0 - smoothstep(0.0, s * 3.0, abs(field - t));\n  vec3 glow = mix(vec3(1.0, 0.25, 0.0), vec3(1.0, 0.9, 0.55), e * e);\n  c.rgb += glow * e * 1.6 * sin(T_PI * p);\n  return vec4(clamp(c.rgb, 0.0, 1.0), c.a);\n}\nvoid main(){ fragColor = transition(vUv); }"},{"id":"glitch-kesme","en":"Glitch cut","tr":"Glitch Kesme","d":0.5,"gl":false,"p":{"strength":1},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uFrom;\nuniform sampler2D uTo;\nuniform float progress;\nuniform float ratio;\nuniform float uTime;\nvec4 getFromColor(vec2 uv){ return texture(uFrom, uv); }\nvec4 getToColor(vec2 uv){ return texture(uTo, uv); }\n#define texture2D texture\nuniform float strength;\n\nconst float T_PI = 3.14159265;\nvec2 t_mirror(vec2 uv){ vec2 m = mod(uv, 2.0); return mix(m, 2.0 - m, step(1.0, m)); }\nfloat t_inside(vec2 uv){ return step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0); }\nvec4 t_fromM(vec2 uv){ return getFromColor(t_mirror(uv)); }\nvec4 t_toM(vec2 uv){ return getToColor(t_mirror(uv)); }\nvec2 t_rot(vec2 p, float a){ float c = cos(a); float s = sin(a); return vec2(c * p.x - s * p.y, s * p.x + c * p.y); }\n// en-boy düzeltmeli merkez koordinatı (y birimi = yükseklik)\nvec2 t_ac(vec2 uv){ vec2 q = uv - 0.5; q.x *= ratio; return q; }\nvec2 t_uv(vec2 q){ q.x /= ratio; return q + 0.5; }\n\nfloat t_cubicIn(float x){ return x * x * x; }\nfloat t_cubicOut(float x){ float y = 1.0 - x; return 1.0 - y * y * y; }\nfloat t_cubicInOut(float x){ return x \u003c 0.5 ? 4.0 * x * x * x : 1.0 - pow(max(-2.0 * x + 2.0, 0.0), 3.0) / 2.0; }\nfloat t_quintInOut(float x){ return x \u003c 0.5 ? 16.0 * x * x * x * x * x : 1.0 - pow(max(-2.0 * x + 2.0, 0.0), 5.0) / 2.0; }\nfloat t_expoInOut(float x){ if (x \u003c= 0.0) return 0.0; if (x >= 1.0) return 1.0;\n  return x \u003c 0.5 ? pow(2.0, 20.0 * x - 10.0) / 2.0 : (2.0 - pow(2.0, -20.0 * x + 10.0)) / 2.0; }\n\nfloat t_hash(vec2 p){ vec3 p3 = fract(vec3(p.xyx) * 0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }\n\n\nvec4 transition(vec2 uv){\n  float p = progress;\n  float k = sin(T_PI * p) * strength;\n  float fr = floor(p * 24.0);\n  float rows = 18.0;\n  float row = floor(uv.y * rows + t_hash(vec2(fr, 3.0)) * 4.0);\n  float rnd = t_hash(vec2(row, fr));\n  float on = step(0.5, t_hash(vec2(row * 1.7, fr + 9.0)));\n  float shift = (rnd - 0.5) * 0.3 * k * on;\n  float blk = t_hash(vec2(floor(uv.x * 6.0), row + fr * 3.1));\n  bool useB = p + (blk - 0.5) * 0.5 * k > 0.5;\n  vec2 s = vec2(fract(uv.x + shift), uv.y);\n  vec2 o = vec2(0.02 * k * (0.5 + rnd), 0.0);\n  vec4 c = useB ? getToColor(s) : getFromColor(s);\n  float r = useB ? getToColor(s + o).r : getFromColor(s + o).r;\n  float b = useB ? getToColor(s - o).b : getFromColor(s - o).b;\n  vec3 col = vec3(r, c.g, b);\n  float inv = step(0.93, t_hash(vec2(row + 4.0, fr * 1.3))) * step(0.3, k);\n  col = mix(col, 1.0 - col, inv * 0.8);\n  col *= mix(1.0, 0.85 + 0.15 * sin(uv.y * 900.0), k);\n  return vec4(col, c.a);\n}\nvoid main(){ fragColor = transition(vUv); }"},{"id":"murekkep-damlasi","en":"Ink drop","tr":"Mürekkep Damlası","d":1,"gl":false,"p":{"smoothness":0.03,"color":[0.0392156862745098,0.0392156862745098,0.07058823529411765]},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uFrom;\nuniform sampler2D uTo;\nuniform float progress;\nuniform float ratio;\nuniform float uTime;\nvec4 getFromColor(vec2 uv){ return texture(uFrom, uv); }\nvec4 getToColor(vec2 uv){ return texture(uTo, uv); }\n#define texture2D texture\nuniform float smoothness;\nuniform vec3 color;\n\nconst float T_PI = 3.14159265;\nvec2 t_mirror(vec2 uv){ vec2 m = mod(uv, 2.0); return mix(m, 2.0 - m, step(1.0, m)); }\nfloat t_inside(vec2 uv){ return step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0); }\nvec4 t_fromM(vec2 uv){ return getFromColor(t_mirror(uv)); }\nvec4 t_toM(vec2 uv){ return getToColor(t_mirror(uv)); }\nvec2 t_rot(vec2 p, float a){ float c = cos(a); float s = sin(a); return vec2(c * p.x - s * p.y, s * p.x + c * p.y); }\n// en-boy düzeltmeli merkez koordinatı (y birimi = yükseklik)\nvec2 t_ac(vec2 uv){ vec2 q = uv - 0.5; q.x *= ratio; return q; }\nvec2 t_uv(vec2 q){ q.x /= ratio; return q + 0.5; }\n\nfloat t_cubicIn(float x){ return x * x * x; }\nfloat t_cubicOut(float x){ float y = 1.0 - x; return 1.0 - y * y * y; }\nfloat t_cubicInOut(float x){ return x \u003c 0.5 ? 4.0 * x * x * x : 1.0 - pow(max(-2.0 * x + 2.0, 0.0), 3.0) / 2.0; }\nfloat t_quintInOut(float x){ return x \u003c 0.5 ? 16.0 * x * x * x * x * x : 1.0 - pow(max(-2.0 * x + 2.0, 0.0), 5.0) / 2.0; }\nfloat t_expoInOut(float x){ if (x \u003c= 0.0) return 0.0; if (x >= 1.0) return 1.0;\n  return x \u003c 0.5 ? pow(2.0, 20.0 * x - 10.0) / 2.0 : (2.0 - pow(2.0, -20.0 * x + 10.0)) / 2.0; }\n\nfloat t_hash(vec2 p){ vec3 p3 = fract(vec3(p.xyx) * 0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }\n\nfloat t_noise(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); vec2 u = f * f * (3.0 - 2.0 * f);\n  return mix(mix(t_hash(i), t_hash(i + vec2(1.0, 0.0)), u.x), mix(t_hash(i + vec2(0.0, 1.0)), t_hash(i + vec2(1.0, 1.0)), u.x), u.y); }\nfloat t_fbm(vec2 p){ float v = 0.0; float a = 0.5; for (int i = 0; i \u003c 5; i++){ v += a * t_noise(p); p = p * 2.03 + 17.1; a *= 0.5; } return v; }\n\n\nvec4 transition(vec2 uv){\n  vec2 m = vec2(ratio, 1.0) / max(ratio, 1.0);\n  vec2 q = uv * m;\n  float n = t_fbm(q * 2.5 + 3.0);\n  float n2 = t_fbm(q * 8.0 - 1.7);\n  float d = min(min(length(q - vec2(0.3, 0.65) * m), length(q - vec2(0.72, 0.35) * m) * 1.15), length(q - vec2(0.55, 0.85) * m) * 1.3);\n  float field = d * 0.8 + (n - 0.5) * 0.55 + (n2 - 0.5) * 0.12;\n  float t = mix(-0.2, 0.5, progress);\n  float s = smoothness;\n  float b = 1.0 - smoothstep(t - s, t + s, field);\n  b = mix(b, 1.0, smoothstep(0.85, 1.0, progress)) * smoothstep(0.0, 0.05, progress);\n  vec4 c = mix(getFromColor(uv), getToColor(uv), b);\n  float rim = smoothstep(t - 0.1, t, field) * (1.0 - smoothstep(t, t + s, field));\n  c.rgb = mix(c.rgb, color, clamp(rim * 0.9 * sin(T_PI * progress) * 1.6, 0.0, 1.0));\n  return c;\n}\nvoid main(){ fragColor = transition(vUv); }"},{"id":"gl-doom-melt","en":"Doom melt","tr":"Doom Erimesi","d":1.2,"gl":true,"p":{"bars":30,"amplitude":2,"noise":0.1,"frequency":0.5,"dripScale":0.5},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uFrom;\nuniform sampler2D uTo;\nuniform float progress;\nuniform float ratio;\nuniform float uTime;\nvec4 getFromColor(vec2 uv){ return texture(uFrom, uv); }\nvec4 getToColor(vec2 uv){ return texture(uTo, uv); }\n#define texture2D texture\n// Author: Zeh Fernando\n// License: MIT\n// Description: The outgoing image melts down in uneven columns, like the Doom screen wipe\n// Tags: melt, columns, retro\n\n\n// Transition parameters --------\n\n// Number of total bars/columns\nuniform int bars; // = 30\n\n// Multiplier for speed ratio. 0 = no variation when going down, higher = some elements go much faster\nuniform float amplitude; // = 2\n\n// Further variations in speed. 0 = no noise, 1 = super noisy (ignore frequency)\nuniform float noise; // = 0.1\n\n// Speed variation horizontally. the bigger the value, the shorter the waves\nuniform float frequency; // = 0.5\n\n// How much the bars seem to \"run\" from the middle of the screen first (sticking to the sides). 0 = no drip, 1 = curved drip\nuniform float dripScale; // = 0.5\n\n\n// The code proper --------\n\nfloat rand(int num) {\n  return fract(mod(float(num) * 67123.313, 12.0) * sin(float(num) * 10.3) * cos(float(num)));\n}\n\nfloat wave(int num) {\n  float fn = float(num) * frequency * 0.1 * float(bars);\n  return cos(fn * 0.5) * cos(fn * 0.13) * sin((fn+10.0) * 0.3) / 2.0 + 0.5;\n}\n\nfloat drip(int num) {\n  return sin(float(num) / float(bars - 1) * 3.141592) * dripScale;\n}\n\nfloat pos(int num) {\n  return (noise == 0.0 ? wave(num) : mix(wave(num), rand(num), noise)) + (dripScale == 0.0 ? 0.0 : drip(num));\n}\n\nvec4 transition(vec2 uv) {\n  int bar = int(uv.x * (float(bars)));\n  float scale = 1.0 + pos(bar) * amplitude;\n  float phase = progress * scale;\n  float posY = uv.y / vec2(1.0).y;\n  vec2 p;\n  vec4 c;\n  if (phase + posY \u003c 1.0) {\n    p = vec2(uv.x, uv.y + mix(0.0, vec2(1.0).y, phase)) / vec2(1.0).xy;\n    c = getFromColor(p);\n  } else {\n    p = uv.xy / vec2(1.0).xy;\n    c = getToColor(p);\n  }\n\n  // Finally, apply the color\n  return c;\n}\n\nvoid main(){ fragColor = transition(vUv); }"},{"id":"piksel-dalgasi","en":"Pixel wave","tr":"Piksel Dalgası","d":0.8,"gl":false,"p":{},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uFrom;\nuniform sampler2D uTo;\nuniform float progress;\nuniform float ratio;\nuniform float uTime;\nvec4 getFromColor(vec2 uv){ return texture(uFrom, uv); }\nvec4 getToColor(vec2 uv){ return texture(uTo, uv); }\n#define texture2D texture\n\n\nconst float T_PI = 3.14159265;\nvec2 t_mirror(vec2 uv){ vec2 m = mod(uv, 2.0); return mix(m, 2.0 - m, step(1.0, m)); }\nfloat t_inside(vec2 uv){ return step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0); }\nvec4 t_fromM(vec2 uv){ return getFromColor(t_mirror(uv)); }\nvec4 t_toM(vec2 uv){ return getToColor(t_mirror(uv)); }\nvec2 t_rot(vec2 p, float a){ float c = cos(a); float s = sin(a); return vec2(c * p.x - s * p.y, s * p.x + c * p.y); }\n// en-boy düzeltmeli merkez koordinatı (y birimi = yükseklik)\nvec2 t_ac(vec2 uv){ vec2 q = uv - 0.5; q.x *= ratio; return q; }\nvec2 t_uv(vec2 q){ q.x /= ratio; return q + 0.5; }\n\nfloat t_cubicIn(float x){ return x * x * x; }\nfloat t_cubicOut(float x){ float y = 1.0 - x; return 1.0 - y * y * y; }\nfloat t_cubicInOut(float x){ return x \u003c 0.5 ? 4.0 * x * x * x : 1.0 - pow(max(-2.0 * x + 2.0, 0.0), 3.0) / 2.0; }\nfloat t_quintInOut(float x){ return x \u003c 0.5 ? 16.0 * x * x * x * x * x : 1.0 - pow(max(-2.0 * x + 2.0, 0.0), 5.0) / 2.0; }\nfloat t_expoInOut(float x){ if (x \u003c= 0.0) return 0.0; if (x >= 1.0) return 1.0;\n  return x \u003c 0.5 ? pow(2.0, 20.0 * x - 10.0) / 2.0 : (2.0 - pow(2.0, -20.0 * x + 10.0)) / 2.0; }\n\n\nvec4 transition(vec2 uv){\n  float f = mix(-0.35, 1.35, progress);\n  float d = uv.x - f;\n  float lv = floor(exp(-d * d * 18.0) * 6.0);\n  if (lv \u003c 0.5) return d \u003c 0.0 ? getToColor(uv) : getFromColor(uv);\n  float cells = 120.0 / pow(2.0, lv);\n  vec2 cv = vec2(cells * ratio, cells);\n  vec2 puv = (floor(uv * cv) + 0.5) / cv;\n  return puv.x - f \u003c 0.0 ? getToColor(puv) : getFromColor(puv);\n}\nvoid main(){ fragColor = transition(vUv); }"},{"id":"vhs-sarma","en":"VHS rewind","tr":"VHS Geri Sarma","d":0.7,"gl":false,"p":{},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uFrom;\nuniform sampler2D uTo;\nuniform float progress;\nuniform float ratio;\nuniform float uTime;\nvec4 getFromColor(vec2 uv){ return texture(uFrom, uv); }\nvec4 getToColor(vec2 uv){ return texture(uTo, uv); }\n#define texture2D texture\n\n\nconst float T_PI = 3.14159265;\nvec2 t_mirror(vec2 uv){ vec2 m = mod(uv, 2.0); return mix(m, 2.0 - m, step(1.0, m)); }\nfloat t_inside(vec2 uv){ return step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0); }\nvec4 t_fromM(vec2 uv){ return getFromColor(t_mirror(uv)); }\nvec4 t_toM(vec2 uv){ return getToColor(t_mirror(uv)); }\nvec2 t_rot(vec2 p, float a){ float c = cos(a); float s = sin(a); return vec2(c * p.x - s * p.y, s * p.x + c * p.y); }\n// en-boy düzeltmeli merkez koordinatı (y birimi = yükseklik)\nvec2 t_ac(vec2 uv){ vec2 q = uv - 0.5; q.x *= ratio; return q; }\nvec2 t_uv(vec2 q){ q.x /= ratio; return q + 0.5; }\n\nfloat t_cubicIn(float x){ return x * x * x; }\nfloat t_cubicOut(float x){ float y = 1.0 - x; return 1.0 - y * y * y; }\nfloat t_cubicInOut(float x){ return x \u003c 0.5 ? 4.0 * x * x * x : 1.0 - pow(max(-2.0 * x + 2.0, 0.0), 3.0) / 2.0; }\nfloat t_quintInOut(float x){ return x \u003c 0.5 ? 16.0 * x * x * x * x * x : 1.0 - pow(max(-2.0 * x + 2.0, 0.0), 5.0) / 2.0; }\nfloat t_expoInOut(float x){ if (x \u003c= 0.0) return 0.0; if (x >= 1.0) return 1.0;\n  return x \u003c 0.5 ? pow(2.0, 20.0 * x - 10.0) / 2.0 : (2.0 - pow(2.0, -20.0 * x + 10.0)) / 2.0; }\n\nfloat t_hash(vec2 p){ vec3 p3 = fract(vec3(p.xyx) * 0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }\n\nfloat t_noise(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); vec2 u = f * f * (3.0 - 2.0 * f);\n  return mix(mix(t_hash(i), t_hash(i + vec2(1.0, 0.0)), u.x), mix(t_hash(i + vec2(0.0, 1.0)), t_hash(i + vec2(1.0, 1.0)), u.x), u.y); }\nfloat t_fbm(vec2 p){ float v = 0.0; float a = 0.5; for (int i = 0; i \u003c 5; i++){ v += a * t_noise(p); p = p * 2.03 + 17.1; a *= 0.5; } return v; }\n\n\nvec4 transition(vec2 uv){\n  float p = progress;\n  float k = sin(T_PI * p);\n  float fr = floor(p * 24.0);\n  float yy = uv.y + k * k * 0.7 * (p \u003c 0.5 ? p * 2.0 : (p - 1.0) * 2.0);\n  float y2 = fract(yy);\n  float bar = smoothstep(0.0, 0.03, y2) * smoothstep(1.0, 0.97, y2);\n  float band = step(0.72, t_noise(vec2(uv.y * 9.0 + fr * 3.7, fr)));\n  float sh = band * (t_hash(vec2(floor(uv.y * 140.0), fr)) - 0.5) * 0.1 * k + sin(uv.y * 40.0 + fr) * 0.004 * k;\n  vec2 s = vec2(uv.x + sh, y2);\n  bool first = p \u003c 0.5;\n  vec4 c = first ? getFromColor(s) : getToColor(s);\n  vec2 o = vec2(0.008 * k, 0.0);\n  float r = (first ? getFromColor(s + o) : getToColor(s + o)).r;\n  float b = (first ? getFromColor(s - o) : getToColor(s - o)).b;\n  vec3 col = vec3(r, c.g, b);\n  float n = t_hash(uv * vec2(420.0, 310.0) + fr);\n  col = mix(col, vec3(n), band * 0.65 * k);\n  col *= mix(1.0, bar, k);\n  col = mix(col, col * vec3(1.06, 0.94, 1.1) + 0.04, k);\n  return vec4(clamp(col, 0.0, 1.0), c.a);\n}\nvoid main(){ fragColor = transition(vUv); }"},{"id":"gl-wind","en":"Wind","tr":"Rüzgâr","d":0.8,"gl":true,"p":{"size":0.2,"reversed":0},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uFrom;\nuniform sampler2D uTo;\nuniform float progress;\nuniform float ratio;\nuniform float uTime;\nvec4 getFromColor(vec2 uv){ return texture(uFrom, uv); }\nvec4 getToColor(vec2 uv){ return texture(uTo, uv); }\n#define texture2D texture\n// Author: gre\n// License: MIT\n// Description: A ragged left-to-right wipe, as if the image was blown away by the wind\n// Tags: wipe, horizontal, noise\n\n// @range(0, 1) Width of the ragged edge\nuniform float size; // = 0.2\n// @param Wipe from right to left instead\nuniform bool reversed; // = false\n\nfloat rand (vec2 co) {\n  return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);\n}\n\nvec4 transition (vec2 uv) {\n  float x = reversed ? 1. - uv.x : uv.x;\n  float r = rand(vec2(0, uv.y));\n  float m = smoothstep(0.0, -size, x*(1.0-size) + size*r - (progress * (1.0 + size)));\n  return mix(\n    getFromColor(uv),\n    getToColor(uv),\n    m\n  );\n}\n\nvoid main(){ fragColor = transition(vUv); }"},{"id":"gl-pixelize","en":"Pixelize","tr":"Pikselleş","d":0.7,"gl":true,"p":{"squaresMin":[20,20],"steps":50},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uFrom;\nuniform sampler2D uTo;\nuniform float progress;\nuniform float ratio;\nuniform float uTime;\nvec4 getFromColor(vec2 uv){ return texture(uFrom, uv); }\nvec4 getToColor(vec2 uv){ return texture(uTo, uv); }\n#define texture2D texture\n// Author: gre\n// License: MIT\n// Description: Both images pixelate, crossfade, then sharpen again\n// Tags: pixelate, blend\n// forked from https://gist.github.com/benraziel/c528607361d90a072e98\n\n// minimum number of squares (when the effect is at its higher level)\n// @param Number of squares at the strongest pixelation\nuniform ivec2 squaresMin; // = ivec2(20)\n// zero disable the stepping\n// @param Number of pixelation steps; 0 for a continuous effect\nuniform int steps; // = 50\n\nvec4 transition(vec2 uv) {\n  float d = min(progress, 1.0 - progress);\n  float dist = steps>0 ? ceil(d * float(steps)) / float(steps) : d;\n  vec2 squareSize = 2.0 * dist / vec2(squaresMin);\n  vec2 p = dist>0.0 ? (floor(uv / squareSize) + 0.5) * squareSize : uv;\n  return mix(getFromColor(p), getToColor(p), progress);\n}\n\nvoid main(){ fragColor = transition(vUv); }"},{"id":"gl-circle-open","en":"Soft circle","tr":"Yumuşak Daire","d":0.7,"gl":true,"p":{"smoothness":0.3,"opening":1},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uFrom;\nuniform sampler2D uTo;\nuniform float progress;\nuniform float ratio;\nuniform float uTime;\nvec4 getFromColor(vec2 uv){ return texture(uFrom, uv); }\nvec4 getToColor(vec2 uv){ return texture(uTo, uv); }\n#define texture2D texture\n// Author: gre\n// License: MIT\n// Description: A soft-edged circle opens from the center to reveal the incoming image\n// Tags: circle, iris, wipe\n// @param Softness of the circle's edge\nuniform float smoothness; // = 0.3\n// @param Open the circle; false closes it instead\nuniform bool opening; // = true\n\nconst vec2 center = vec2(0.5, 0.5);\nconst float SQRT_2 = 1.414213562373;\n\nvec4 transition (vec2 uv) {\n  float x = opening ? progress : 1.-progress;\n  float m = smoothstep(-smoothness, 0.0, SQRT_2*distance(center, uv) - x*(1.+smoothness));\n  return mix(getFromColor(uv), getToColor(uv), opening ? 1.-m : m);\n}\n\nvoid main(){ fragColor = transition(vUv); }"},{"id":"kalp-acilimi","en":"Heart reveal","tr":"Kalp Açılımı","d":0.9,"gl":false,"p":{"smoothness":0.008,"ring":0.015,"color":[1,0.36470588235294116,0.6352941176470588]},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uFrom;\nuniform sampler2D uTo;\nuniform float progress;\nuniform float ratio;\nuniform float uTime;\nvec4 getFromColor(vec2 uv){ return texture(uFrom, uv); }\nvec4 getToColor(vec2 uv){ return texture(uTo, uv); }\n#define texture2D texture\nuniform float smoothness;\nuniform float ring;\nuniform vec3 color;\n\nconst float T_PI = 3.14159265;\nvec2 t_mirror(vec2 uv){ vec2 m = mod(uv, 2.0); return mix(m, 2.0 - m, step(1.0, m)); }\nfloat t_inside(vec2 uv){ return step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0); }\nvec4 t_fromM(vec2 uv){ return getFromColor(t_mirror(uv)); }\nvec4 t_toM(vec2 uv){ return getToColor(t_mirror(uv)); }\nvec2 t_rot(vec2 p, float a){ float c = cos(a); float s = sin(a); return vec2(c * p.x - s * p.y, s * p.x + c * p.y); }\n// en-boy düzeltmeli merkez koordinatı (y birimi = yükseklik)\nvec2 t_ac(vec2 uv){ vec2 q = uv - 0.5; q.x *= ratio; return q; }\nvec2 t_uv(vec2 q){ q.x /= ratio; return q + 0.5; }\n\nfloat t_cubicIn(float x){ return x * x * x; }\nfloat t_cubicOut(float x){ float y = 1.0 - x; return 1.0 - y * y * y; }\nfloat t_cubicInOut(float x){ return x \u003c 0.5 ? 4.0 * x * x * x : 1.0 - pow(max(-2.0 * x + 2.0, 0.0), 3.0) / 2.0; }\nfloat t_quintInOut(float x){ return x \u003c 0.5 ? 16.0 * x * x * x * x * x : 1.0 - pow(max(-2.0 * x + 2.0, 0.0), 5.0) / 2.0; }\nfloat t_expoInOut(float x){ if (x \u003c= 0.0) return 0.0; if (x >= 1.0) return 1.0;\n  return x \u003c 0.5 ? pow(2.0, 20.0 * x - 10.0) / 2.0 : (2.0 - pow(2.0, -20.0 * x + 10.0)) / 2.0; }\n\n\n\nfloat t_dot2(vec2 v){ return dot(v, v); }\nfloat sdHeart(vec2 p){\n  p.x = abs(p.x);\n  if (p.y + p.x > 1.0) return sqrt(t_dot2(p - vec2(0.25, 0.75))) - sqrt(2.0) / 4.0;\n  return sqrt(min(t_dot2(p - vec2(0.0, 1.0)), t_dot2(p - 0.5 * max(p.x + p.y, 0.0)))) * sign(p.x - p.y);\n}\nfloat shapeD(vec2 q, float s){\n  s = max(s, 1e-4);\n  float beat = 1.0 + 0.08 * sin(progress * T_PI * 4.0) * (1.0 - progress);\n  s *= beat;\n  return sdHeart(q / s + vec2(0.0, 0.5)) * s;\n}\nvec4 transition(vec2 uv){\n  vec2 q = t_ac(uv);\n  float e = progress * progress;\n  float CD = length(vec2(0.5 * ratio, 0.5));\n  float S = CD / 0.33 + 0.1;\n  float s = mix(-0.05, S, e);\n  float d = shapeD(q, s);\n  float m = 1.0 - smoothstep(-smoothness, smoothness, d);\n  m = mix(m, 1.0, smoothstep(0.93, 1.0, progress));\n  m *= step(0.0001, progress);\n  vec4 c = mix(getFromColor(uv), getToColor(uv), m);\n  float rg = (1.0 - smoothstep(0.0, ring, abs(d + ring))) * sin(T_PI * progress);\n  c.rgb = mix(c.rgb, color, clamp(rg, 0.0, 1.0));\n  return c;\n}\nvoid main(){ fragColor = transition(vUv); }"},{"id":"gl-dreamy","en":"Dreamy","tr":"Rüya Dalgası","d":0.9,"gl":true,"p":{},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uFrom;\nuniform sampler2D uTo;\nuniform float progress;\nuniform float ratio;\nuniform float uTime;\nvec4 getFromColor(vec2 uv){ return texture(uFrom, uv); }\nvec4 getToColor(vec2 uv){ return texture(uTo, uv); }\n#define texture2D texture\n// Author: mikolalysenko\n// License: MIT\n// Description: A crossfade with a gentle wavy distortion\n// Tags: wave, blend\n\nvec2 offset(float progress, float x, float theta) {\n  float phase = progress*progress + progress + theta;\n  float shifty = 0.03*progress*cos(10.0*(progress+x));\n  return vec2(0, shifty);\n}\nvec4 transition(vec2 p) {\n  return mix(getFromColor(p + offset(progress, p.x, 0.0)), getToColor(p + offset(1.0-progress, p.x, 3.14)), progress);\n}\n\nvoid main(){ fragColor = transition(vUv); }"}],"effects":[{"id":"vhs","en":"VHS tape","tr":"VHS Kaset","p":{"u_amount":0.85,"u_speed":1},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uTex;\nuniform sampler2D uOrig;\nuniform vec2 uRes;\nuniform float uTime;\nuniform float uProgress;\nuniform float uIntensity;\nuniform float uSeed;\n\nfloat rand(vec2 co){ return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453); }\nfloat noise(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); vec2 u = f*f*(3.0-2.0*f);\n  return mix(mix(rand(i), rand(i+vec2(1,0)), u.x), mix(rand(i+vec2(0,1)), rand(i+vec2(1,1)), u.x), u.y); }\nfloat fbm(vec2 p){ float v = 0.0; float a = 0.5; for(int i=0;i\u003c5;i++){ v += a*noise(p); p *= 2.02; a *= 0.5; } return v; }\nvec3 rgb2hsv(vec3 c){ vec4 K = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0); vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));\n  vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r)); float d = q.x - min(q.w, q.y); float e = 1.0e-10;\n  return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x); }\nvec3 hsv2rgb(vec3 c){ vec4 K = vec4(1.0, 2.0/3.0, 1.0/3.0, 3.0); vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);\n  return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y); }\nfloat luma(vec3 c){ return dot(c, vec3(0.2126, 0.7152, 0.0722)); }\n\nvec4 tex(vec2 uv){ return texture(uTex, clamp(uv, vec2(0.0), vec2(1.0))); }\nuniform float u_amount;\nuniform float u_speed;\n#define texture2D texture\nvec4 tx(vec2 uv){ return textureLod(uTex, clamp(uv, 0.0, 1.0), 0.0); }\nvec2 px(){ return vec2(uRes.y / uRes.x, 1.0) / 1080.0; }\n\nvec4 effect(vec2 uv){\n  float A = u_amount * uIntensity;\n  float t = uTime * u_speed;\n  vec2 q = uv;\n  q.x += (noise(vec2(uv.y * 3.0, t * 1.5)) - 0.5) * 0.006 * A;\n  float by = fract(-t * 0.12 + uSeed);\n  float band = 1.0 - smoothstep(0.0, 0.07, abs(uv.y - by));\n  q.x += band * (noise(vec2(uv.y * 220.0, t * 40.0)) - 0.5) * 0.05 * A;\n  float hs = 1.0 - smoothstep(0.0, 0.05, uv.y);\n  q.x += hs * noise(vec2(uv.y * 80.0, t * 25.0)) * 0.05 * A;\n  vec4 c0 = tx(q);\n  vec3 cs = vec3(0.0);\n  for (int i = 0; i \u003c 6; i++) cs += tx(q + vec2(px().x * (float(i) * 4.0 - 4.0) * A + 0.004 * A, 0.0)).rgb;\n  cs /= 6.0;\n  float Y = luma(c0.rgb);\n  vec3 c = Y + (cs - luma(cs)) * 1.15;\n  c += (rand(uv * uRes + fract(t * 7.0) * 100.0) - 0.5) * 0.09 * A;\n  float streak = step(0.75, noise(vec2(uv.x * 30.0 + t * 50.0, floor(uv.y * uRes.y * 0.5))));\n  c += band * streak * 0.5 * A;\n  c += hs * 0.15 * A;\n  c = mix(c, c * vec3(1.04, 0.98, 0.9) * 0.88 + 0.07, A);\n  c *= 1.0 - 0.06 * A * (0.5 + 0.5 * sin(uv.y * uRes.y * 1.5));\n  return vec4(clamp(c, 0.0, 1.0), c0.a);\n}\nvoid main(){ fragColor = effect(vUv); }"},{"id":"eski-film","en":"Old film","tr":"Eski Film","p":{"u_amount":1,"u_sepia":0.85},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uTex;\nuniform sampler2D uOrig;\nuniform vec2 uRes;\nuniform float uTime;\nuniform float uProgress;\nuniform float uIntensity;\nuniform float uSeed;\n\nfloat rand(vec2 co){ return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453); }\nfloat noise(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); vec2 u = f*f*(3.0-2.0*f);\n  return mix(mix(rand(i), rand(i+vec2(1,0)), u.x), mix(rand(i+vec2(0,1)), rand(i+vec2(1,1)), u.x), u.y); }\nfloat fbm(vec2 p){ float v = 0.0; float a = 0.5; for(int i=0;i\u003c5;i++){ v += a*noise(p); p *= 2.02; a *= 0.5; } return v; }\nvec3 rgb2hsv(vec3 c){ vec4 K = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0); vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));\n  vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r)); float d = q.x - min(q.w, q.y); float e = 1.0e-10;\n  return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x); }\nvec3 hsv2rgb(vec3 c){ vec4 K = vec4(1.0, 2.0/3.0, 1.0/3.0, 3.0); vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);\n  return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y); }\nfloat luma(vec3 c){ return dot(c, vec3(0.2126, 0.7152, 0.0722)); }\n\nvec4 tex(vec2 uv){ return texture(uTex, clamp(uv, vec2(0.0), vec2(1.0))); }\nuniform float u_amount;\nuniform float u_sepia;\n#define texture2D texture\nvec2 asp(){ return vec2(uRes.x / uRes.y, 1.0); }\nvec2 h22(vec2 p){ p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3))); return fract(sin(p) * 43758.5453); }\nfloat vig(vec2 uv, float a, float b){ vec2 q = (uv - 0.5) * 2.0; return 1.0 - smoothstep(a, b, length(q)); }\nvec3 contr(vec3 c, float k){ return clamp((c - 0.5) * k + 0.5, 0.0, 1.0); }\n\nvec4 effect(vec2 uv){\n  float A = u_amount * uIntensity;\n  float fr = floor(uTime * 18.0);\n  vec2 jit = (vec2(rand(vec2(fr, 1.0)), rand(vec2(fr, 2.0))) - 0.5) * vec2(0.002, 0.007) * A;\n  vec4 s = tex(uv + jit);\n  float l = luma(s.rgb);\n  vec3 sep = vec3(l * 1.07 + 0.03, l * 0.93 + 0.01, l * 0.72);\n  vec3 c = mix(s.rgb, sep, u_sepia * A);\n  c = contr(c, 1.0 + 0.15 * A);\n  c *= 1.0 - 0.12 * A * rand(vec2(fr, 3.0));\n  for (int i = 0; i \u003c 3; i++){\n    float fi = float(i);\n    float on = step(0.45, rand(vec2(fr, fi + 5.0)));\n    float x = rand(vec2(floor(fr / 3.0) + fi * 7.0, 4.0)) + (rand(vec2(fr, fi)) - 0.5) * 0.01;\n    float w = 0.0006 + 0.0012 * rand(vec2(fi, fr));\n    float m = on * (1.0 - smoothstep(w, w * 2.5, abs(uv.x - x))) * (0.4 + 0.6 * noise(vec2(uv.y * 8.0, fi + fr)));\n    c = mix(c, vec3(0.92, 0.88, 0.8), m * 0.7 * A);\n  }\n  vec2 g = uv * asp() * 14.0; vec2 id = floor(g);\n  float rr = rand(id + fr * 1.37);\n  if (rr > 0.975) {\n    vec2 pos = h22(id + fr);\n    float sz = 0.04 + 0.12 * rand(id + 2.0);\n    float d = length(fract(g) - pos);\n    c = mix(c, rr > 0.99 ? vec3(0.95) : vec3(0.05), (1.0 - smoothstep(sz * 0.5, sz, d)) * A);\n  }\n  c *= mix(1.0, vig(uv, 0.3, 1.5), 0.85 * A);\n  c += (rand(uv * uRes + fr) - 0.5) * 0.12 * A;\n  return vec4(clamp(c, 0.0, 1.0), s.a);\n}\nvoid main(){ fragColor = effect(vUv); }"},{"id":"crt","en":"CRT screen","tr":"CRT Ekran","p":{"u_amount":1,"u_curve":0.5,"u_lines":280},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uTex;\nuniform sampler2D uOrig;\nuniform vec2 uRes;\nuniform float uTime;\nuniform float uProgress;\nuniform float uIntensity;\nuniform float uSeed;\n\nfloat rand(vec2 co){ return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453); }\nfloat noise(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); vec2 u = f*f*(3.0-2.0*f);\n  return mix(mix(rand(i), rand(i+vec2(1,0)), u.x), mix(rand(i+vec2(0,1)), rand(i+vec2(1,1)), u.x), u.y); }\nfloat fbm(vec2 p){ float v = 0.0; float a = 0.5; for(int i=0;i\u003c5;i++){ v += a*noise(p); p *= 2.02; a *= 0.5; } return v; }\nvec3 rgb2hsv(vec3 c){ vec4 K = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0); vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));\n  vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r)); float d = q.x - min(q.w, q.y); float e = 1.0e-10;\n  return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x); }\nvec3 hsv2rgb(vec3 c){ vec4 K = vec4(1.0, 2.0/3.0, 1.0/3.0, 3.0); vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);\n  return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y); }\nfloat luma(vec3 c){ return dot(c, vec3(0.2126, 0.7152, 0.0722)); }\n\nvec4 tex(vec2 uv){ return texture(uTex, clamp(uv, vec2(0.0), vec2(1.0))); }\nuniform float u_amount;\nuniform float u_curve;\nuniform float u_lines;\n#define texture2D texture\nvec2 px(){ return vec2(uRes.y / uRes.x, 1.0) / 1080.0; }\nvec2 barrel(vec2 uv, float k){ vec2 c = uv - 0.5; return 0.5 + c * (1.0 + k * dot(c, c) * 4.0) / (1.0 + k * 0.5); }\n\nvec4 effect(vec2 uv){\n  float A = u_amount * uIntensity;\n  vec2 q = barrel(uv, u_curve * 0.6 * A);\n  float inside = step(0.0, q.x) * step(q.x, 1.0) * step(0.0, q.y) * step(q.y, 1.0);\n  vec4 c = tex(q);\n  vec3 col = c.rgb;\n  col += (tex(q + vec2(px().x * 2.0, 0.0)).rgb + tex(q - vec2(px().x * 2.0, 0.0)).rgb) * 0.15 * A;\n  float sl = 0.5 + 0.5 * cos(q.y * min(u_lines, uRes.y / 3.0) * 6.28318);\n  col *= mix(1.0, 0.6 + 0.4 * sl, A);\n  float m = mod(floor(uv.x * uRes.x / max(1.0, uRes.y / 360.0)), 3.0);\n  vec3 mask = m \u003c 1.0 ? vec3(1.0, 0.7, 0.7) : m \u003c 2.0 ? vec3(0.7, 1.0, 0.7) : vec3(0.7, 0.7, 1.0);\n  col *= mix(vec3(1.0), mask, 0.6 * A);\n  col *= 1.0 + 0.3 * A;\n  vec2 e = clamp(q * (1.0 - q), 0.0, 1.0);\n  col *= mix(1.0, clamp(pow(e.x * e.y * 30.0, 0.3), 0.0, 1.0), A);\n  col *= 1.0 - 0.04 * A * sin(uTime * 60.0);\n  col = mix(vec3(0.0), col, inside);\n  return vec4(clamp(col, 0.0, 1.0), mix(tex(uv).a, c.a, inside));\n}\nvoid main(){ fragColor = effect(vUv); }"},{"id":"8-bit","en":"8-bit","tr":"8-Bit","p":{"u_size":10,"u_dither":0.6},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uTex;\nuniform sampler2D uOrig;\nuniform vec2 uRes;\nuniform float uTime;\nuniform float uProgress;\nuniform float uIntensity;\nuniform float uSeed;\n\nfloat rand(vec2 co){ return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453); }\nfloat noise(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); vec2 u = f*f*(3.0-2.0*f);\n  return mix(mix(rand(i), rand(i+vec2(1,0)), u.x), mix(rand(i+vec2(0,1)), rand(i+vec2(1,1)), u.x), u.y); }\nfloat fbm(vec2 p){ float v = 0.0; float a = 0.5; for(int i=0;i\u003c5;i++){ v += a*noise(p); p *= 2.02; a *= 0.5; } return v; }\nvec3 rgb2hsv(vec3 c){ vec4 K = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0); vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));\n  vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r)); float d = q.x - min(q.w, q.y); float e = 1.0e-10;\n  return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x); }\nvec3 hsv2rgb(vec3 c){ vec4 K = vec4(1.0, 2.0/3.0, 1.0/3.0, 3.0); vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);\n  return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y); }\nfloat luma(vec3 c){ return dot(c, vec3(0.2126, 0.7152, 0.0722)); }\n\nvec4 tex(vec2 uv){ return texture(uTex, clamp(uv, vec2(0.0), vec2(1.0))); }\nuniform float u_size;\nuniform float u_dither;\n#define texture2D texture\nvec2 px(){ return vec2(uRes.y / uRes.x, 1.0) / 1080.0; }\nfloat bayer(vec2 p){\n  const float B[16] = float[16](0.0, 8.0, 2.0, 10.0, 12.0, 4.0, 14.0, 6.0, 3.0, 11.0, 1.0, 9.0, 15.0, 7.0, 13.0, 5.0);\n  ivec2 q = ivec2(mod(p, 4.0));\n  return (B[q.x + q.y * 4] + 0.5) / 16.0;\n}\n\nconst vec3 PAL[16] = vec3[16](\n  vec3(0.0), vec3(0.27), vec3(0.62), vec3(1.0),\n  vec3(0.55, 0.1, 0.12), vec3(0.95, 0.25, 0.2), vec3(1.0, 0.6, 0.3), vec3(1.0, 0.9, 0.45),\n  vec3(0.1, 0.45, 0.15), vec3(0.35, 0.82, 0.3), vec3(0.1, 0.18, 0.55), vec3(0.25, 0.5, 0.95),\n  vec3(0.45, 0.82, 1.0), vec3(0.5, 0.15, 0.55), vec3(0.98, 0.45, 0.75), vec3(0.6, 0.38, 0.2));\nvec4 effect(vec2 uv){\n  vec2 cell = px() * u_size;\n  vec2 g = floor((uv - 0.5) / cell);\n  vec4 s = tex((g + 0.5) * cell + 0.5);\n  vec3 c = s.rgb + (bayer(g) - 0.5) * 0.2 * u_dither;\n  float bd = 1e9; vec3 best = c;\n  for (int i = 0; i \u003c 16; i++){ vec3 d = (c - PAL[i]) * vec3(0.8, 1.0, 0.6); float dd = dot(d, d); if (dd \u003c bd){ bd = dd; best = PAL[i]; } }\n  return vec4(mix(tex(uv).rgb, best, uIntensity), s.a);\n}\nvoid main(){ fragColor = effect(vUv); }"},{"id":"kar","en":"Snowfall","tr":"Kar Yağışı","p":{"u_amount":1,"u_speed":1,"u_density":0.6,"u_wind":0.2,"u_cold":0.4},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uTex;\nuniform sampler2D uOrig;\nuniform vec2 uRes;\nuniform float uTime;\nuniform float uProgress;\nuniform float uIntensity;\nuniform float uSeed;\n\nfloat rand(vec2 co){ return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453); }\nfloat noise(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); vec2 u = f*f*(3.0-2.0*f);\n  return mix(mix(rand(i), rand(i+vec2(1,0)), u.x), mix(rand(i+vec2(0,1)), rand(i+vec2(1,1)), u.x), u.y); }\nfloat fbm(vec2 p){ float v = 0.0; float a = 0.5; for(int i=0;i\u003c5;i++){ v += a*noise(p); p *= 2.02; a *= 0.5; } return v; }\nvec3 rgb2hsv(vec3 c){ vec4 K = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0); vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));\n  vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r)); float d = q.x - min(q.w, q.y); float e = 1.0e-10;\n  return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x); }\nvec3 hsv2rgb(vec3 c){ vec4 K = vec4(1.0, 2.0/3.0, 1.0/3.0, 3.0); vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);\n  return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y); }\nfloat luma(vec3 c){ return dot(c, vec3(0.2126, 0.7152, 0.0722)); }\n\nvec4 tex(vec2 uv){ return texture(uTex, clamp(uv, vec2(0.0), vec2(1.0))); }\nuniform float u_amount;\nuniform float u_speed;\nuniform float u_density;\nuniform float u_wind;\nuniform float u_cold;\n#define texture2D texture\nvec2 asp(){ return vec2(uRes.x / uRes.y, 1.0); }\nvec2 h22(vec2 p){ p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3))); return fract(sin(p) * 43758.5453); }\n\nvec4 effect(vec2 uv){\n  float A = u_amount * uIntensity;\n  vec4 s = tex(uv);\n  vec3 col = mix(s.rgb, s.rgb * vec3(0.92, 0.97, 1.05) + 0.03, u_cold * A);\n  vec2 P = uv * asp();\n  float t = uTime * u_speed;\n  float snow = 0.0;\n  for (int L = 0; L \u003c 4; L++){\n    float fl = float(L);\n    float sc = 22.0 - fl * 5.0;\n    vec2 p = P * sc;\n    p.y += t * sc * (0.05 + fl * 0.03);\n    p.x += sin(t * 0.6 + fl) * 0.8 + t * sc * u_wind * (0.03 + fl * 0.015);\n    vec2 id = floor(p); vec2 f = fract(p) - 0.5;\n    vec2 r = h22(id + fl * 19.0 + uSeed * 4.0);\n    if (r.x > u_density) continue;\n    vec2 o = (r - 0.5) * 0.7;\n    o.x += sin(t * 1.7 + r.y * 6.28) * 0.12;\n    float d = length(f - o);\n    float rad = (0.06 + 0.1 * r.y) * (0.7 + fl * 0.15);\n    float soft = rad * (0.4 + fl * 0.3);\n    snow += (1.0 - smoothstep(rad - soft, rad, d)) * (0.55 + fl * 0.15);\n  }\n  col = mix(col, vec3(1.0), clamp(snow, 0.0, 1.0) * A);\n  return vec4(col, s.a);\n}\nvoid main(){ fragColor = effect(vUv); }"},{"id":"rgb-ayrisma","en":"RGB split","tr":"RGB Ayrışma","p":{"u_amount":0.5,"u_angle":0,"u_speed":1},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uTex;\nuniform sampler2D uOrig;\nuniform vec2 uRes;\nuniform float uTime;\nuniform float uProgress;\nuniform float uIntensity;\nuniform float uSeed;\n\nfloat rand(vec2 co){ return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453); }\nfloat noise(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); vec2 u = f*f*(3.0-2.0*f);\n  return mix(mix(rand(i), rand(i+vec2(1,0)), u.x), mix(rand(i+vec2(0,1)), rand(i+vec2(1,1)), u.x), u.y); }\nfloat fbm(vec2 p){ float v = 0.0; float a = 0.5; for(int i=0;i\u003c5;i++){ v += a*noise(p); p *= 2.02; a *= 0.5; } return v; }\nvec3 rgb2hsv(vec3 c){ vec4 K = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0); vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));\n  vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r)); float d = q.x - min(q.w, q.y); float e = 1.0e-10;\n  return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x); }\nvec3 hsv2rgb(vec3 c){ vec4 K = vec4(1.0, 2.0/3.0, 1.0/3.0, 3.0); vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);\n  return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y); }\nfloat luma(vec3 c){ return dot(c, vec3(0.2126, 0.7152, 0.0722)); }\n\nvec4 tex(vec2 uv){ return texture(uTex, clamp(uv, vec2(0.0), vec2(1.0))); }\nuniform float u_amount;\nuniform float u_angle;\nuniform float u_speed;\n#define texture2D texture\n\n\nvec4 effect(vec2 uv){\n  float t = uTime * u_speed;\n  float A = u_amount * uIntensity;\n  float j = 0.55 + 0.9 * noise(vec2(t * 7.0, uSeed * 13.0));\n  float ang = radians(u_angle) + (noise(vec2(t * 3.0, 5.0)) - 0.5) * 0.6 * min(u_speed, 1.0);\n  vec2 d = vec2(cos(ang), sin(ang)) * A * j * 0.025;\n  vec4 r = tex(uv + d), g = tex(uv), b = tex(uv - d);\n  return vec4(r.r, g.g, b.b, max(g.a, max(r.a, b.a)));\n}\nvoid main(){ fragColor = effect(vUv); }"},{"id":"film-greni","en":"Film grain","tr":"Film Greni + Vinyet","p":{"u_amount":0.6,"u_size":1.5,"u_vig":0.5},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uTex;\nuniform sampler2D uOrig;\nuniform vec2 uRes;\nuniform float uTime;\nuniform float uProgress;\nuniform float uIntensity;\nuniform float uSeed;\n\nfloat rand(vec2 co){ return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453); }\nfloat noise(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); vec2 u = f*f*(3.0-2.0*f);\n  return mix(mix(rand(i), rand(i+vec2(1,0)), u.x), mix(rand(i+vec2(0,1)), rand(i+vec2(1,1)), u.x), u.y); }\nfloat fbm(vec2 p){ float v = 0.0; float a = 0.5; for(int i=0;i\u003c5;i++){ v += a*noise(p); p *= 2.02; a *= 0.5; } return v; }\nvec3 rgb2hsv(vec3 c){ vec4 K = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0); vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));\n  vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r)); float d = q.x - min(q.w, q.y); float e = 1.0e-10;\n  return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x); }\nvec3 hsv2rgb(vec3 c){ vec4 K = vec4(1.0, 2.0/3.0, 1.0/3.0, 3.0); vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);\n  return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y); }\nfloat luma(vec3 c){ return dot(c, vec3(0.2126, 0.7152, 0.0722)); }\n\nvec4 tex(vec2 uv){ return texture(uTex, clamp(uv, vec2(0.0), vec2(1.0))); }\nuniform float u_amount;\nuniform float u_size;\nuniform float u_vig;\n#define texture2D texture\nfloat vig(vec2 uv, float a, float b){ vec2 q = (uv - 0.5) * 2.0; return 1.0 - smoothstep(a, b, length(q)); }\n\nvec4 effect(vec2 uv){\n  float A = u_amount * uIntensity;\n  vec4 s = tex(uv);\n  float fr = floor(uTime * 24.0);\n  vec2 g = uv * uRes / max(1.0, u_size * uRes.y / 1080.0);\n  float n = (rand(floor(g) + fr * 17.13) - 0.5) * 0.6 + (noise(g * 0.5 + fr * 3.7) - 0.5) * 0.8;\n  float l = luma(s.rgb);\n  float w = 1.0 - pow(abs(l - 0.5) * 2.0, 2.0) * 0.6;\n  vec3 cn = vec3(rand(floor(g) + 3.1 + fr), rand(floor(g) + 5.7 + fr), rand(floor(g) + 7.3 + fr)) - 0.5;\n  vec3 c = s.rgb + n * 0.22 * A * w + cn * 0.04 * A;\n  c *= mix(1.0, vig(uv, 0.35, 1.55), u_vig * uIntensity);\n  return vec4(clamp(c, 0.0, 1.0), s.a);\n}\nvoid main(){ fragColor = effect(vUv); }"},{"id":"kaleydoskop","en":"Kaleidoscope","tr":"Kaleydoskop","p":{"u_segments":6,"u_speed":0.5,"u_zoom":1},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uTex;\nuniform sampler2D uOrig;\nuniform vec2 uRes;\nuniform float uTime;\nuniform float uProgress;\nuniform float uIntensity;\nuniform float uSeed;\n\nfloat rand(vec2 co){ return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453); }\nfloat noise(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); vec2 u = f*f*(3.0-2.0*f);\n  return mix(mix(rand(i), rand(i+vec2(1,0)), u.x), mix(rand(i+vec2(0,1)), rand(i+vec2(1,1)), u.x), u.y); }\nfloat fbm(vec2 p){ float v = 0.0; float a = 0.5; for(int i=0;i\u003c5;i++){ v += a*noise(p); p *= 2.02; a *= 0.5; } return v; }\nvec3 rgb2hsv(vec3 c){ vec4 K = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0); vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));\n  vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r)); float d = q.x - min(q.w, q.y); float e = 1.0e-10;\n  return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x); }\nvec3 hsv2rgb(vec3 c){ vec4 K = vec4(1.0, 2.0/3.0, 1.0/3.0, 3.0); vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);\n  return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y); }\nfloat luma(vec3 c){ return dot(c, vec3(0.2126, 0.7152, 0.0722)); }\n\nvec4 tex(vec2 uv){ return texture(uTex, clamp(uv, vec2(0.0), vec2(1.0))); }\nuniform float u_segments;\nuniform float u_speed;\nuniform float u_zoom;\n#define texture2D texture\nvec2 asp(){ return vec2(uRes.x / uRes.y, 1.0); }\n\nvec4 effect(vec2 uv){\n  vec2 p = (uv - 0.5) * asp();\n  float r = length(p);\n  float seg = 6.28318 / floor(u_segments + 0.5);\n  float a = atan(p.y, p.x) + uTime * u_speed * 0.4;\n  a = mod(a, seg); a = abs(a - seg * 0.5);\n  vec2 q = vec2(cos(a), sin(a)) * r / u_zoom;\n  q = q / asp() + 0.5;\n  q = 1.0 - abs(1.0 - mod(q, 2.0));\n  return mix(tex(uv), tex(q), uIntensity);\n}\nvoid main(){ fragColor = effect(vUv); }"},{"id":"neon-kenar","en":"Neon edges","tr":"Neon Kenarlar","p":{"u_amount":1,"u_speed":1,"u_bg":0.15,"u_mono":0,"u_color":[1,0.16862745098039217,0.8392156862745098]},"src":"#version 300 es\nprecision highp float;\nin vec2 vUv;\nout vec4 fragColor;\n\nuniform sampler2D uTex;\nuniform sampler2D uOrig;\nuniform vec2 uRes;\nuniform float uTime;\nuniform float uProgress;\nuniform float uIntensity;\nuniform float uSeed;\n\nfloat rand(vec2 co){ return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453); }\nfloat noise(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); vec2 u = f*f*(3.0-2.0*f);\n  return mix(mix(rand(i), rand(i+vec2(1,0)), u.x), mix(rand(i+vec2(0,1)), rand(i+vec2(1,1)), u.x), u.y); }\nfloat fbm(vec2 p){ float v = 0.0; float a = 0.5; for(int i=0;i\u003c5;i++){ v += a*noise(p); p *= 2.02; a *= 0.5; } return v; }\nvec3 rgb2hsv(vec3 c){ vec4 K = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0); vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));\n  vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r)); float d = q.x - min(q.w, q.y); float e = 1.0e-10;\n  return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x); }\nvec3 hsv2rgb(vec3 c){ vec4 K = vec4(1.0, 2.0/3.0, 1.0/3.0, 3.0); vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);\n  return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y); }\nfloat luma(vec3 c){ return dot(c, vec3(0.2126, 0.7152, 0.0722)); }\n\nvec4 tex(vec2 uv){ return texture(uTex, clamp(uv, vec2(0.0), vec2(1.0))); }\nuniform float u_amount;\nuniform float u_speed;\nuniform float u_bg;\nuniform float u_mono;\nuniform vec3 u_color;\n#define texture2D texture\nvec4 tx(vec2 uv){ return textureLod(uTex, clamp(uv, 0.0, 1.0), 0.0); }\nvec2 px(){ return vec2(uRes.y / uRes.x, 1.0) / 1080.0; }\nfloat lumA(vec4 c){ return luma(c.rgb) * c.a; }\nfloat sobel(vec2 uv, vec2 d){\n  float tl = lumA(tx(uv + vec2(-d.x, d.y))), tc = lumA(tx(uv + vec2(0.0, d.y))), tr = lumA(tx(uv + d));\n  float ml = lumA(tx(uv - vec2(d.x, 0.0))), mr = lumA(tx(uv + vec2(d.x, 0.0)));\n  float bl = lumA(tx(uv - d)), bc = lumA(tx(uv - vec2(0.0, d.y))), br = lumA(tx(uv + vec2(d.x, -d.y)));\n  float gx = tr + 2.0 * mr + br - tl - 2.0 * ml - bl;\n  float gy = tl + 2.0 * tc + tr - bl - 2.0 * bc - br;\n  return length(vec2(gx, gy));\n}\n\nvec4 effect(vec2 uv){\n  float A = u_amount * uIntensity;\n  vec4 s = tex(uv);\n  float e1 = sobel(uv, px() * 1.2);\n  float e2 = sobel(uv, px() * 3.0);\n  float e3 = sobel(uv, px() * 7.0);\n  float e = smoothstep(0.1, 0.7, e1) + smoothstep(0.1, 0.9, e2) * 0.5 + smoothstep(0.1, 1.0, e3) * 0.3;\n  vec3 col = hsv2rgb(vec3(fract(uv.x * 0.5 - uv.y * 0.3 + uTime * u_speed * 0.15), 0.85, 1.0));\n  col = mix(col, u_color, u_mono);\n  vec3 c = s.rgb * u_bg + col * e * 1.3;\n  return vec4(mix(s.rgb, clamp(c, 0.0, 1.0), A), s.a);\n}\nvoid main(){ fragColor = effect(vUv); }"}]}</script>
+<script>
+(function () {
+  'use strict'
+  var root = document.documentElement
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  // ---------------------------------------------------------------- dil
+  function setLang (l) {
+    root.setAttribute('data-lang', l); root.lang = l
+    try { localStorage.setItem('sweaxcut.lang', l) } catch (e) {}
+    document.querySelectorAll('.langs button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.set === l)) })
+    document.title = l === 'tr' ? 'SWEAXCUT · Windows için ücretsiz video kurgu programı' : 'SWEAXCUT · Free video editor for Windows'
+    if (window.__cutLang) window.__cutLang()
+  }
+  document.querySelectorAll('.langs button').forEach(function (b) { b.addEventListener('click', function () { setLang(b.dataset.set) }) })
+  setLang(root.getAttribute('data-lang') || 'en')
+
+  // ---------------------------------------------------------------- kaydırma cetveli (sayfa = zaman çizelgesi)
+  var head = document.getElementById('rul-head'), rtc = document.getElementById('rul-tc'), ticks = document.querySelector('.ruler .ticks')
+  var pad2 = function (n) { return (n < 10 ? '0' : '') + n }
+  var smpte = function (fr, fps) { var f = fr % fps, s = Math.floor(fr / fps); return pad2(Math.floor(s / 3600)) + ':' + pad2(Math.floor(s / 60) % 60) + ':' + pad2(s % 60) + ':' + pad2(f) }
+  var rq = 0
+  function onScroll () {
+    rq = 0
+    var max = document.documentElement.scrollHeight - innerHeight
+    var p = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0
+    var r = ticks.getBoundingClientRect(), pr = ticks.parentElement.getBoundingClientRect()
+    head.style.left = (r.left - pr.left + p * r.width) + 'px'
+    rtc.textContent = smpte(Math.round(scrollY / 4), 30)
+  }
+  addEventListener('scroll', function () { if (!rq) rq = requestAnimationFrame(onScroll) }, { passive: true })
+  addEventListener('resize', onScroll)
+  onScroll()
+
+  // ---------------------------------------------------------------- silme geçişiyle açılış (yalnız geniş ekran + hareket izni)
+  var wipeOK = !reduce && matchMedia('(min-width: 900px)').matches && 'IntersectionObserver' in window
+  if (wipeOK) {
+    root.classList.add('js-wipe')
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target) } })
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 })
+    document.querySelectorAll('.wipe, .bin').forEach(function (el) { io.observe(el) })
+  }
+
+  // ---------------------------------------------------------------- koddan sayılanlar
+  var BIN = [
+    ['Stickers', 'Çıkartma', 777, 's', '649 Twemoji emoji, 117 animated, 11 shapes', '649 Twemoji emojisi, 117 animasyonlu, 11 şekil'],
+    ['Transitions', 'Geçiş', 197, 'v', '125 gl-transitions, 72 written for the app', '125 gl-transitions, 72 uygulama için yazıldı'],
+    ['Effects', 'Efekt', 161, 'e', '11 groups', '11 grup'],
+    ['Clip animations', 'Klip animasyonu', 137, 'v', '46 in, 56 out, 35 loop', '46 giriş, 56 çıkış, 35 döngü'],
+    ['Text templates', 'Yazı şablonu', 126, 't', '10 groups', '10 grup'],
+    ['Sound effects', 'Ses efekti', 102, 'a', 'synthesized', 'sentezle üretilir'],
+    ['Fonts', 'Yazı tipi', 101, 't', 'all with Turkish letters', 'hepsinde Türkçe harfler'],
+    ['Colour filters', 'Renk filtresi', 93, 'e', '8 groups', '8 grup'],
+    ['Text animations', 'Yazı animasyonu', 88, 't', '36 in, 28 out, 24 loop', '36 giriş, 28 çıkış, 24 döngü'],
+    ['Caption styles', 'Altyazı stili', 45, 't', '6 groups', '6 grup'],
+    ['Voice changers', 'Ses değiştirici', 40, 'a', '6 groups', '6 grup'],
+    ['Music tracks', 'Müzik', 22, 'a', 'synthesized', 'sentezle üretilir'],
+    ['Speed curves', 'Hız eğrisi', 22, 'v', '0.1× to 100×', '0,1× ile 100× arası'],
+    ['Layouts', 'Düzen', 13, 'v', 'one click', 'tek tık'],
+  ]
+  var bin = document.getElementById('bin')
+  var lmax = Math.log(778)
+  BIN.forEach(function (r, i) {
+    var w = 10 + 90 * Math.log(r[2] + 1) / lmax
+    var d = document.createElement('div')
+    d.className = 'trk'
+    d.innerHTML = '<div class="nm"><span lang="en">' + r[0] + '</span><span lang="tr">' + r[1] + '</span><small><span lang="en">' + r[4] + '</span><span lang="tr">' + r[5] + '</span></small></div>' +
+      '<div class="lane"><div class="clipbar" style="--w:' + w.toFixed(1) + '%;--c:var(--' + r[3] + ');transition-delay:' + (i * 45) + 'ms">' + r[2] + '</div></div>'
+    bin.appendChild(d)
+  })
+
+  // ---------------------------------------------------------------- kısayollar (src/ui/shortcuts.js)
+  var KEYS = [
+    [['Space'], ['Boşluk'], 'Play / pause', 'Oynat / duraklat'],
+    [['Ctrl+B', 'S'], null, 'Split at the playhead', 'Oynatma kafasında böl'],
+    [['Q', 'W'], null, 'Trim left / right', 'Solu / sağı kırp'],
+    [['Delete'], null, 'Delete', 'Sil'],
+    [['Shift+Delete'], null, 'Delete and close the gap', 'Sil ve boşluğu kapat'],
+    [['Ctrl+Z', 'Ctrl+Y'], null, 'Undo / redo', 'Geri al / yinele'],
+    [['Ctrl+C', 'X', 'V'], null, 'Copy / cut / paste', 'Kopyala / kes / yapıştır'],
+    [['Ctrl+D'], null, 'Duplicate', 'Çoğalt'],
+    [['←', '→'], null, 'One frame back / forward', 'Bir kare geri / ileri'],
+    [['Shift+←', '→'], null, 'One second back / forward', 'Bir saniye geri / ileri'],
+    [['↑', '↓'], null, 'Previous / next cut', 'Önceki / sonraki kesim'],
+    [['J', 'K', 'L'], null, 'Shuttle back / stop / forward', 'Geri sar / dur / ileri sar'],
+    [['Ctrl++', 'Ctrl+−'], null, 'Zoom the timeline', 'Zaman çizelgesini yakınlaştır'],
+    [['Shift+Z'], null, 'Fit the timeline', 'Zaman çizelgesini sığdır'],
+    [['M'], null, 'Add a marker', 'İşaret ekle'],
+    [['T'], null, 'Add text', 'Yazı ekle'],
+    [['Alt+K'], null, 'Add a keyframe', 'Anahtar kare ekle'],
+    [['[', ']'], null, 'Previous / next keyframe', 'Önceki / sonraki anahtar kare'],
+    [['I', 'O'], null, 'Range in / out', 'Aralık başı / sonu'],
+    [['N'], null, 'Snapping on / off', 'Yakalamayı aç / kapat'],
+    [['Ctrl+S'], null, 'Save', 'Kaydet'],
+    [['Ctrl+E'], null, 'Export', 'Dışa aktar'],
+    [['Ctrl+I'], null, 'Import media', 'Medya içe aktar'],
+    [['F'], null, 'Full-screen preview', 'Önizlemeyi tam ekran yap'],
+  ]
+  var kg = document.getElementById('keys-grid')
+  var kb = function (a) { return a.map(function (k) { return '<kbd>' + k + '</kbd>' }).join(' ') }
+  KEYS.forEach(function (k) {
+    var d = document.createElement('div')
+    var en = kb(k[0]), tr = k[1] ? kb(k[1]) : en
+    d.innerHTML = '<span><span lang="en">' + k[2] + '</span><span lang="tr">' + k[3] + '</span></span><span>' + (k[1] ? '<span lang="en">' + en + '</span><span lang="tr">' + tr + '</span>' : en) + '</span>'
+    kg.appendChild(d)
+  })
+
+  // ---------------------------------------------------------------- kesim dene (WebGL2)
+  var FX = {}
+  try { FX = JSON.parse(document.getElementById('fx-data').textContent) } catch (e) {}
+  var cv = document.getElementById('cut-gl')
+  var gl = null
+  try { gl = cv.getContext('webgl2', { antialias: false, alpha: false, preserveDrawingBuffer: false }) } catch (e) {}
+  if (!gl || !FX.transitions || !FX.transitions.length) { document.getElementById('cut-mon').classList.add('nogl'); return }
+
+  var HEAD = '#version 300 es\nprecision highp float;\nuniform vec2 R; uniform float T;\nout vec4 o;\n' +
+    'float h21(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7)))*43758.5453); }\n' +
+    'float vnoise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f); return mix(mix(h21(i), h21(i+vec2(1,0)), f.x), mix(h21(i+vec2(0,1)), h21(i+vec2(1,1)), f.x), f.y); }\n' +
+    'float fbm(vec2 p){ float s = 0.0, a = 0.5; for (int i = 0; i < 5; i++){ s += a*vnoise(p); p = p*2.03 + 17.1; a *= 0.5; } return s; }\n'
+  // örnek klipler: scripts/docs-media/footage.html'deki özgün sahnelerin hafifletilmiş kopyası
+  var SCENES = [
+    'void main(){ vec2 p = (gl_FragCoord.xy - 0.5*R)/R.y; float hz = -0.04; vec3 col;' +
+    ' if (p.y > hz) { float t = clamp((p.y - hz)/0.56, 0.0, 1.0); col = mix(vec3(1.0,0.42,0.38), vec3(0.20,0.05,0.32), pow(t, 0.55)); col = mix(col, vec3(0.04,0.02,0.10), smoothstep(0.55, 1.0, t));' +
+    ' vec2 st = floor(gl_FragCoord.xy/2.0); col += step(0.997, h21(st)) * smoothstep(0.25, 0.9, t);' +
+    ' vec2 sp = p - vec2(0.0, 0.13); float r = length(sp); float band = sp.y < 0.0 ? step(0.0, sin(sp.y*120.0 + T*3.0) + 0.9 + sp.y*9.0) : 1.0;' +
+    ' vec3 sunc = mix(vec3(1.0,0.18,0.52), vec3(1.0,0.86,0.32), smoothstep(-0.25, 0.28, sp.y)); col = mix(col, sunc, smoothstep(0.262, 0.255, r) * band); col += vec3(1.0,0.35,0.45)*0.30*exp(-max(r-0.25,0.0)*7.0);' +
+    ' float x = p.x + T*0.015; float m = 0.035 + 0.07*fbm(vec2(x*3.0, 1.0)) + 0.06*abs(sin(x*2.3 + 1.7)); col = mix(col, vec3(0.06,0.01,0.13), smoothstep(0.0, 0.003, m - (p.y - hz))); col += smoothstep(0.006, 0.0, abs(m - (p.y - hz))) * vec3(1.0,0.25,0.75)*0.9;' +
+    ' } else { float d = hz - p.y; float z = 0.36/d; vec2 g = vec2(p.x*z*1.6, z + T*3.2); vec2 fw = fwidth(g); vec2 g2 = abs(fract(g) - 0.5);' +
+    ' float line = max(smoothstep(0.5 - fw.x*1.5, 0.5, g2.x + 0.012), smoothstep(0.5 - fw.y*1.5, 0.5, g2.y + 0.02)); col = vec3(0.07,0.0,0.14) + line*vec3(1.0,0.18,0.78)*1.2; col = mix(col, vec3(1.0,0.42,0.45), exp(-d*7.0)*0.85); }' +
+    ' o = vec4(col * smoothstep(1.25, 0.4, length(p*vec2(0.9,1.2))), 1.0); }',
+    'float sdBox(vec3 p, vec3 b){ vec3 q = abs(p) - b; return length(max(q, 0.0)) + min(max(q.x, max(q.y, q.z)), 0.0) - 0.04; }' +
+    ' mat2 rot(float a){ float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }' +
+    ' float map(vec3 p, out float id){ vec2 c = floor(p.xz/2.0 + 0.5); vec3 q = p; q.xz -= c*2.0; float hgt = 0.35 + 0.9*h21(c) + 0.25*sin(T*1.6 + h21(c)*20.0); q.y -= hgt*0.5 - 0.5; q.xz = rot(T*0.4 + h21(c+7.0)*6.0)*q.xz;' +
+    ' float d = sdBox(q, vec3(0.5, hgt*0.5, 0.5)); float pl = p.y + 0.5; id = h21(c+3.0); if (pl < d) { id = -1.0; return pl; } return d; }' +
+    ' vec3 nrm(vec3 p){ float id; vec2 e = vec2(0.002, 0.0); return normalize(vec3(map(p+e.xyy,id)-map(p-e.xyy,id), map(p+e.yxy,id)-map(p-e.yxy,id), map(p+e.yyx,id)-map(p-e.yyx,id))); }' +
+    ' void main(){ vec2 p = (gl_FragCoord.xy - 0.5*R)/R.y; vec3 ro = vec3(T*0.9, 3.2, T*1.4 - 6.0); vec3 ta = ro + vec3(0.5, -1.4, 3.0);' +
+    ' vec3 f = normalize(ta - ro), r = normalize(cross(vec3(0,1,0), f)), u = cross(f, r); vec3 rd = normalize(p.x*r + p.y*u + 1.5*f);' +
+    ' float t = 0.0, id = 0.0; for (int i = 0; i < 80; i++){ float d = map(ro + rd*t, id); if (d < 0.002 || t > 36.0) break; t += min(d*0.75, 0.35); }' +
+    ' vec3 sky = mix(vec3(0.95,0.75,0.55), vec3(0.35,0.55,0.85), clamp(rd.y*2.0 + 0.4, 0.0, 1.0)); vec3 col = sky;' +
+    ' if (t < 36.0){ vec3 pos = ro + rd*t, n = nrm(pos); vec3 L = normalize(vec3(-0.5, 0.8, -0.3)); float dif = clamp(dot(n, L), 0.0, 1.0);' +
+    ' float sh = 1.0, tt = 0.05, idd; for (int i = 0; i < 20; i++){ float h = map(pos + L*tt, idd); sh = min(sh, 10.0*h/tt); tt += clamp(h, 0.03, 0.4); if (sh < 0.01 || tt > 8.0) break; } sh = clamp(sh, 0.0, 1.0);' +
+    ' vec3 alb = id < 0.0 ? vec3(0.85,0.82,0.78) : 0.5 + 0.5*cos(6.2831*(id*0.6 + vec3(0.0, 0.25, 0.55)));' +
+    ' col = alb*(0.18 + 0.85*dif*sh)*vec3(1.05,0.98,0.9) + alb*0.25*vec3(0.4,0.55,0.8)*(0.5 + 0.5*n.y); col = mix(col, sky, 1.0 - exp(-0.0025*t*t)); }' +
+    ' o = vec4(pow(col, vec3(0.9)), 1.0); }',
+    'void main(){ vec2 p = (gl_FragCoord.xy - 0.5*R)/R.y; p += 0.06*vec2(sin(T*0.7), cos(T*0.5)); float a = atan(p.y, p.x); float r = length(p);' +
+    ' float z = 0.32/r + T*1.6; float u = a/3.14159265*6.0 + T*0.25; vec2 q = vec2(u, z*2.0); vec2 f = abs(fract(q) - 0.5); vec2 fw = fwidth(q);' +
+    ' float gd = min(0.5 - f.x, 0.5 - f.y); float grid = smoothstep(fw.x*1.5 + 0.01, 0.0, gd) + 0.35*exp(-gd*12.0); float cell = h21(floor(q));' +
+    ' vec3 base = 0.5 + 0.5*cos(6.2831*(vec3(0.0,0.33,0.67) + floor(z*0.5)*0.11 + 0.55)); vec3 col = base*(0.12 + 0.35*step(0.82, cell)*(0.6 + 0.4*sin(T*6.0 + cell*30.0)));' +
+    ' col += grid*mix(vec3(0.1,0.9,1.0), vec3(1.0,0.25,0.85), 0.5 + 0.5*sin(z*0.7)); col *= smoothstep(0.0, 0.35, r); col += vec3(0.6,0.85,1.0)*0.35*exp(-r*9.0);' +
+    ' o = vec4(col*smoothstep(1.3, 0.3, length(p)), 1.0); }',
+    'float ridge(float x, float s, float o2){ return fbm(vec2(x*s + o2, o2)); }' +
+    ' void main(){ vec2 uv = gl_FragCoord.xy / R; vec2 p = (gl_FragCoord.xy - 0.5*R)/R.y; float pan = T*0.03;' +
+    ' vec3 col = mix(vec3(0.01,0.03,0.07), vec3(0.03,0.10,0.18), smoothstep(1.0, 0.0, uv.y)); vec2 st = floor(gl_FragCoord.xy/1.5); col += step(0.998, h21(st))*smoothstep(0.3, 0.8, uv.y)*0.8;' +
+    ' for (int i = 0; i < 3; i++){ float fi = float(i); float x = p.x + pan*(0.6 + fi*0.3); float h = 0.18 + 0.12*fi + 0.08*sin(x*1.3 + fi*2.0 + T*0.15) + 0.06*fbm(vec2(x*2.0 + fi*5.0, T*0.08)); float y = p.y - h + 0.1;' +
+    ' float curtain = exp(-max(y, 0.0)*3.2)*smoothstep(-0.03, 0.08, y); float rays = smoothstep(0.35, 0.85, fbm(vec2(x*7.0 + fbm(vec2(x*2.0, T*0.2))*3.0, y*1.5 - T*0.25)));' +
+    ' vec3 c = mix(vec3(0.15,1.0,0.55), vec3(0.55,0.3,1.0), smoothstep(0.0, 0.35, y)); col += c*curtain*(0.12 + 0.9*rays)*(0.6 - fi*0.14); }' +
+    ' for (int i = 0; i < 4; i++){ float fi = float(i); float x = p.x + pan*(1.0 + fi*1.6) + fi*3.7; float m = -0.06 - fi*0.11 + 0.22*ridge(x, 1.2 + fi*0.6, fi*9.0) + 0.05*abs(sin(x*3.0 + fi));' +
+    ' vec3 mc = mix(vec3(0.05,0.10,0.16), vec3(0.005,0.01,0.02), fi/3.0); mc += vec3(0.1,0.5,0.35)*0.08*(3.0 - fi)*smoothstep(-0.1, 0.0, p.y - m); col = mix(col, mc, smoothstep(0.002, -0.002, p.y - m)); }' +
+    ' o = vec4(col*smoothstep(1.4, 0.35, length(p)), 1.0); }',
+  ]
+  var VS = '#version 300 es\nin vec2 p; out vec2 vUv; void main(){ vUv = p*0.5 + 0.5; gl_Position = vec4(p, 0.0, 1.0); }'
+  var COPY = '#version 300 es\nprecision highp float; in vec2 vUv; out vec4 fragColor; uniform sampler2D uTex; void main(){ fragColor = texture(uTex, vUv); }'
+
+  var vb = gl.createBuffer()
+  gl.bindBuffer(gl.ARRAY_BUFFER, vb)
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW)
+  var vao = gl.createVertexArray()
+  gl.bindVertexArray(vao)
+  gl.enableVertexAttribArray(0)
+  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
+
+  var progs = {}
+  function sh (type, src) { var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { console.warn(gl.getShaderInfoLog(s)); return null } return s }
+  function prog (key, fs) {
+    if (key in progs) return progs[key]
+    var v = sh(gl.VERTEX_SHADER, VS), f = sh(gl.FRAGMENT_SHADER, fs), p = null
+    if (v && f) {
+      p = gl.createProgram(); gl.attachShader(p, v); gl.attachShader(p, f); gl.bindAttribLocation(p, 0, 'p'); gl.linkProgram(p)
+      if (!gl.getProgramParameter(p, gl.LINK_STATUS)) { console.warn(gl.getProgramInfoLog(p)); p = null }
+      else {
+        var n = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS), u = []
+        for (var i = 0; i < n; i++) { var info = gl.getActiveUniform(p, i); u.push({ name: info.name.replace(/\[0\]$/, ''), type: info.type, loc: gl.getUniformLocation(p, info.name) }) }
+        p.u = u
+      }
+    }
+    progs[key] = p
+    return p
+  }
+  function use (p, vals) {
+    gl.useProgram(p)
+    var unit = 0
+    for (var i = 0; i < p.u.length; i++) {
+      var u = p.u[i], v = vals[u.name]
+      if (v === undefined) continue
+      switch (u.type) {
+        case gl.FLOAT: gl.uniform1f(u.loc, +v); break
+        case gl.FLOAT_VEC2: gl.uniform2fv(u.loc, v); break
+        case gl.FLOAT_VEC3: gl.uniform3fv(u.loc, v); break
+        case gl.FLOAT_VEC4: gl.uniform4fv(u.loc, v); break
+        case gl.INT: case gl.BOOL: gl.uniform1i(u.loc, typeof v === 'boolean' ? (v ? 1 : 0) : Math.round(v)); break
+        case gl.INT_VEC2: gl.uniform2iv(u.loc, v); break
+        case gl.SAMPLER_2D: gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, v); gl.uniform1i(u.loc, unit); unit++; break
+      }
+    }
+  }
+  function target (w, h) {
+    var t = gl.createTexture()
+    gl.bindTexture(gl.TEXTURE_2D, t)
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+    var f = gl.createFramebuffer()
+    gl.bindFramebuffer(gl.FRAMEBUFFER, f)
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, t, 0)
+    return { tex: t, fbo: f, w: w, h: h }
+  }
+  function free (t) { if (t) { gl.deleteTexture(t.tex); gl.deleteFramebuffer(t.fbo) } }
+  function bind (t) { gl.bindFramebuffer(gl.FRAMEBUFFER, t ? t.fbo : null); gl.viewport(0, 0, t ? t.w : cv.width, t ? t.h : cv.height) }
+
+  var W = 0, H = 0, A = null, B = null, C = null
+  function size () {
+    var r = cv.getBoundingClientRect()
+    var w = Math.round(Math.min(960, Math.max(320, r.width * Math.min(devicePixelRatio || 1, 1.5))))
+    var h = Math.round(w * 9 / 16)
+    if (w === W && h === H) return
+    W = cv.width = w; H = cv.height = h
+    free(A); free(B); free(C)
+    A = target(W, H); B = target(W, H); C = target(W, H)
+  }
+
+  var CLIP = 4, N = 4, TOTAL = CLIP * N, OFF = [0.0, 2.0, 0.5, 6.0]
+  var cuts = [0, 1, 4]   // her kesimin geçişi (FX.transitions dizini)
+  var picks = { 'gl-cross-zoom': 0, 'kup-sola': 1, 'sok-dalgasi': 2 }
+  FX.transitions.forEach(function (t, i) { if (t.id in picks) cuts[picks[t.id]] = i })
+  var selCut = 0, fxIdx = -1, t = 0, playing = false, last = 0
+
+  function scene (i, time, out) {
+    var p = prog('sc' + i, HEAD + SCENES[i])
+    bind(out)
+    if (!p) { gl.clearColor(0, 0, 0, 1); gl.clear(gl.COLOR_BUFFER_BIT); return }
+    use(p, { R: [out ? out.w : W, out ? out.h : H], T: time + OFF[i] })
+    gl.drawArrays(gl.TRIANGLES, 0, 3)
+  }
+  function durOf (k) { var d = FX.transitions[cuts[k]].d || 0.7; return Math.max(0.6, Math.min(1.2, d * 1.2)) }
+  function render () {
+    size()
+    var k = -1, pr = 0
+    for (var j = 0; j < N - 1; j++) {
+      var c = (j + 1) * CLIP, d = durOf(j)
+      if (t >= c - d / 2 && t < c + d / 2) { k = j; pr = (t - (c - d / 2)) / d }
+    }
+    var fx = fxIdx >= 0 ? FX.effects[fxIdx] : null
+    var out = fx ? C : null
+    if (k >= 0) {
+      scene(k, t, A); scene(k + 1, t, B)
+      var tr = FX.transitions[cuts[k]], p = prog('tr' + cuts[k], tr.src)
+      bind(out)
+      if (p) {
+        var vals = { uFrom: A.tex, uTo: B.tex, progress: pr, ratio: W / H, uTime: t }
+        for (var key in tr.p) vals[key] = tr.p[key]
+        use(p, vals); gl.drawArrays(gl.TRIANGLES, 0, 3)
+      }
+    } else {
+      scene(Math.min(N - 1, Math.floor(t / CLIP)), t, out)
+    }
+    if (fx) {
+      var pe = prog('fx' + fxIdx, fx.src)
+      bind(null)
+      if (pe) {
+        var v2 = { uTex: C.tex, uOrig: C.tex, uRes: [W, H], uTime: t, uProgress: t / TOTAL, uIntensity: 1, uSeed: 0.37 }
+        for (var k2 in fx.p) v2[k2] = fx.p[k2]
+        use(pe, v2); gl.drawArrays(gl.TRIANGLES, 0, 3)
+      } else {
+        var pc = prog('copy', COPY); use(pc, { uTex: C.tex }); gl.drawArrays(gl.TRIANGLES, 0, 3)
+      }
+    }
+    ui()
+  }
+
+  // ---------------------------------------------------------------- arayüz
+  var tcEl = document.getElementById('cut-tc'), ph = document.getElementById('tl-ph'), tlv = document.getElementById('tl-v')
+  var nowEl = document.getElementById('cut-now'), fxBar = document.getElementById('tl-fx'), names = document.getElementById('tl-names')
+  var lang = function () { return root.getAttribute('data-lang') === 'tr' ? 'tr' : 'en' }
+  function fmt (s) { var fr = Math.floor(s * 30 + 1e-6); return pad2(Math.floor(fr / 1800)) + ':' + pad2(Math.floor(fr / 30) % 60) + ':' + pad2(fr % 30) }
+  function ui () {
+    tcEl.firstChild.nodeValue = fmt(t) + ' '
+    var r = tlv.getBoundingClientRect(), pr = tlv.parentElement.getBoundingClientRect()
+    ph.style.left = (r.left - pr.left + (t / TOTAL) * r.width) + 'px'
+  }
+  function labels () {
+    var L = lang()
+    names.innerHTML = ''
+    for (var k = 0; k < N - 1; k++) {
+      var b = document.createElement('button')
+      b.type = 'button'; b.dataset.k = k; b.setAttribute('aria-pressed', String(k === selCut))
+      b.innerHTML = (L === 'tr' ? 'Kesim ' : 'Cut ') + (k + 1) + '<b>' + FX.transitions[cuts[k]][L] + '</b>'
+      b.addEventListener('click', function () { selectCut(+this.dataset.k, true) })
+      names.appendChild(b)
+    }
+    document.querySelectorAll('.cutmk').forEach(function (m) { m.setAttribute('aria-pressed', String(+m.dataset.k === selCut)) })
+    document.querySelectorAll('#tr-opts button').forEach(function (b) { b.setAttribute('aria-pressed', String(+b.dataset.i === cuts[selCut])) })
+    document.querySelectorAll('#fx-opts button').forEach(function (b) { b.setAttribute('aria-pressed', String(+b.dataset.i === fxIdx)) })
+    var fx = fxIdx >= 0 ? FX.effects[fxIdx] : null
+    fxBar.hidden = !fx
+    fxBar.textContent = fx ? fx[L] : ''
+    nowEl.textContent = fx ? (L === 'tr' ? 'Efekt: ' : 'Effect: ') + fx[L] : ''
+  }
+  window.__cutLang = function () { labels(); buildOpts() }
+  // test kancası: belirli bir ana git (ekran görüntüsü almak için)
+  window.__cutSeek = function (s, play) { t = Math.max(0, Math.min(TOTAL - 0.001, +s || 0)); if (play != null) setPlaying(!!play); kick() }
+  function selectCut (k, seek) { selCut = k; labels(); if (seek) { t = Math.max(0, (k + 1) * CLIP - 1.1); kick() } }
+  function buildOpts () {
+    var L = lang()
+    var to = document.getElementById('tr-opts'), fo = document.getElementById('fx-opts')
+    to.innerHTML = ''; fo.innerHTML = ''
+    FX.transitions.forEach(function (tr, i) {
+      var b = document.createElement('button'); b.type = 'button'; b.dataset.i = i
+      b.setAttribute('aria-pressed', String(i === cuts[selCut]))
+      b.innerHTML = tr[L] + (tr.gl ? '<i>gl</i>' : '')
+      b.addEventListener('click', function () { cuts[selCut] = i; labels(); t = Math.max(0, (selCut + 1) * CLIP - 1.1); kick() })
+      to.appendChild(b)
+    })
+    var none = document.createElement('button'); none.type = 'button'; none.dataset.i = -1
+    none.setAttribute('aria-pressed', String(fxIdx === -1)); none.textContent = L === 'tr' ? 'Yok' : 'None'
+    none.addEventListener('click', function () { fxIdx = -1; labels(); kick() })
+    fo.appendChild(none)
+    FX.effects.forEach(function (e, i) {
+      var b = document.createElement('button'); b.type = 'button'; b.dataset.i = i
+      b.setAttribute('aria-pressed', String(i === fxIdx)); b.textContent = e[L]
+      b.addEventListener('click', function () { fxIdx = i; labels(); kick() })
+      fo.appendChild(b)
+    })
+  }
+  document.querySelectorAll('.cutmk').forEach(function (m) { m.addEventListener('click', function (e) { e.stopPropagation(); selectCut(+m.dataset.k, true) }) })
+
+  // cetvel + ses dalgası (görsel)
+  var rul = document.getElementById('tl-ruler')
+  for (var s = 0; s < TOTAL; s += 2) { var i2 = document.createElement('i'); i2.style.left = (s / TOTAL * 100) + '%'; i2.textContent = s ? s + 's' : '0'; rul.appendChild(i2) }
+  ;(function wave () {
+    var c = document.getElementById('tl-wave'), x = c.getContext('2d'), w = c.width, h = c.height
+    x.fillStyle = '#2EE6A6'
+    for (var i = 0; i < w; i += 3) {
+      var tt = i / w * TOTAL, beat = Math.pow(1 - ((tt * 2) % 1), 3), env = 0.25 + 0.55 * beat + 0.2 * Math.abs(Math.sin(tt * 7.1) * Math.sin(tt * 2.3))
+      var a = Math.max(2, env * h * 0.9)
+      x.globalAlpha = 0.85; x.fillRect(i, (h - a) / 2, 2, a)
+    }
+  })()
+
+  // küçük resimler: her sahneden bir kare (zaman çizelgesi + giriş şeridi)
+  function thumbs () {
+    var tw = 192, th = 108, T2 = target(tw, th), px = new Uint8Array(tw * th * 4)
+    var cnv = document.createElement('canvas'); cnv.width = tw; cnv.height = th
+    var cx = cnv.getContext('2d'), img = cx.createImageData(tw, th)
+    for (var i = 0; i < N; i++) {
+      scene(i, 1.4 + i * 0.3, T2)
+      gl.readPixels(0, 0, tw, th, gl.RGBA, gl.UNSIGNED_BYTE, px)
+      for (var y = 0; y < th; y++) img.data.set(px.subarray((th - 1 - y) * tw * 4, (th - y) * tw * 4), y * tw * 4)
+      cx.putImageData(img, 0, 0)
+      var url = cnv.toDataURL('image/jpeg', 0.82)
+      var clip = tlv.querySelector('.clp[data-c="' + i + '"]'); if (clip) clip.style.backgroundImage = 'url(' + url + ')'
+      var hc = document.querySelector('canvas[data-thumb="' + i + '"]')
+      if (hc) { var hx = hc.getContext('2d'); var im = new Image(); im.onload = (function (ctx, el) { return function () { ctx.drawImage(this, 0, 0, el.width, el.height) } })(hx, hc); im.src = url }
+    }
+    free(T2)
+  }
+
+  // oynatma
+  var playBtn = document.getElementById('cut-play'), icoP = document.getElementById('ico-play'), icoS = document.getElementById('ico-pause')
+  var visible = false, raf = 0
+  function setPlaying (v) {
+    playing = v; icoP.style.display = v ? 'none' : ''; icoS.style.display = v ? '' : 'none'
+    playBtn.setAttribute('aria-label', v ? 'Pause' : 'Play')
+    if (v) kick()
+  }
+  function loop (now) {
+    raf = 0
+    if (playing && visible) { var dt = last ? Math.min(0.1, (now - last) / 1000) : 0; t = (t + dt) % TOTAL }
+    last = now
+    render()
+    if (playing && visible) raf = requestAnimationFrame(loop)
+  }
+  function kick () { last = 0; if (!raf) raf = requestAnimationFrame(loop) }
+  playBtn.addEventListener('click', function () { setPlaying(!playing) })
+
+  // gezinme
+  var tl = document.getElementById('cut-tl'), drag = false, wasPlaying = false
+  function seekX (e) { var r = tlv.getBoundingClientRect(); t = Math.max(0, Math.min(TOTAL - 0.001, (e.clientX - r.left) / r.width * TOTAL)); kick() }
+  tl.addEventListener('pointerdown', function (e) { if (e.target.closest('.cutmk')) return; drag = true; wasPlaying = playing; playing = false; tl.setPointerCapture(e.pointerId); seekX(e) })
+  tl.addEventListener('pointermove', function (e) { if (drag) seekX(e) })
+  tl.addEventListener('pointerup', function () { if (!drag) return; drag = false; if (wasPlaying) setPlaying(true) })
+  tl.addEventListener('pointercancel', function () { drag = false })
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) { visible = es[0].isIntersecting; if (visible) kick() }, { threshold: 0.05 }).observe(cv)
+  } else visible = true
+  addEventListener('resize', function () { kick() })
+
+  size()
+  thumbs()
+  buildOpts()
+  labels()
+  setPlaying(!reduce)
+  render()
+})()
+</script>
+</body>
+</html>

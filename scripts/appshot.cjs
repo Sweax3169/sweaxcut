@@ -20,7 +20,9 @@ const sleep = ms => new Promise(r => setTimeout(r, ms))
   // APPSHOT_EXE: paketlenmiş uygulamayı (release/win-unpacked/SWEAXCUT.exe) sür
   const exe = process.env.APPSHOT_EXE ? path.resolve(root, process.env.APPSHOT_EXE) : path.join(root, 'node_modules/electron/dist/electron.exe')
   if (process.env.APPSHOT_EXE) delete env.SWEAXCUT_DEV_URL
-  const app = spawn(exe, process.env.APPSHOT_EXE ? [] : ['.'], { cwd: root, env, stdio: 'ignore' })
+  // APPSHOT_ARGS: ek komut satırı argümanları (ör. --user-data-dir=... ile gerçek kullanıcı verisine dokunmadan çalış)
+  const extra = (process.env.APPSHOT_ARGS || '').split('|').filter(Boolean)
+  const app = spawn(exe, [...(process.env.APPSHOT_EXE ? [] : ['.']), ...extra], { cwd: root, env, stdio: 'ignore' })
   let target = null
   for (let i = 0; i < 60 && !target; i++) {
     await sleep(500)

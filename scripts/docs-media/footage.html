@@ -1,0 +1,194 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>footage</title>
+<canvas id="c"></canvas>
+<script>
+// Örnek görüntü sahneleri — bu proje için yazılmış özgün GLSL (üçüncü parti kod yok).
+const canvas = document.getElementById('c')
+const gl = canvas.getContext('webgl2', { preserveDrawingBuffer: true, antialias: false })
+const VS = `#version 300 es
+in vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }`
+const HEAD = `#version 300 es
+precision highp float;
+uniform vec2 R; uniform float T;
+out vec4 o;
+float h11(float n){ return fract(sin(n*127.1)*43758.5453); }
+float h21(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7)))*43758.5453); }
+float vnoise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f);
+  return mix(mix(h21(i), h21(i+vec2(1,0)), f.x), mix(h21(i+vec2(0,1)), h21(i+vec2(1,1)), f.x), f.y); }
+float fbm(vec2 p){ float s = 0.0, a = 0.5; for (int i = 0; i < 6; i++){ s += a*vnoise(p); p = p*2.03 + 17.1; a *= 0.5; } return s; }
+`
+const SCENES = {
+  // Gün batımında ızgara yol: güneş, dağ silueti, yıldızlar, ileri akan ızgara
+  synthwave: `
+void main(){
+  vec2 p = (gl_FragCoord.xy - 0.5*R)/R.y;
+  float hz = -0.04;
+  vec3 col;
+  if (p.y > hz) {
+    float t = clamp((p.y - hz)/0.56, 0.0, 1.0);
+    col = mix(vec3(1.0, 0.42, 0.38), vec3(0.20, 0.05, 0.32), pow(t, 0.55));
+    col = mix(col, vec3(0.04, 0.02, 0.10), smoothstep(0.55, 1.0, t));
+    vec2 st = floor(gl_FragCoord.xy/2.0);
+    float star = step(0.9975, h21(st)) * smoothstep(0.25, 0.9, t) * (0.6 + 0.4*sin(T*3.0 + h21(st+3.0)*40.0));
+    col += star;
+    vec2 sp = p - vec2(0.0, 0.13);
+    float r = length(sp);
+    float band = sp.y < 0.0 ? step(0.0, sin(sp.y*120.0 + T*3.0) + 0.9 + sp.y*9.0) : 1.0;
+    vec3 sunc = mix(vec3(1.0, 0.18, 0.52), vec3(1.0, 0.86, 0.32), smoothstep(-0.25, 0.28, sp.y));
+    col = mix(col, sunc, smoothstep(0.262, 0.255, r) * band);
+    col += vec3(1.0, 0.35, 0.45) * 0.30 * exp(-max(r - 0.25, 0.0)*7.0);
+    float x = p.x + T*0.015;
+    float m = 0.035 + 0.07*fbm(vec2(x*3.0, 1.0)) + 0.06*abs(sin(x*2.3 + 1.7));
+    float mtn = smoothstep(0.0, 0.003, m - (p.y - hz));
+    float rim = smoothstep(0.006, 0.0, abs(m - (p.y - hz)));
+    col = mix(col, vec3(0.06, 0.01, 0.13), mtn);
+    col += rim * vec3(1.0, 0.25, 0.75) * 0.9;
+  } else {
+    float d = hz - p.y;
+    float z = 0.36/d;
+    vec2 g = vec2(p.x*z*1.6, z + T*3.2);
+    vec2 fw = fwidth(g);
+    vec2 gl2 = abs(fract(g) - 0.5);
+    float lx = smoothstep(0.5 - fw.x*1.5, 0.5, gl2.x + 0.012);
+    float ly = smoothstep(0.5 - fw.y*1.5, 0.5, gl2.y + 0.02);
+    float line = max(lx, ly);
+    vec3 ground = vec3(0.07, 0.0, 0.14);
+    col = ground + line * vec3(1.0, 0.18, 0.78) * 1.2;
+    float fog = exp(-d*7.0);
+    col = mix(col, vec3(1.0, 0.42, 0.45), fog*0.85);
+    col += vec3(0.0, 0.8, 1.0) * 0.5 * smoothstep(0.04, 0.0, abs(p.x)*d*3.0 + 0.0) * 0.0;
+  }
+  float vig = smoothstep(1.25, 0.4, length(p*vec2(0.9, 1.2)));
+  o = vec4(pow(col*vig, vec3(0.95)), 1.0);
+}`,
+  // Neon tünel: kutupsal koordinat, akan halkalar ve altıgen desen
+  tunnel: `
+void main(){
+  vec2 p = (gl_FragCoord.xy - 0.5*R)/R.y;
+  p += 0.06*vec2(sin(T*0.7), cos(T*0.5));
+  float a = atan(p.y, p.x);
+  float r = length(p);
+  float z = 0.32/r + T*1.6;
+  float u = a/3.14159265*6.0 + T*0.25;
+  vec2 q = vec2(u, z*2.0);
+  vec2 f = abs(fract(q) - 0.5);
+  vec2 fw = fwidth(q);
+  float gd = min(0.5 - f.x, 0.5 - f.y); float grid = smoothstep(fw.x*1.5 + 0.01, 0.0, gd) + 0.35*exp(-gd*12.0);
+  float cell = h21(floor(q));
+  vec3 base = 0.5 + 0.5*cos(6.2831*(vec3(0.0, 0.33, 0.67) + floor(z*0.5)*0.11 + 0.55));
+  vec3 col = base * (0.12 + 0.35*step(0.82, cell)*(0.6 + 0.4*sin(T*6.0 + cell*30.0)));
+  col += grid * mix(vec3(0.1, 0.9, 1.0), vec3(1.0, 0.25, 0.85), 0.5 + 0.5*sin(z*0.7));
+  col *= smoothstep(0.0, 0.35, r);
+  col += vec3(0.6, 0.85, 1.0) * 0.35 * exp(-r*9.0);
+  float vig = smoothstep(1.3, 0.3, length(p));
+  o = vec4(col*vig, 1.0);
+}`,
+  // Kuzey ışıkları: katmanlı dağlar, yıldızlar, dalgalanan perdeler, yavaş yatay kaydırma
+  aurora: `
+float ridge(float x, float s, float o){ return fbm(vec2(x*s + o, o)) ; }
+void main(){
+  vec2 uv = gl_FragCoord.xy / R;
+  vec2 p = (gl_FragCoord.xy - 0.5*R)/R.y;
+  float pan = T*0.03;
+  vec3 col = mix(vec3(0.01, 0.03, 0.07), vec3(0.03, 0.10, 0.18), smoothstep(1.0, 0.0, uv.y));
+  vec2 st = floor(gl_FragCoord.xy/1.5);
+  col += step(0.998, h21(st)) * (0.5 + 0.5*sin(T*2.0 + h21(st)*50.0)) * smoothstep(0.3, 0.8, uv.y);
+  for (int i = 0; i < 3; i++){
+    float fi = float(i);
+    float x = p.x + pan*(0.6 + fi*0.3);
+    float h = 0.18 + 0.12*fi + 0.08*sin(x*1.3 + fi*2.0 + T*0.15) + 0.06*fbm(vec2(x*2.0 + fi*5.0, T*0.08));
+    float y = p.y - h + 0.1;
+    float curtain = exp(-max(y, 0.0)*3.2) * smoothstep(-0.03, 0.08, y);
+    float rays = smoothstep(0.35, 0.85, fbm(vec2(x*7.0 + fbm(vec2(x*2.0, T*0.2))*3.0, y*1.5 - T*0.25)));
+    vec3 c = mix(vec3(0.15, 1.0, 0.55), vec3(0.55, 0.3, 1.0), smoothstep(0.0, 0.35, y));
+    col += c * curtain * (0.12 + 0.9*rays) * (0.6 - fi*0.14);
+  }
+  for (int i = 0; i < 4; i++){
+    float fi = float(i);
+    float x = p.x + pan*(1.0 + fi*1.6) + fi*3.7;
+    float m = -0.06 - fi*0.11 + 0.22*ridge(x, 1.2 + fi*0.6, fi*9.0) + 0.05*abs(sin(x*3.0 + fi));
+    float inside = smoothstep(0.002, -0.002, p.y - m);
+    vec3 mc = mix(vec3(0.05, 0.10, 0.16), vec3(0.005, 0.01, 0.02), fi/3.0);
+    mc += vec3(0.1, 0.5, 0.35) * 0.08 * (3.0 - fi) * smoothstep(-0.1, 0.0, p.y - m);
+    col = mix(col, mc, inside);
+  }
+  float vig = smoothstep(1.4, 0.35, length(p));
+  o = vec4(col*vig, 1.0);
+}`,
+  // Kutu dünyası: ışın yürütmeli (raymarch) dönen bloklar, yansımalı zemin
+  blocks: `
+float sdBox(vec3 p, vec3 b){ vec3 q = abs(p) - b; return length(max(q, 0.0)) + min(max(q.x, max(q.y, q.z)), 0.0) - 0.04; }
+mat2 rot(float a){ float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
+float map(vec3 p, out float id){
+  vec2 c = floor(p.xz/2.0 + 0.5);
+  vec3 q = p; q.xz -= c*2.0;
+  float hgt = 0.35 + 0.9*h21(c) + 0.25*sin(T*1.6 + h21(c)*20.0);
+  q.y -= hgt*0.5 - 0.5;
+  q.xz = rot(T*0.4 + h21(c+7.0)*6.0) * q.xz;
+  float d = sdBox(q, vec3(0.5, hgt*0.5, 0.5));
+  float pl = p.y + 0.5;
+  id = h21(c+3.0);
+  if (pl < d) { id = -1.0; return pl; }
+  return d;
+}
+vec3 nrm(vec3 p){ float id; vec2 e = vec2(0.002, 0.0);
+  return normalize(vec3(map(p+e.xyy, id)-map(p-e.xyy, id), map(p+e.yxy, id)-map(p-e.yxy, id), map(p+e.yyx, id)-map(p-e.yyx, id))); }
+void main(){
+  vec2 p = (gl_FragCoord.xy - 0.5*R)/R.y;
+  vec3 ro = vec3(T*0.9, 3.2, T*1.4 - 6.0);
+  vec3 ta = ro + vec3(0.5, -1.4, 3.0);
+  vec3 f = normalize(ta - ro), r = normalize(cross(vec3(0,1,0), f)), u = cross(f, r);
+  vec3 rd = normalize(p.x*r + p.y*u + 1.5*f);
+  float t = 0.0, id = 0.0;
+  for (int i = 0; i < 110; i++){ float d = map(ro + rd*t, id); if (d < 0.001 || t > 40.0) break; t += min(d*0.75, 0.35); }
+  vec3 sky = mix(vec3(0.95, 0.75, 0.55), vec3(0.35, 0.55, 0.85), clamp(rd.y*2.0 + 0.4, 0.0, 1.0));
+  vec3 col = sky;
+  if (t < 40.0){
+    vec3 pos = ro + rd*t, n = nrm(pos);
+    vec3 L = normalize(vec3(-0.5, 0.8, -0.3));
+    float dif = clamp(dot(n, L), 0.0, 1.0);
+    float sh = 1.0; float tt = 0.05; float idd;
+    for (int i = 0; i < 40; i++){ float h = map(pos + L*tt, idd); sh = min(sh, 10.0*h/tt); tt += clamp(h, 0.02, 0.3); if (sh < 0.01 || tt > 8.0) break; }
+    sh = clamp(sh, 0.0, 1.0);
+    vec3 alb = id < 0.0 ? vec3(0.85, 0.82, 0.78) * (0.85 + 0.15*step(0.5, fract(pos.x*0.5)) * step(0.5, fract(pos.z*0.5)) + 0.08*step(0.5, fract(pos.x*0.5 + 0.5))) :
+      0.5 + 0.5*cos(6.2831*(id*0.6 + vec3(0.0, 0.25, 0.55)));
+    float ao = clamp(map(pos + n*0.3, idd)/0.3, 0.0, 1.0);
+    col = alb*(0.18 + 0.85*dif*sh)*vec3(1.05, 0.98, 0.9) + alb*0.25*vec3(0.4, 0.55, 0.8)*(0.5 + 0.5*n.y)*ao;
+    col = mix(col, sky, 1.0 - exp(-0.0025*t*t));
+  }
+  col = pow(col, vec3(0.9));
+  o = vec4(col, 1.0);
+}`,
+}
+const progs = {}
+function compile(type, src) { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s }
+function prog(name) {
+  if (progs[name]) return progs[name]
+  const p = gl.createProgram()
+  gl.attachShader(p, compile(gl.VERTEX_SHADER, VS))
+  gl.attachShader(p, compile(gl.FRAGMENT_SHADER, HEAD + SCENES[name]))
+  gl.bindAttribLocation(p, 0, 'p')
+  gl.linkProgram(p)
+  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p))
+  return (progs[name] = p)
+}
+const vb = gl.createBuffer()
+gl.bindBuffer(gl.ARRAY_BUFFER, vb)
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW)
+gl.enableVertexAttribArray(0)
+gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
+let pix = null
+window.renderFrame = (name, t, w, h) => {
+  if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; pix = null }
+  const p = prog(name)
+  gl.viewport(0, 0, w, h)
+  gl.useProgram(p)
+  gl.uniform2f(gl.getUniformLocation(p, 'R'), w, h)
+  gl.uniform1f(gl.getUniformLocation(p, 'T'), t)
+  gl.drawArrays(gl.TRIANGLES, 0, 3)
+  if (!pix) pix = new Uint8Array(w * h * 4)
+  gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, pix)
+  return pix
+}
+</script>

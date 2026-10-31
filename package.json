@@ -11,8 +11,9 @@
     "build:renderer": "vite build",
     "start": "electron .",
     "start:dev": "node scripts/dev-electron.cjs",
-    "dist": "node scripts/fetch-piper.cjs && vite build && electron-builder --win nsis",
-    "prepare:vendor": "node scripts/fetch-piper.cjs"
+    "dist": "node scripts/fetch-piper.cjs && node scripts/copy-mediapipe.cjs && vite build && electron-builder --win nsis",
+    "prepare:vendor": "node scripts/fetch-piper.cjs && node scripts/copy-mediapipe.cjs",
+    "postinstall": "node scripts/copy-mediapipe.cjs"
   },
   "dependencies": {
     "ffmpeg-static": "^5.2.0",
@@ -166,6 +167,18 @@
       "shortcutName": "SWEAXCUT"
     },
     "extraResources": [
+      {
+        "from": "LICENSE",
+        "to": "LICENSE.txt"
+      },
+      {
+        "from": "THIRD_PARTY_NOTICES.md",
+        "to": "THIRD_PARTY_NOTICES.md"
+      },
+      {
+        "from": "docs/licenses",
+        "to": "licenses"
+      },
       {
         "from": "vendor",
         "to": "vendor",
