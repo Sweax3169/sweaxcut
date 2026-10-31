@@ -1,323 +1,396 @@
 <a href="https://sweax3169.github.io/sweaxcut/">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/art/banner-tr-dark.svg">
-    <img alt="SWEAXCUT: Windows için ücretsiz video kurgu programı. Altyazı, seslendirme ve yapay zekâ araçları internet olmadan, bilgisayarda çalışır." src="docs/art/banner-tr-light.svg" width="100%">
+    <img alt="SWEAXCUT, Windows için video kurgu programı. Önizlemede altyazı kelime kelime doluyor, alttaki zaman çizelgesinde kırmızı oynatma kafası bir kesimden geçiyor." src="docs/art/banner-tr-light.svg" width="100%">
   </picture>
 </a>
 
 <p align="center">
   <a href="https://github.com/Sweax3169/sweaxcut/releases/latest"><b>Windows için indir</b></a>
   &nbsp;&nbsp;·&nbsp;&nbsp;
-  <a href="https://sweax3169.github.io/sweaxcut/">İnternet sitesi</a>
+  <a href="https://sweax3169.github.io/sweaxcut/">Web sitesi</a>
   &nbsp;&nbsp;·&nbsp;&nbsp;
   <a href="README.md">English</a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/Sweax3169/sweaxcut/releases/latest"><img alt="Son sürüm" src="https://img.shields.io/github/v/release/Sweax3169/sweaxcut?label=s%C3%BCr%C3%BCm&color=3FA9F5"></a>
-  <a href="https://github.com/Sweax3169/sweaxcut/releases"><img alt="İndirme sayısı" src="https://img.shields.io/github/downloads/Sweax3169/sweaxcut/total?label=indirme&color=121518"></a>
-  <img alt="Windows 10 ve 11, 64 bit" src="https://img.shields.io/badge/Windows-10%20%7C%2011%20%C2%B7%2064%20bit-121518">
-  <a href="LICENSE"><img alt="MIT lisansı" src="https://img.shields.io/badge/lisans-MIT-2EE6A6"></a>
+  <a href="https://github.com/Sweax3169/sweaxcut/releases/latest"><img alt="Son sürüm" src="https://img.shields.io/github/v/release/Sweax3169/sweaxcut?label=s%C3%BCr%C3%BCm&color=ff4b3e"></a>
+  <a href="https://github.com/Sweax3169/sweaxcut/releases"><img alt="İndirme sayısı" src="https://img.shields.io/github/downloads/Sweax3169/sweaxcut/total?label=indirme&color=13161c"></a>
+  <img alt="Windows 10 ve 11, 64 bit" src="https://img.shields.io/badge/Windows-10%20%7C%2011%20%C2%B7%2064%20bit-13161c">
+  <a href="LICENSE"><img alt="MIT lisansı" src="https://img.shields.io/badge/lisans-MIT-36d39b"></a>
 </p>
 
 <br>
 
 <p align="center">
-  <img alt="SWEAXCUT düzenleyicisinde 16:9 bir proje oynatılıyor: GECE SÜRÜŞÜ başlığı canlanıyor, çapraz zum geçişiyle sonraki klibe geçiliyor, ardından geçiş kütüphanesi açılıp yeni bir geçiş uygulanıyor" src="docs/media/tour.gif" width="900">
+  <a href="docs/media/tour.mp4"><img alt="SWEAXCUT 3 ekran kaydı: ana ekran, ritimli montaj kuran bir tarif ve oynayan montaj, otomatik altyazılı proje, altyazı stili değişimleri, komut paleti ve dışa aktarma penceresi" src="docs/media/tour.gif" width="900"></a>
 </p>
-<p align="center"><sub>Düzenleyicide oynatılan bir proje: hareketli başlık, çapraz zum kesmesi, ardından kütüphaneden seçilen yeni bir geçiş. <a href="docs/media/tour.mp4">32 saniyelik turun tamamını izle (MP4)</a>.</sub></p>
+<p align="center"><sub>Ana ekrandan dışa aktarmaya: bir tarif ritimli montaj kuruyor, konuşma klibine altyazı ekleniyor, altyazının stili değişiyor, komut paleti açılıyor. <a href="docs/media/tour.mp4">Turu MP4 olarak izle</a>.</sub></p>
 
 <br>
 
 ## Nedir
 
-SWEAXCUT, Sweax Studios'un Windows için yaptığı bir video kurgu programı. Oyun kaydı, Shorts ve YouTube videosu kurgulayanlar düşünülerek hazırlandı. Çok izli zaman çizelgesi ve ekran kartıyla çizilen önizlemenin yanında efekt, geçiş, yazı stili, çıkartma, müzik ve ses efektlerinden oluşan geniş bir kütüphane, otomatik altyazı, metinden sese ve yapay zekâ araçları var. Konuşma tanıma ve seslendirme dahil hepsi senin bilgisayarında çalışır.
+SWEAXCUT, Sweax Studios'un yaptığı bir Windows video kurgu programı. Kliplerini altı tariften birine bırakırsın, kurguyu o kurar: müziğin vuruşunda keser, konuşmadaki boşlukları atar, oyun kaydındaki sesli anları bulur, altyazıyı kelime kelime yazar. Kurduğu her şey çok izli zaman çizelgesinde düzenlenebilir kalır; zaman çizelgesini, dışa aktarmayı da çizen aynı WebGL2 bileşimci çizer.
 
-Kullanımı ücretsizdir, dışa aktardığın videoya filigran basmaz. Hesap açman gerekmez.
+Konuşma tanıma (whisper.cpp), seslendirme (Piper) ve efektler senin bilgisayarında çalışır. Kaynak kodu MIT lisanslı.
 
 > [!NOTE]
-> Arayüz Türkçedir. Altyazı 12 dilde çıkarılabilir; indirilebilir sesler 10 dili kapsar.
+> Arayüz Türkçe. Altyazı Türkçe, İngilizce ve başka dillerde oluşturulabilir.
 
 <br>
 
-## İçinde neler var
+## 3.0'da yeni
+
+| | |
+|---|---|
+| **Baştan tasarım** | Ana ekran, editör, bütün paneller, denetçi, zaman çizelgesi, pencereler ve dışa aktarma. |
+| **Ana ekranda tarifler** | Dosyaları bir tarif kartına bırak, kurgu kurulsun. Her kart küçük bir canlı önizleme oynatır. |
+| **Otomatik sekmesi** | Altı tarif, Güzelleştir (sekiz adım) ve rengi, geçişi, altyazı stilini birlikte ayarlayan sekiz görünüm paketi. |
+| **Altyazı** | Klipten tek tık, üç doğruluk seviyesi, müzik ve oyun sesini atlama, metin düzenleyici, stil düzenleyici, 45 hazır stil ve kendi stillerin. |
+| **Komut paleti** | <kbd>Ctrl</kbd>+<kbd>K</kbd> komutları, tarifleri ve kütüphanedeki her şeyi arar. |
+| **Uzmanlar için** | Anahtar kare eğri düzenleyicisi, renk kapsamları, önizleme çevresinde ortam ışığı. |
+| **Dışa aktarma hazır ayarları** | Sosyal medyadan Yalnız sese altı hazır ayar. |
+| **Rehber** | Boş zaman çizelgesinde dört adım (Ekle, Otomatik kurgu, Altyazı, Dışa aktar), dosya gelince "Sıradaki adım" şeridi. |
+
+<br>
+
+## Tek tıkla kurgu
+
+<p align="center">
+  <img alt="Ana ekran: Dosya seç ve Boş proje düğmeli bırakma alanı, 9:16'dan 21:9'a beş biçim kartı, canlı önizlemeli altı tarif kartı ve kütüphane sayıları" src="docs/media/home.webp" width="100%">
+</p>
+
+Ana ekranda bir bırakma alanı, beş biçim (TikTok, Reels ve Shorts için 9:16, 16:9, 1:1, 4:5 ve 21:9) ve altı tarif var. Videolarını bir tarif kartına bırakırsan kurgu kendiliğinden kurulur; bırakma alanına bırakırsan zaman çizelgesine olduğu gibi dizilir.
+
+| Tarif | Ne kurar |
+|---|---|
+| **Ritimli montaj** | Müziğin vuruşunda keser, iki ölçüde bir zoom geçişi, vurgu zoomu, canlı renk |
+| **Konuşma + altyazı** | Sessizlikleri keser, sıçrama zoomu ve ses netleştirme ekler, altyazıyı kelime kelime yazar, müziği konuşmada kısar |
+| **Oyun anları** | Sesin yükseldiği anları bulur, zoom ve flaş ekler |
+| **Vlog** | Klipler sırayla, yumuşak geçiş, altın saat rengi, tarih başlığı |
+| **Fotoğraf slaytı** | Müziğin her ölçüsünde yavaş zoom ya da kayma |
+| **Kısa özet** | Uzun videodan 30 saniyelik özet |
+
+Uygulamanın müzik kütüphanesindeki parçaların temposu bilindiği için vuruş ızgarası kesindir. Kendi müziğinde vuruşlar algılanır.
 
 <table>
 <tr>
-<td width="33%" valign="top">
-<img alt="Geçiş kütüphanesi: önizlemeli 197 geçiş" src="docs/art/panel-transitions.webp" width="100%">
-<h3>197 geçiş</h3>
-<p>Kırbaç, zum, ışık patlaması, glitch, 3D küp, şekilli açılımlar. 125'i gl-transitions'tan, 72'si SWEAXCUT için yazıldı.</p>
-</td>
-<td width="33%" valign="top">
-<img alt="161 efektli efekt kütüphanesi" src="docs/art/panel-effects.webp" width="100%">
-<h3>161 efekt</h3>
-<p>VHS, tüplü ekran, film greni, glitch, hava durumu, ışık sızıntısı, kamera sarsıntısı, oyun çerçeveleri. Klibe ya da ayrı bir katmana uygulanır.</p>
-</td>
-<td width="33%" valign="top">
-<img alt="126 şablonlu yazı kütüphanesi" src="docs/art/panel-text.webp" width="100%">
-<h3>126 yazı şablonu</h3>
-<p>Hepsi Türkçe harfleri içeren 101 yazı tipi, 88 yazı animasyonu, kontur, gölge, parlama, arka plan kutusu ve kavisli yazı.</p>
-</td>
+<td width="50%" valign="top"><img alt="Otomatik kurgu penceresi: solda altı tarif, sağda müzik, uzunluk (15 sn, 30 sn, 1 dk, hepsi) ve otomatik altyazı" src="docs/media/autoedit.webp" width="100%"></td>
+<td width="50%" valign="top"><img alt="Ritimli montaj tarifi çalışıyor: müzik hazırlanıyor; aşamalar Müzik, Klipler, Kurgu, Bitti" src="docs/media/autoedit-run.webp" width="100%"></td>
 </tr>
 <tr>
-<td width="33%" valign="top">
-<img alt="Otomatik altyazı paneli: kaynak, dil, model ve altyazı stilleri" src="docs/art/panel-captions.webp" width="100%">
-<h3>Otomatik altyazı</h3>
-<p>whisper.cpp konuşmayı bilgisayarında, kelime zamanlı altyazıya çevirir. 45 altyazı stili, anahtar kelime vurgusu ve emoji.</p>
-</td>
-<td width="33%" valign="top">
-<img alt="Gömülü Türkçe ses Fahrettin ile metinden sese paneli" src="docs/art/panel-voice.webp" width="100%">
-<h3>Metinden sese</h3>
-<p>İnternetsiz çalışan Piper sesleri; Türkçe bir ses kurulumla gelir. Windows'un kendi sesleri de kullanılabilir.</p>
-</td>
-<td width="33%" valign="top">
-<img alt="777 çıkartmalı çıkartma kütüphanesi" src="docs/art/panel-stickers.webp" width="100%">
-<h3>777 çıkartma</h3>
-<p>649 Twemoji emojisi, 117 animasyonlu vektör çıkartma (abone ol düğmesi, can barı, leş sayacı, çizgi roman patlamaları) ve 11 şekil.</p>
-</td>
-</tr>
-<tr>
-<td width="33%" valign="top">
-<img alt="Program tarafından sentezlenen 22 parçalık müzik kütüphanesi" src="docs/art/panel-audio.webp" width="100%">
-<h3>Müzik ve ses efektleri</h3>
-<p>Hepsini programın kendisinin sentezlediği 22 müzik ve 102 ses efekti. 40 ses değiştirici, gürültü azaltma ve konuşmada müziği kısma.</p>
-</td>
-<td width="33%" valign="top">
-<img alt="Araçlar paneli: sessizlikleri kes, altyazı, öne çıkanlar, vuruşlar" src="docs/art/panel-tools.webp" width="100%">
-<h3>Yapay zekâ araçları</h3>
-<p>Arka plan silme, görüntü sabitleme, otomatik kadraj, sahne bölme, sessizlik kesme, öne çıkan anları ve vuruşları bulma.</p>
-</td>
-<td width="33%" valign="top">
-<img alt="93 filtreli renk filtresi kütüphanesi" src="docs/art/panel-filters.webp" width="100%">
-<h3>Renk</h3>
-<p>93 renk filtresi, ışık ve renk ayarları, sekiz renk aralığı için HSL. Işık ve renk kaydırıcılarına anahtar kare konabilir.</p>
-</td>
+<td valign="top"><sub>Tarifi, müziği ve uzunluğu seç. Pencere, tarifin ne yapacağını çalıştırmadan önce yazar.</sub></td>
+<td valign="top"><sub>Tarif dört aşamada çalışır: müzik, klipler, kurgu, bitti. Paketlenmiş uygulamada Ritimli montaj kartına bırakılan üç klip 6,3 sn'de 38 kesimli 30 saniyelik bir montaj oldu.</sub></td>
 </tr>
 </table>
 
+### Güzelleştir
+
+Güzelleştir, elindeki kurgunun üzerinden geçer. Her adım çalıştırmadan önce açılıp kapatılabilir.
+
+| Adım | Ne yapar | Varsayılan |
+|---|---|:---:|
+| Sessizlikleri kes | Konuşmadaki boşlukları atar | |
+| Sesi netleştir ve dengele | Gürültü azaltma, netlik, yükseklik eşitleme | ✓ |
+| Rengi iyileştir | Hafif kontrast ve canlılık | ✓ |
+| Kesimlere geçiş | Yumuşak karışım, 0,35 sn | ✓ |
+| Vurgu zoomu | Sesin yükseldiği anlarda yakınlaşır | |
+| Otomatik altyazı | Konuşmayı kelime kelime yazar | |
+| Arka plan müziği | Konuşmada kendiliğinden kısılır | |
+| Giriş ve bitiş | Başta belirme, sonda kararma | ✓ |
+
+### Görünüm paketleri
+
+Bir görünüm paketi renk filtresini, geçişleri ve altyazı stilini tek tıkla ayarlar. Sekiz paket var: **Sinematik, Enerjik, Sade, Oyun, Sıcak vlog, Retro, Neon gece** ve **Siyah beyaz**.
+
+### Komut paleti
+
+<p align="center">
+  <img alt="Editörün üstünde komut paleti: 'altyazı' araması Otomatik altyazı oluştur komutunu ve Konuşma + altyazı tarifini buluyor" src="docs/media/command.webp" width="100%">
+</p>
+
+<kbd>Ctrl</kbd>+<kbd>K</kbd> *Ne yapmak istiyorsun?* kutusunu açar. Tek arama komutları, tarifleri ve kütüphanedeki her efekti, geçişi, filtreyi, yazı şablonunu ve müziği kapsar.
+
 <br>
 
-## Koddan sayıldı
+## Otomatik altyazı
 
-Bu sayılar bir özellik listesinden değil, çalışan programın içerik kayıt defterinden (`src/engine/registry.js`, sürüm 2.0.1) alındı.
+Altyazıyı [whisper.cpp](https://github.com/ggml-org/whisper.cpp) (`b5454` sürümü) senin bilgisayarında çıkarır. Her kelimenin kendi zamanı olduğu için o an söylenen kelime vurgulanabilir.
 
-| | Adet | Ayrıntı |
+<table>
+<tr>
+<th width="33%">1 · Oluştur</th>
+<th width="33%">2 · Düzenle</th>
+<th width="33%">3 · Stil</th>
+</tr>
+<tr>
+<td valign="top"><img alt="Konuşma yazıya dökülürken altyazı paneli, yüzde 8: kaynak Ana iz, dil Türkçe, doğruluk Doğru seçili" src="docs/media/captions-running.webp" width="100%"></td>
+<td valign="top"><img alt="Altyazı metin düzenleyici: başlangıç zamanlarıyla 22 satır; önizlemede SONRA MERDİVENLERDEN yazarken SONRA kelimesi vurgulu" src="docs/media/captions.webp" width="100%"></td>
+<td valign="top"><img alt="Altyazı stil düzenleyici: hazır stiller, yazı tipi, boyut, kalınlık, harf aralığı, renk ve BÜYÜK HARF; yanda dikey önizleme" src="docs/media/caption-style.webp" width="100%"></td>
+</tr>
+</table>
+
+**Oluştur.** Klibin denetçisindeki *Altyazı oluştur* düğmesine, zaman çizelgesi araç çubuğundaki *Altyazı* düğmesine bas ya da klibin sağ tık menüsünü kullan.
+
+| Doğruluk | Model | İndirme |
+|---|---|---:|
+| Hızlı | small | 190 MB |
+| **Doğru** (önerilen) | medium | 539 MB |
+| Büyük | large-v3-turbo | 574 MB |
+
+Kelime zamanı DTW ile bulunur. *Müzik ve oyun sesini atla* önce Silero VAD çalıştırır; bir süzgeç de uydurma yazıyı atar (konuşma olmayan oyun sesinin üstüne modelin yazabildiği "bzzzz" gibi).
+
+**Düzenle.** Bütün satırlar tek bir belge gibi okunur:
+
+- kelimeye tıkla, o ana git; çift tıkla, yaz
+- <kbd>Enter</kbd> satırı imleçten böler, satır başında <kbd>Geri sil</kbd> öncekiyle birleştirir
+- başlangıç ve bitişi kare kare kaydır (<kbd>Shift</kbd>: 0,1 sn) ya da senkron için bütün altyazıları birlikte kaydır
+- bul ve değiştir
+- SRT, VTT, ASS ya da TXT olarak dışa aktar; SRT, VTT ya da ASS içe aktar
+
+**Stil.** Değişiklik bütün satırlara aynı anda uygulanır ve önizlemede canlı görünür.
+
+| | Seçenekler |
+|---|---|
+| Yazı | yazı tipi, boyut, kalınlık, harf aralığı, renk, Türkçe kuralıyla BÜYÜK HARF (i → İ) |
+| Konuşulan kelime | Renk, Kutu, Çizgi, Karaoke dolgu ya da Yok; rengi, kutu köşesi, büyüme, zıplama |
+| Söylenecek kelimeler | kendi opaklıkları |
+| Kelime girişi | Pat, Belir, Kay, Düş, Vur, Bulanık, Daktilo, Dön, Esne |
+| Sürekli hareket | Nabız, Sallan, Süzül |
+| Ekler | emoji, kontur, gölge, parlama |
+| Arka plan | satır, blok ya da her kelime |
+| Yerleşim | üst, orta ya da alt; dikey ve yatay kaydırma, genişlik, satır başına kelime (kelime zamanlarıyla yeniden böler) |
+
+45 hazır stil gerçek altyazı çizicisiyle önizlenir. *Bu stili kaydet* kendi stilini *Kaydettiklerim* altına kaydeder (uygulama veri klasöründe `caption-styles.json`).
+
+### Ölçülen doğruluk
+
+TTS sesiyle üretilmiş 66 saniyelik Türkçe konuşma; beş model `scripts/test-captions.cjs --models=all` ile, AMD Ryzen 5 7600 işlemcide çalıştırıldı (whisper ekran kartını kullanmadı).
+
+| Model | Kelime hata oranı | 66 sn için süre |
+|---|---:|---:|
+| tiny | %23,9 | |
+| base | %16,2 | |
+| small · *Hızlı* | %6,0 | 13,5 sn |
+| **medium · *Doğru*** | **%2,6** | **42,6 sn** |
+| large-v3-turbo · *Büyük* | %5,1 | 78,3 sn |
+
+Kelime zamanındaki hatanın ortancası 29–49 ms. 39 saniyelik İngilizce konuşmada (Windows'un Zira sesi) medium bütün kelimeleri doğru yazdı, süre yaklaşık 26–32 sn. Paketlenmiş uygulamada klibin *Altyazı oluştur* düğmesi, 32 saniyelik Türkçe konuşmayı medium ile 43 sn'de 22 satır, 53 kelimeye çevirdi.
+
+<br>
+
+## Kütüphane
+
+<table>
+<tr>
+<td width="33%" valign="top" align="center"><img alt="Otomatik paneli: tarifler, Güzelleştir ve görünüm paketleri" src="docs/art/panel-auto.webp" width="100%"><br><b>Otomatik</b><br><sub>6 tarif · Güzelleştir · 8 görünüm</sub></td>
+<td width="33%" valign="top" align="center"><img alt="Önizlemeli geçiş paneli" src="docs/art/panel-transitions.webp" width="100%"><br><b>197 geçiş</b><br><sub>125'i gl-transitions, 72'si SWEAXCUT için yazıldı</sub></td>
+<td width="33%" valign="top" align="center"><img alt="Efekt paneli" src="docs/art/panel-effects.webp" width="100%"><br><b>161 efekt</b><br><sub>klibe ya da kendi katmanına</sub></td>
+</tr>
+<tr>
+<td valign="top" align="center"><img alt="Renk filtresi paneli" src="docs/art/panel-filters.webp" width="100%"><br><b>93 renk filtresi</b><br><sub>HSL ve ayar katmanıyla</sub></td>
+<td valign="top" align="center"><img alt="Yazı şablonu paneli" src="docs/art/panel-text.webp" width="100%"><br><b>126 yazı şablonu</b><br><sub>88 animasyon, Türkçe harfli 101 yazı tipi</sub></td>
+<td valign="top" align="center"><img alt="Çıkartma paneli" src="docs/art/panel-stickers.webp" width="100%"><br><b>777 çıkartma</b><br><sub>Twemoji ve vektör çıkartmalar</sub></td>
+</tr>
+<tr>
+<td valign="top" align="center"><img alt="Müzik ve ses efekti paneli" src="docs/art/panel-audio.webp" width="100%"><br><b>102 ses efekti, 22 müzik</b><br><sub>uygulamada sentezlenir; 40 ses değiştirici</sub></td>
+<td valign="top" align="center"><img alt="Araçlar paneli" src="docs/art/panel-tools.webp" width="100%"><br><b>Araçlar</b><br><sub>arka plan silme, sabitleme, kadraj, sahne bölme</sub></td>
+<td valign="top" align="center"><img alt="Düzen paneli" src="docs/art/panel-layouts.webp" width="100%"><br><b>13 düzen</b><br><sub>kamera + oyun, bölünmüş ekran ve daha fazlası</sub></td>
+</tr>
+</table>
+
+Uygulamanın içerik kayıt defterinden (`src/engine/registry.js`) sayıldı:
+
+| | Sayı | |
 |---|---:|---|
-| <img src="https://img.shields.io/badge/-%20-FFD23F?style=flat-square" alt=""> Efekt | **161** | temelden oyuna, glitch'ten retroya ve havaya 11 kategori |
-| <img src="https://img.shields.io/badge/-%20-3FA9F5?style=flat-square" alt=""> Geçiş | **197** | 12 kategori · 125'i gl-transitions, 72'si özgün |
-| <img src="https://img.shields.io/badge/-%20-3FA9F5?style=flat-square" alt=""> Renk filtresi | **93** | 8 kategori |
-| <img src="https://img.shields.io/badge/-%20-3FA9F5?style=flat-square" alt=""> Klip animasyonu | **137** | 46 giriş · 56 çıkış · 35 döngü |
-| <img src="https://img.shields.io/badge/-%20-3FA9F5?style=flat-square" alt=""> Hız eğrisi | **22** | 5 kategori |
-| <img src="https://img.shields.io/badge/-%20-3FA9F5?style=flat-square" alt=""> Düzen | **13** | facecam ve oyun, bölünmüş ekran, sinema bantları ve diğerleri |
-| <img src="https://img.shields.io/badge/-%20-FF5DA2?style=flat-square" alt=""> Yazı şablonu | **126** | 10 kategori |
-| <img src="https://img.shields.io/badge/-%20-FF5DA2?style=flat-square" alt=""> Yazı animasyonu | **88** | 36 giriş · 28 çıkış · 24 döngü |
-| <img src="https://img.shields.io/badge/-%20-FF5DA2?style=flat-square" alt=""> Altyazı stili | **45** | 6 kategori |
-| <img src="https://img.shields.io/badge/-%20-FF5DA2?style=flat-square" alt=""> Yazı tipi | **101** | 7 grup, her biri 12 Türkçe harfin hepsi için denetlendi |
-| <img src="https://img.shields.io/badge/-%20-B98CFF?style=flat-square" alt=""> Çıkartma | **777** | 649 emoji · 117 animasyonlu vektör · 11 şekil |
-| <img src="https://img.shields.io/badge/-%20-2EE6A6?style=flat-square" alt=""> Ses efekti | **102** | 8 kategori, program içinde sentezlenir |
-| <img src="https://img.shields.io/badge/-%20-2EE6A6?style=flat-square" alt=""> Müzik | **22** | 10 tür, program içinde sentezlenir |
-| <img src="https://img.shields.io/badge/-%20-2EE6A6?style=flat-square" alt=""> Ses değiştirici | **40** | 6 kategori |
-| Yumuşatma eğrisi | **38** | anahtar kareler için (`src/core/easing.js`) |
-| Karışım modu | **24** | `src/engine/shaders.js` |
-| Maske şekli | **8** | doğrusal, ayna, daire, dikdörtgen, kalp, yıldız, elmas, altıgen |
-| En-boy oranı | **9** | 9:16, 16:9, 1:1, 4:5, 3:4, 4:3, 21:9, 2:1, 2.35:1 |
+| <img src="https://img.shields.io/badge/-%20-ff6b8b?style=flat-square" alt=""> Efekt | **161** | |
+| <img src="https://img.shields.io/badge/-%20-4d8dff?style=flat-square" alt=""> Geçiş | **197** | 125 gl-transitions + 72 SWEAXCUT için yazıldı |
+| <img src="https://img.shields.io/badge/-%20-4fd6e8?style=flat-square" alt=""> Renk filtresi | **93** | |
+| <img src="https://img.shields.io/badge/-%20-e070ee?style=flat-square" alt=""> Yazı şablonu | **126** | |
+| <img src="https://img.shields.io/badge/-%20-e070ee?style=flat-square" alt=""> Yazı animasyonu | **88** | |
+| <img src="https://img.shields.io/badge/-%20-e070ee?style=flat-square" alt=""> Yazı tipi | **101** | hepsinde Türkçe harfler |
+| <img src="https://img.shields.io/badge/-%20-e070ee?style=flat-square" alt=""> Altyazı stili | **45** | ve kaydettiklerin |
+| <img src="https://img.shields.io/badge/-%20-ffb84d?style=flat-square" alt=""> Çıkartma | **777** | Twemoji (CC-BY 4.0) ve vektör |
+| <img src="https://img.shields.io/badge/-%20-36d39b?style=flat-square" alt=""> Ses efekti | **102** | uygulamada sentezlenir |
+| <img src="https://img.shields.io/badge/-%20-36d39b?style=flat-square" alt=""> Müzik | **22** | uygulamada sentezlenir |
+| <img src="https://img.shields.io/badge/-%20-36d39b?style=flat-square" alt=""> Ses değiştirici | **40** | |
+| <img src="https://img.shields.io/badge/-%20-4d8dff?style=flat-square" alt=""> Klip animasyonu | **137** | |
+| <img src="https://img.shields.io/badge/-%20-4d8dff?style=flat-square" alt=""> Hız eğrisi | **22** | ve özel eğri |
+| <img src="https://img.shields.io/badge/-%20-4d8dff?style=flat-square" alt=""> Düzen | **13** | |
+| <img src="https://img.shields.io/badge/-%20-ff4b3e?style=flat-square" alt=""> Otomatik kurgu tarifi | **6** | |
+| <img src="https://img.shields.io/badge/-%20-ff4b3e?style=flat-square" alt=""> Görünüm paketi | **8** | |
+| <img src="https://img.shields.io/badge/-%20-ff4b3e?style=flat-square" alt=""> Dışa aktarma hazır ayarı | **6** | |
 
 <br>
 
-## Kurgu
+## Uzmanlar için
 
 <p align="center">
-  <img alt="16:9 bir proje: solda geçiş kütüphanesi, önizlemede yarısına gelmiş bir Çapraz Zum geçişi, sağda ayarları, altta efekt, yazı, çıkartma, video ve müzik izleri" src="docs/media/transitions.png" width="100%">
+  <img alt="Denetçide anahtar kare eğri düzenleyicisi (iki altın tutamaçlı yavaş başla-bitir eğrisi ve altı hazır eğri), önizlemenin üstünde luma dalga formu kapsamı" src="docs/media/pro-curve-scopes.webp" width="100%">
 </p>
 
-<table>
-<tr>
-<td width="50%" valign="top"><img alt="Önizlemedeki GECE SÜRÜŞÜ başlığı ve yazı stili paneli" src="docs/media/text.png" width="100%"></td>
-<td width="50%" valign="top"><img alt="Tünel klibinin üstünde VHS efekt katmanı, yoğunluk ve hız ayarları" src="docs/media/effects.png" width="100%"></td>
-</tr>
-<tr>
-<td valign="top"><sub>Yazı şablonları ve stil paneli: kontur, ikinci kontur, gölge, parlama, arka plan kutusu.</sub></td>
-<td valign="top"><sub>Ayrı katmandaki efekt, sürdüğü boyunca altındaki her şeyi etkiler.</sub></td>
-</tr>
-<tr>
-<td width="50%" valign="top"><img alt="Kuzey ışıkları klibinin üstünde animasyonlu Abone Ol çıkartması, konum ve opaklık ayarları" src="docs/media/stickers.png" width="100%"></td>
-<td width="50%" valign="top"><img alt="Küpler klibi için renk filtreleri ve ışık ayarları" src="docs/media/filters.png" width="100%"></td>
-</tr>
-<tr>
-<td valign="top"><sub>Çıkartma da bir klip: taşınır, büyütülür, canlandırılır, karıştırılır.</sub></td>
-<td valign="top"><sub>Yoğunluğu ayarlanabilen renk filtresi, ardından ışık, renk ve HSL ayarları.</sub></td>
-</tr>
-</table>
+3.0'da yeni:
 
-- **Zaman çizelgesi.** Ana iz mıknatıslıdır, klipler arada boşluk kalmadan dizilir; üst katman, yazı, çıkartma, efekt ve ses kendi izlerine gider. Bölme, iki yandan kırpma, boşluğu kapatarak silme, kopyalama, çoğaltma, işaretler ve giriş/çıkış aralığı.
-- **Anahtar kare:** konum, ölçek, döndürme, opaklık, ses seviyesi, renk ve efekt ayarlarında, 38 yumuşatma eğrisiyle.
-- **Hız:** logaritmik kaydırıcıyla 0.1× ile 100× arası, 22 hız eğrisi, ters oynatma, kare dondurma ve perde koruma.
-- **Maske, karışım, renk anahtarı.** Yumuşak kenarlı, köşesi yuvarlatılabilen ve tersine çevrilebilen 8 maske şekli, 24 karışım modu, taşma bastırmalı krom anahtar.
-- **Projeler** 9 en-boy oranında, 24, 25, 30, 50 ya da 60 kare/sn. 13 tek tık düzen, dikey video için facecam ile oyun görüntüsünü yerleştirir.
-- **Ağır kayıtlar** (önizlemenin oynatamadığı biçimler, 1440p üstü, anahtar kare aralığı uzun kayıtlar) için arka planda hafif bir önizleme kopyası hazırlanır; o sırada kurguya devam edebilirsin.
+- **Anahtar kare eğri düzenleyicisi.** İki anahtar kare arasında iki tutamaçlı bezier; değerler −0,5 ile 1,5 arasında, böylece hareket hedefini aşabilir ya da önce geri çekilebilir. Altı hazır eğri: Yumuşak, Hızlan, Yavaşla, Çarpıcı, Taşma, Hazırlan.
+- **Renk kapsamları.** Histogram, luma dalga formu, RGB geçit ve ten çizgili vektörskop.
+- **Ortam ışığı.** Önizlemenin çevresi rengini kareden alır.
+
+Önceki sürümlerden korunanlar:
+
+| Alan | |
+|---|---|
+| Animasyon | anahtar kareler, 137 klip animasyonu, 22 hız eğrisi ve özel eğri |
+| Bileşim | maske, krom anahtar, karışım modları, ayar katmanı |
+| Renk | 93 filtre, HSL |
+| Video araçları | arka plan silme (MediaPipe), sabitleme (ffmpeg vidstab), otomatik kadraj, sahne bölme |
+| Ses | gürültü azaltma, netleştirme, yükseklik eşitleme, ducking, 40 ses değiştirici |
+| Seslendirme | Piper; Türkçe ses Fahrettin gömülü |
 
 <br>
 
-## Altyazı ve seslendirme
-
-<table>
-<tr>
-<td width="34%" valign="top" align="center">
-<img alt="Kelime kelime vurgulanan otomatik altyazılı dikey klip" src="docs/media/captions.gif" width="288">
-</td>
-<td width="66%" valign="top">
-<img alt="Zaman çizelgesinde otomatik altyazılar ve altyazı stili paneliyle 9:16 proje" src="docs/media/captions.png" width="100%">
-<p><sub>Bu klipteki sesi programla gelen Piper sesi "Fahrettin" okudu, altyazıları da aynı bilgisayarda whisper.cpp çıkardı. Yanlış duyulan tek kelime, senin de yapacağın gibi altyazının kelime düzenleyicisinde düzeltildi.</sub></p>
-</td>
-</tr>
-</table>
-
-**Otomatik altyazı**, ayrı bir süreç olarak çalışan [whisper.cpp](https://github.com/ggml-org/whisper.cpp) (v1.9.5, BLAS derlemesi) ile yapılır. Her kelimenin kendi zamanı olduğundan altyazı stilleri o an söylenen kelimeyi vurgulayabilir. Altyazı ana izden, seçili kliplerden ya da seslendirme izinden, 12 dilde ya da dil otomatik algılanarak çıkarılabilir. Dolgu kelimeleri ("ıı", "şey" gibi) zaman çizelgesinde işaretlenebilir. SRT, VTT ve ASS dosyaları içe aktarılır, SRT olarak dışa aktarılır.
-
-Konuşma modeli ilk altyazıda indirilir, sonra diskinde kalır:
-
-| Model | Boyut | |
-|---|---:|---|
-| Tiny | 32 MB | en hızlı |
-| Base | 60 MB | hızlı |
-| **Small** | **190 MB** | **varsayılan, Türkçe için önerilen** |
-| Medium | 539 MB | daha doğru |
-| Large v3 Turbo | 574 MB | en doğru |
+## Dışa aktarma
 
 <p align="center">
-  <img alt="Türkçe ve diğer dillerde seslerle metinden sese paneli, sağda bir altyazı klibinin seslendirme sekmesi" src="docs/media/voice.png" width="100%">
+  <img alt="Dışa aktarma penceresi: altı hazır ayar (Sosyal medya, YouTube, En yüksek, Hızlı paylaş, GIF, Yalnız ses), dosya adı, klasör, biçim, çözünürlük, kare hızı, kalite, kodek, donanım ve ses kalitesi" src="docs/media/export.webp" width="100%">
 </p>
 
-**Metinden sese** için [Piper](https://github.com/rhasspy/piper) kullanılır. Türkçe *Fahrettin* sesi kurulumla gelir; 10 dilde 21 ses daha program içinden indirilebilir. Windows'un kendi sesleri (OneCore ve SAPI, örneğin *Microsoft Tolga*) de aynı listede. Her yazı klibi kendi panelindeki sekmeden seslendirilebilir, ses altındaki bir ses izine yerleşir. Mikrofonla kayıt da yapabilirsin.
+| Hazır ayar | Çıktı |
+|---|---|
+| Sosyal medya | 1080p, 30 kare, H.264 |
+| YouTube | 1080p, 60 kare |
+| En yüksek | 4K, H.265 |
+| Hızlı paylaş | 720p |
+| GIF | döngülü hareketli görsel |
+| Yalnız ses | MP3, 320 kbps |
 
-<br>
-
-## Yapay zekâ araçları
-
-<p align="center">
-  <img alt="Sessizlikleri kes, altyazı, öne çıkanlar, vuruşlar, sahne algılama ve sabitleme araçlarının olduğu panel; sağda renk paneli açık" src="docs/media/tools.png" width="100%">
-</p>
-
-| Araç | Ne yapar | Nasıl |
-|---|---|---|
-| Arka planı kaldır | Yeşil perde olmadan kişiyi arka plandan ayırır | MediaPipe Selfie Segmenter; ekran kartında, olmazsa işlemcide |
-| Görüntü sabitleme | Titreyen görüntüyü yumuşatır, kenarlar görünmesin diye hafifçe yakınlaşır | ffmpeg vidstab, iki geçiş |
-| Otomatik kadraj | 16:9'u 9:16'ya (ya da tersine) çevirirken konuyu kadrajda tutar | MediaPipe yüz algılama, yüz yoksa hareket |
-| Sahnelere böl | Klibi her sahne değişiminde keser | ffmpeg sahne algılama |
-| Öne çıkanları bul | Ani yüksek sesli anları (vuruş, patlama, bağırış) işaretler, istersen zum ekler | kısa süreli ses yüksekliği, klibin genel seviyesine göre |
-| Anlık zoom vuruşu | Oynatma kafasına kısa, sert bir yakınlaşma ekler | anahtar kare |
-| Sessizlikleri kes | Konuşmadaki boşlukları bulur ve çıkarır | ffmpeg silencedetect |
-| Vuruşları bul | Müziğin vuruşlarını işaretler, kesimler vuruşa yapışır | başlangıç algılama ve vuruş takibi |
-| Shorts'a böl | Uzun videoyu eşit parçalara ya da öne çıkan anların çevresinden böler | zaman çizelgesi işaretleri |
-| Ses seviyesini eşitle | Bütün klipleri aynı yüksekliğe getirir | ffmpeg loudnorm, dışa aktarmada uygulanır |
-| Krom anahtar | Yeşil perdeyi ya da istediğin başka bir rengi siler | bileşimci gölgelendiricisi |
-
-<br>
-
-## Dışa aktarma ve ekran kartı hızlandırması
+Hazır ayarların altındaki her alan elle de değiştirilebilir. Kodlama mümkünse ekran kartında yapılır (NVIDIA NVENC, AMD AMF, Intel Quick Sync); kareler önizlemeyle aynı WebGL2 bileşimciden gelir. Pencere filigran eklemez.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/art/pipeline-tr-dark.svg">
-    <img alt="Dışa aktarma hattı: her klip için bir ffmpeg çözücü, YUV düzlemleri ekran kartına yüklenir, önizlemeyle aynı WebGL2 bileşimci, ekran kartında BT.709 YUV 4:2:0 paketleme, eşzamansız geri okuma, ardından NVENC, AMF, Quick Sync ya da işlemci kodlayıcısı; ses paralelde WAV'a karıştırılıp dosyaya eklenir" src="docs/art/pipeline-tr-light.svg" width="760">
+    <img alt="Mimari: dosyalar içe aktarmadan (ffprobe, önizleme kopyaları) zaman çizelgesi modeline geçer; whisper.cpp altyazısı ve Piper seslendirmesi zaman çizelgesine eklenir; tek WebGL2 bileşimci önizlemeyi ve dışa aktarmada klip başına bir ffmpeg kod çözücüden gelen kareleri çizer; kareler ekran kartında BT.709 YUV 4:2:0'a paketlenir, geri okunur ve NVENC, AMF, Quick Sync ya da işlemci kodlayıcısına gider" src="docs/art/pipeline-tr-light.svg" width="100%">
   </picture>
 </p>
 
-Önizlemeyi de dışa aktarmayı da aynı WebGL2 bileşimci (`src/engine/compositor.js`) çizer; kurgu sırasında ne görüyorsan dosyaya o çıkar. Dışa aktarmada her klibi kendi ffmpeg süreci kare doğruluğuyla çözer, her kare ekran kartında birleştirilip YUV'a çevrilir, ancak ondan sonra geri okunup kodlayıcıya verilir.
+Dışa aktarmada her klibi kendi ffmpeg süreci çözer; her kare WebGL2 bileşimcide (`src/engine/compositor.js`) birleştirilir, ekran kartında BT.709 YUV 4:2:0'a çevrilir, geri okunur ve kodlayıcıya verilir. Ses yanda WAV'a karıştırılır ve sonunda dosyaya eklenir. [Dışa aktarılmış bir örnek](docs/media/export-sample.mp4) depoda duruyor.
 
-Program açıldıktan birkaç saniye sonra ffmpeg'in listelediği her donanım kodlayıcısıyla (NVIDIA NVENC, AMD AMF, Intel Quick Sync) çok kısa bir deneme kodlaması yapar ve sonucu üç gün hatırlar. Dışa aktarma penceresindeki *Otomatik* seçeneği çalışan ilk kodlayıcıyı, hiçbiri yoksa işlemciyi kullanır.
+<br>
 
-<table>
-<tr>
-<td width="62%" valign="top"><img alt="Dışa aktarma penceresi: dosya adı, klasör, biçim, çözünürlük, kare hızı, kalite, kodek, donanım ve ses kalitesi" src="docs/media/export.png" width="100%"></td>
-<td width="38%" valign="top"><img alt="Saniyede 96 kareyle süren dışa aktarma, 960 karenin 143'ü" src="docs/media/export-progress.png" width="100%">
-<p><sub>Tek bir bilgisayarda ölçüldü (RTX 4070 SUPER, geliştirme derlemesi): bu ekran görüntülerindeki 32 saniyelik 1080p30 proje (dört klip, üç geçiş, başlık, çıkartma, efekt katmanı ve müzik) <code>h264_nvenc</code> ile <b>12,5 saniyede</b> dışa aktarıldı. <a href="docs/media/export-sample.mp4">Çıkan videoyu izle</a> (web için 960 piksele yeniden kodlandı).</sub></p>
-</td>
-</tr>
-</table>
+## Tek makinede ölçüldü
 
-| | Seçenekler |
+Paketlenmiş uygulama, uçtan uca betikler, AMD Ryzen 5 7600.
+
+| İş | Sonuç |
 |---|---|
-| Biçim | MP4, MOV, WebM, GIF; yalnız ses için MP3 ya da WAV |
-| Video kodeği | H.264, HEVC (H.265), AV1, VP9, ProRes |
-| Donanım kodlayıcıları | NVIDIA NVENC, AMD AMF, Intel Quick Sync; kart destekliyorsa H.264, HEVC ve AV1 |
-| İşlemci kodlayıcıları | x264, x265, libaom AV1, libvpx VP9, ProRes (prores_ks) |
-| Çözünürlük | proje boyutu, 480p, 720p, 1080p, 2K, 4K |
-| Kare hızı | 24, 25, 30, 50, 60 |
-| Kalite | Düşük, Orta, Yüksek, Maksimum |
-| Ses | AAC (MP4, MOV), Opus (WebM), MP3 ya da WAV; sıkıştırılmış seste 128 ile 320 kbps arası |
-| Renk | BT.709, dosyaya etiketlenir |
+| *Ritimli montaj* tarif kartına bırakılan üç klip | 38 kesimli 30 saniyelik montaj, **6,3 sn** |
+| 32 sn Türkçe konuşmalı klipte *Altyazı oluştur* (medium) | 22 satır, 53 kelime, **43 sn** |
+| 32 saniyelik 1080×1920 projenin `h264_nvenc` ile dışa aktarılması | **23,8 sn** |
+| 66 sn Türkçe TTS konuşmasının altyazısı, medium | %2,6 kelime hatası, **42,6 sn** |
 
 <br>
 
 ## Klavye kısayolları
 
-| Tuş | İş | Tuş | İş |
+| Tuş | İşlem | Tuş | İşlem |
 |---|---|---|---|
-| <kbd>Boşluk</kbd> | Oynat / duraklat | <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd> | Geri sar, dur, ileri sar |
-| <kbd>Ctrl</kbd>+<kbd>B</kbd> ya da <kbd>S</kbd> | Oynatma kafasında böl | <kbd>←</kbd> <kbd>→</kbd> | Bir kare geri / ileri |
-| <kbd>Q</kbd> / <kbd>W</kbd> | Kafanın solunu / sağını kırp | <kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd> | Bir saniye geri / ileri |
-| <kbd>Delete</kbd> | Sil | <kbd>↑</kbd> <kbd>↓</kbd> | Önceki / sonraki kesim |
-| <kbd>Shift</kbd>+<kbd>Delete</kbd> | Boşluğu kapatarak sil | <kbd>Home</kbd> <kbd>End</kbd> | Başa / sona git |
-| <kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd> | Geri al / yinele | <kbd>I</kbd> <kbd>O</kbd> | Aralık başı / sonu |
-| <kbd>Ctrl</kbd>+<kbd>C</kbd> <kbd>X</kbd> <kbd>V</kbd> | Kopyala, kes, yapıştır | <kbd>M</kbd> | İşaret ekle |
-| <kbd>Ctrl</kbd>+<kbd>D</kbd> | Çoğalt | <kbd>T</kbd> | Yazı ekle |
-| <kbd>Ctrl</kbd>+<kbd>A</kbd> | Tümünü seç | <kbd>Alt</kbd>+<kbd>K</kbd> | Ölçeğe anahtar kare ekle |
-| <kbd>Esc</kbd> | Seçimi ve aralığı temizle | <kbd>[</kbd> <kbd>]</kbd> | Önceki / sonraki anahtar kare |
-| <kbd>Ctrl</kbd>+<kbd>+</kbd> / <kbd>−</kbd> | Zaman çizelgesini yakınlaştır / uzaklaştır | <kbd>N</kbd> | Yakalamayı aç / kapat |
+| <kbd>Ctrl</kbd>+<kbd>K</kbd> | Komut paleti | <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd> | Geri sar, dur, ileri sar |
+| <kbd>Boşluk</kbd> | Oynat / duraklat | <kbd>←</kbd> <kbd>→</kbd> | Bir kare geri / ileri |
+| <kbd>Ctrl</kbd>+<kbd>B</kbd> ya da <kbd>S</kbd> | Oynatma kafasında böl | <kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd> | Bir saniye geri / ileri |
+| <kbd>Q</kbd> / <kbd>W</kbd> | Oynatma kafasının solunu / sağını kırp | <kbd>↑</kbd> <kbd>↓</kbd> | Önceki / sonraki kesim |
+| <kbd>Delete</kbd> | Sil | <kbd>Home</kbd> <kbd>End</kbd> | Başa / sona git |
+| <kbd>Shift</kbd>+<kbd>Delete</kbd> | Sil ve boşluğu kapat | <kbd>I</kbd> <kbd>O</kbd> | Aralık başı / sonu |
+| <kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd> | Geri al / yinele | <kbd>M</kbd> | İşaret ekle |
+| <kbd>Ctrl</kbd>+<kbd>C</kbd> <kbd>X</kbd> <kbd>V</kbd> | Kopyala, kes, yapıştır | <kbd>T</kbd> | Yazı ekle |
+| <kbd>Ctrl</kbd>+<kbd>D</kbd> | Çoğalt | <kbd>Alt</kbd>+<kbd>K</kbd> | Anahtar kare ekle |
+| <kbd>Ctrl</kbd>+<kbd>A</kbd> | Tümünü seç | <kbd>[</kbd> <kbd>]</kbd> | Önceki / sonraki anahtar kare |
+| <kbd>Ctrl</kbd>+<kbd>+</kbd> / <kbd>−</kbd> | Zaman çizelgesini yakınlaştır | <kbd>N</kbd> | Yakalamayı aç / kapat |
 | <kbd>Shift</kbd>+<kbd>Z</kbd> | Zaman çizelgesini sığdır | <kbd>F</kbd> | Önizlemeyi tam ekran yap |
 | <kbd>Ctrl</kbd>+<kbd>S</kbd> | Kaydet | <kbd>Ctrl</kbd>+<kbd>O</kbd> | Proje aç |
 | <kbd>Ctrl</kbd>+<kbd>E</kbd> | Dışa aktar | <kbd>Ctrl</kbd>+<kbd>I</kbd> | Medya içe aktar |
 
-Fareyle: <kbd>Ctrl</kbd> ya da <kbd>Alt</kbd> + tekerlek zaman çizelgesini yakınlaştırır, <kbd>Shift</kbd> + tekerlek izler arasında kaydırır, önizlemenin üstünde <kbd>Alt</kbd> + tekerlek seçili klibi büyütüp küçültür, sürüklerken <kbd>Shift</kbd>'e basılı tutmak o sürüklemede yakalamayı kapatır, <kbd>Alt</kbd>+<kbd>1</kbd>…<kbd>9</kbd> panel sekmeleri arasında geçer. Liste program içinde **Yardım → Klavye kısayolları** altında da var.
+Aynı liste uygulamada **Yardım → Klavye kısayolları** altında (`src/ui/shortcuts.js`).
 
 <br>
 
 ## Gizlilik
 
-SWEAXCUT işini senin bilgisayarında yapar. Videoların hiçbir yere yüklenmez, hesap yoktur; kodda analiz, telemetri ya da güncelleme denetimi bulunmaz.
+Videoların senin bilgisayarında düzenlenir, hiçbir yere yüklenmez. Hesap yok; kodda analiz, telemetri ya da güncelleme denetimi yok.
 
-Program yalnızca iki durumda internete çıkar, ikisini de sen başlatırsın:
+Uygulama yalnızca iki durumda, o da sen başlatınca internete çıkar:
 
-| Ne zaman | Nereden | Ne iner |
+| Ne zaman | Nereden | Ne |
 |---|---|---|
-| Diskinde olmayan bir konuşma modeliyle altyazı çıkardığında | `huggingface.co/ggerganov/whisper.cpp`, iki deneme başarısız olursa `hf-mirror.com` yansısı | model dosyası, boyutu ve SHA-256 değeri denetlenerek |
-| Kurulu olmayan bir Piper sesi seçtiğinde | `huggingface.co` (`rhasspy/piper-voices`, `speaches-ai`) | ses modeli ve ayar dosyası, boyutu ve sağlama değeri denetlenerek |
+| Diskinde olmayan bir modelle altyazı oluşturduğunda | `huggingface.co/ggerganov/whisper.cpp` ya da yedek `hf-mirror.com` | model dosyası; boyutu ve SHA-256'sı denetlenir |
+| Kurulu olmayan bir Piper sesi seçtiğinde | `huggingface.co` (`rhasspy/piper-voices`, `speaches-ai`) | ses modeli ve ayar dosyası |
 
-MediaPipe modelleri, yazı tipleri, çıkartmalar, müzik ve ses efektleri dahil geri kalan her şey kurulumla gelir.
+Geri kalan her şey (Silero VAD modeli, MediaPipe modelleri, yazı tipleri, çıkartmalar, müzik ve ses efektleri) kurulum dosyasıyla gelir.
 
 <br>
 
-## Dosyalar nerede
+## Dosyaların nerede
 
 | Ne | Nerede |
 |---|---|
 | Projeler (`.sweax`) | `Belgeler\SWEAXCUT\Projeler` |
-| 45 saniyede bir otomatik kayıt | `%APPDATA%\SWEAXCUT\autosave\` (çökme sonrası başlangıç ekranında geri yüklemen önerilir) |
-| Önizleme kopyaları, dalga biçimleri, küçük resimler | `%APPDATA%\SWEAXCUT\cache\` ve `thumbs\` |
-| İndirilen konuşma modelleri ve sesler | `%APPDATA%\SWEAXCUT\models\` |
+| 45 saniyede bir otomatik kayıt | `%APPDATA%\SWEAXCUT\autosave\` |
+| Kaydedilen altyazı stilleri | `%APPDATA%\SWEAXCUT\caption-styles.json` |
+| Önizleme kopyaları, ses dalgaları, küçük resimler | `%APPDATA%\SWEAXCUT\cache\` |
+| İndirilen konuşma modelleri | `%APPDATA%\SWEAXCUT\models\whisper\` |
 | Dışa aktarılan videolar | `Videolar\SWEAXCUT` ya da dışa aktarma penceresinde seçtiğin klasör |
-| Program | `%LOCALAPPDATA%\Programs\sweaxcut` |
-
-Proje, kullandığın medya dosyalarının yerini hatırlar; dosyaları taşırsan bağlantı kopar. Programı kaldırmak `%APPDATA%\SWEAXCUT` içindekileri silmez.
 
 <br>
 
 ## Kurulum
 
-<p align="center">
-  <img alt="Başlangıç ekranı: en-boy oranı seç, proje aç ya da video seç" src="docs/media/home.png" width="430">
-</p>
-
-1. [Son sürümden](https://github.com/Sweax3169/sweaxcut/releases/latest) `SWEAXCUT-Kurulum-2.0.2.exe` dosyasını indir (yaklaşık 213 MB).
-2. Çalıştır. Yalnız senin kullanıcı hesabına kurulur, masaüstüne ve Başlat menüsüne kısayol koyar, `.sweax` proje dosyalarını tanır ve programı açar.
-3. Başlangıç ekranında en-boy oranını seç (Shorts, TikTok ve Reels için 9:16, YouTube için 16:9), sonra videonu pencereye sürükle.
+1. [Son sürümden](https://github.com/Sweax3169/sweaxcut/releases/latest) `SWEAXCUT-Kurulum-3.0.0.exe` dosyasını indir (yaklaşık 214 MB).
+2. Çalıştır. Yalnız senin kullanıcı hesabına kurulur, masaüstüne ve Başlat menüsüne kısayol ekler, `.sweax` proje dosyalarını tanıtır ve uygulamayı açar.
+3. Videolarını bir tarif kartına ya da kendin düzenlemek için bırakma alanına bırak.
 
 > [!IMPORTANT]
-> Kurulum dosyası kod imzalı değil; Windows SmartScreen ilk seferde mavi bir uyarı gösterebilir. **Ek bilgi**'ye, ardından **Yine de çalıştır**'a tıkla.
+> Kurulum dosyası kod imzalı değil, bu yüzden Windows SmartScreen ilk seferde mavi bir uyarı gösterebilir. **Ek bilgi**'ye, sonra **Yine de çalıştır**'a tıkla.
 
-**Gereksinimler:** 64 bit Windows 10 ya da 11 ve WebGL 2 destekleyen bir ekran kartı. Donanım kodlayıcısı (NVIDIA, AMD ya da Intel) dışa aktarmayı hızlandırır ama şart değildir.
+**Gereksinimler:** 64 bit Windows 10 ya da 11 ve WebGL 2 destekli bir ekran kartı. Donanım video kodlayıcısı (NVIDIA, AMD ya da Intel) dışa aktarmayı hızlandırır ama şart değil.
+
+<br>
+
+## Sık sorulanlar
+
+<details>
+<summary><b>İnternet gerekiyor mu?</b></summary>
+<br>
+Yalnızca bir konuşma modeliyle ilk kez altyazı oluştururken o modeli indirmek ve ek Piper sesleri indirmek için. Kurgu, efektler, tarifler, gömülü Türkçe ses ve dışa aktarma internetsiz çalışır.
+</details>
+
+<details>
+<summary><b>Hangi doğruluğu seçmeliyim?</b></summary>
+<br>
+<i>Doğru</i> (medium) önerilen seçenek; yukarıdaki ölçümde Türkçede en az hatayı yaptı (%2,6). <i>Hızlı</i> (small) aynı 66 saniyeyi 42,6 sn yerine 13,5 sn'de bitirdi, hata oranı %6,0.
+</details>
+
+<details>
+<summary><b>Konuşma olmayan oyun klibinde altyazı saçma şeyler yazdı.</b></summary>
+<br>
+<i>Müzik ve oyun sesini atla</i> seçeneğini aç. Whisper'dan önce konuşma algılama çalışır, bir süzgeç de "bzzzz" gibi uydurma yazıyı atar.
+</details>
+
+<details>
+<summary><b>İndirilebilir Türkçe ses <code>tr_TR-dfki-medium</code>'u ticari bir videoda kullanabilir miyim?</b></summary>
+<br>
+Hayır. Bu sesin lisansı CC BY-NC-SA 4.0; ticari kullanıma izin vermez. Gömülü ses Fahrettin CC0. Her sesin lisansı <a href="THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES.md</a> içinde.
+</details>
+
+<details>
+<summary><b>Windows kurulum dosyasının bilinmeyen bir yayıncıdan olduğunu söylüyor.</b></summary>
+<br>
+Kurulum dosyası kod imzalı değil. <b>Ek bilgi</b>'ye, sonra <b>Yine de çalıştır</b>'a tıkla. İstersen bu depodan kendin de derleyebilirsin.
+</details>
+
+<details>
+<summary><b>Uygulama beklenmedik şekilde kapandı. Projem gitti mi?</b></summary>
+<br>
+Proje 45 saniyede bir <code>%APPDATA%\SWEAXCUT\autosave\</code> klasörüne kaydedilir; uygulamayı yeniden açtığında ana ekran geri yüklemeyi önerir.
+</details>
 
 <br>
 
@@ -326,19 +399,19 @@ Proje, kullandığın medya dosyalarının yerini hatırlar; dosyaları taşırs
 ```bash
 git clone https://github.com/Sweax3169/sweaxcut.git
 cd sweaxcut
-npm install                # MediaPipe wasm çalışma zamanını public/ altına da kopyalar (scripts/copy-mediapipe.cjs)
-npm run prepare:vendor     # Piper'ı, gömülü Türkçe sesi, RNNoise modellerini ve FFprobe'u vendor/ altına indirir
+npm install                # MediaPipe wasm dosyalarını da public/ içine kopyalar
+npm run prepare:vendor     # Piper'ı, gömülü Türkçe sesi ve FFprobe'u vendor/ içine indirir
 ```
 
-whisper.cpp'yi indiren bir betik yok. [`b5454` sürümündeki](https://github.com/ggml-org/whisper.cpp/releases/tag/b5454) `whisper-blas-bin-x64.zip` dosyalarını ve Microsoft Visual C++ çalışma zamanı DLL'lerini (`msvcp140.dll`, `vcruntime140.dll`, `vcruntime140_1.dll`, `vcomp140.dll`) `vendor/whisper/bin/` içine koy. Bu ikililerin hiçbiri git'te tutulmuyor; ayrıntılar [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) dosyasında.
+whisper.cpp bir betikle indirilmiyor. [`b5454` sürümündeki](https://github.com/ggml-org/whisper.cpp/releases/tag/b5454) `whisper-blas-bin-x64.zip` dosyalarını ve Microsoft Visual C++ çalışma zamanı DLL'lerini `vendor/whisper/bin/` içine koy. Bu ikili dosyaların hiçbiri git'te tutulmuyor; bkz. [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ```bash
-npm run dev                # 5199 numaralı bağlantı noktasında Vite geliştirme sunucusu
-npm run start:dev          # ona bağlanan Electron penceresi
-npm run dist               # üretim derlemesi ve release/ altına NSIS kurulum dosyası
+npm run dev                # Vite geliştirme sunucusu
+npm run start:dev          # ona bağlı Electron penceresi
+npm run dist               # üretim derlemesi ve release/ içinde NSIS kurulum dosyası
 ```
 
-Bu sayfadaki görseller gerçek programdan alındı. `scripts/docs-media/footage.html` örnek görüntüleri özgün GLSL sahnelerinden üretir, `drive.cjs` programı geçici bir profille açıp Chrome DevTools Protokolü üzerinden sürer, `encode.cjs` kaydedilen kareleri MP4 ve GIF'e çevirir, `readme-art.cjs` başlık görselini ve hat şemasını çizer.
+Bu sayfadaki görüntüler çalışan uygulamadan alındı. `scripts/docs-media/footage.html` örnek görüntüleri özgün GLSL sahnelerinden üretir, `drive.cjs` uygulamayı Chrome DevTools Protokolü ile sürer, `encode.cjs` MP4 ve GIF'i yapar, `readme-art.cjs` başlığı ve mimari şemayı çizer, `site-build.cjs` web sitesinin yazı tiplerini ve gölgelendirici verisini günceller.
 
 <br>
 
@@ -346,40 +419,41 @@ Bu sayfadaki görseller gerçek programdan alındı. `scripts/docs-media/footage
 
 ```
 sweaxcut/
-├─ electron/main.cjs        ana süreç: pencere, dosya pencereleri, klasör yolları
+├─ electron/main.cjs        ana süreç: pencere, dosya pencereleri, yollar
 ├─ src/
-│  ├─ core/                 proje modeli, geri alınabilir durum, zaman çizelgesi işlemleri, anahtar kare, yumuşatma, medya içe aktarma
-│  ├─ engine/               WebGL2 bileşimci, gölgelendiriciler, oynatma, ses motoru, yazı ve çıkartma çizimi
-│  │  └─ export/            çözücüler, ekran kartında YUV paketleme, kodlayıcı seçimi, ses miksi
-│  ├─ features/             captions (whisper.cpp), tts (Piper, Windows sesleri), video (yapay zekâ araçları), audio (çözümleme)
-│  ├─ packs/                efekt, geçiş, filtre, yazı, yazı tipi, çıkartma, ses efekti, müzik, hız eğrisi, ses değiştirici, düzen
-│  ├─ platform/node.js      arayüzün Node'a eriştiği tek yer
-│  └─ ui/                   başlangıç ekranı, düzenleyici, kütüphane, özellik paneli, zaman çizelgesi, önizleme
+│  ├─ core/                 proje modeli, geri alma deposu, zaman çizelgesi işlemleri, anahtar kareler, içe aktarma
+│  ├─ engine/               WebGL2 bileşimci, gölgelendiriciler, oynatma, ses, yazı ve çıkartma çizimi
+│  │  └─ export/            kod çözücüler, GPU YUV paketleme, kodlayıcı seçimi, ses karışımı
+│  ├─ features/             autoedit (tarifler, Güzelleştir, görünümler), captions (whisper.cpp), tts (Piper),
+│  │                        video (arka plan silme, sabitleme, kadraj, sahneler), audio (vuruş, sessizlik)
+│  ├─ packs/                efektler, geçişler, filtreler, yazılar, yazı tipleri, çıkartmalar, sesler, müzik, düzenler
+│  ├─ platform/node.js      arayüzün Node'a dokunduğu tek yer
+│  └─ ui/                   ana ekran, editör, kütüphane, denetçi, zaman çizelgesi, önizleme, stiller
 ├─ public/                  yazı tipleri, Twemoji SVG'leri, MediaPipe modelleri
-├─ vendor/                  Piper, RNNoise modelleri, whisper.cpp, FFprobe (ikililer git'te değil)
-├─ scripts/                 vendor indirme, testler ve belge görselleri için program sürücüleri
-├─ dev/                     her içerik paketi için test sayfaları
-├─ docs/                    internet sitesi, README görselleri, ekran görüntüleri, lisans notları
-└─ legacy/                  1. sürümün (dikey video dönüştürücü) kaynak kodu
+├─ vendor/                  Piper, whisper.cpp, FFprobe (ikili dosyalar git'te değil)
+├─ scripts/                 vendor indirme, test sürücüleri, belge görselleri
+└─ docs/                    web sitesi, README görselleri, ekran görüntüleri, lisans notları
 ```
 
 <br>
 
 ## Emeği geçenler ve lisanslar
 
-SWEAXCUT'ı **Sweax Studios** yaptı. Şu açık kaynak projelerin üzerine kurulu:
+SWEAXCUT'ı **Sweax Studios** yaptı; şu açık projelerin üzerine kurulu:
 
-- **[Twemoji](https://github.com/jdecked/twemoji)**: emoji grafikleri © Twitter, Inc ve diğer katkıda bulunanlar, [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/) lisansıyla.
-- **[gl-transitions](https://github.com/gl-transitions/gl-transitions)**: geçişlerin 125'i (MIT; ikisi BSD).
-- **[whisper.cpp](https://github.com/ggml-org/whisper.cpp)** (MIT), OpenAI Whisper modelleri (MIT) ve Silero VAD (MIT): altyazı.
-- **[Piper](https://github.com/rhasspy/piper)** (MIT) ve eSpeak NG (GPL-3.0): metinden sese. Gömülü *Fahrettin* sesi CC0; isteğe bağlı *dfki* Türkçe sesi CC BY-NC-SA 4.0 lisanslıdır, ticari işte kullanılamaz.
-- **[FFmpeg](https://ffmpeg.org)** (gyan.dev'in GPL-3.0 derlemesi): çözme, kodlama, sabitleme ve ses filtreleri için ayrı bir program olarak çalışır.
-- **[MediaPipe](https://github.com/google-ai-edge/mediapipe)** (Apache-2.0): arka plan silme ve yüz algılama.
-- **[Electron](https://www.electronjs.org)**, **[React](https://react.dev)** ve **[Vite](https://vite.dev)** (MIT).
-- **101 yazı tipi ailesi**, Google Fonts'tan Fontsource üzerinden: 100'ü SIL Open Font License, Luckiest Guy Apache-2.0.
+| Bileşen | Ne için | Lisans |
+|---|---|---|
+| [FFmpeg](https://ffmpeg.org) 6.1.1, [gyan.dev](https://www.gyan.dev/ffmpeg/builds/) derlemesi | kod çözme, kodlama, sabitleme, ses süzgeçleri; ayrı bir program olarak çalışır | GPL |
+| [whisper.cpp](https://github.com/ggml-org/whisper.cpp) | otomatik altyazı | MIT |
+| [Piper](https://github.com/rhasspy/piper) ve [eSpeak NG](https://github.com/espeak-ng/espeak-ng) | seslendirme | MIT, GPL |
+| [MediaPipe](https://github.com/google-ai-edge/mediapipe) | arka plan silme, yüz algılama | Apache-2.0 |
+| [gl-transitions](https://github.com/gl-transitions/gl-transitions) | 197 geçişin 125'i | MIT |
+| [Twemoji](https://github.com/jdecked/twemoji) | emoji çıkartmalar | CC-BY 4.0 |
+| Fontsource üzerinden Google Fonts'tan 101 yazı tipi ailesi, Mona Sans ve Geist Mono | yazı şablonları, arayüz | SIL Open Font License (Luckiest Guy: Apache-2.0) |
+| Piper sesi `tr_TR-dfki-medium` (isteğe bağlı indirme) | Türkçe ses | CC BY-NC-SA 4.0, **ticari olmayan** |
 
-Gömülü her bileşen lisansı ve kaynağıyla **[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)** dosyasında listeli. Efektler, filtreler, geçişlerin 72'si, vektör çıkartmalar, müzikler ve ses efektleri SWEAXCUT için yapıldı, üçüncü taraf varlık içermez.
+Uygulamayla gelen her bileşen, lisansı ve kaynağıyla **[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)** içinde listeli. Efektler, filtreler, geçişlerin 72'si, vektör çıkartmalar, müzik ve ses efektleri SWEAXCUT için yapıldı.
 
 ## Lisans
 
-SWEAXCUT'ın kaynak kodu [MIT Lisansı](LICENSE) ile yayımlanır. © 2026 Sweax Studios.
+SWEAXCUT kaynak kodu [MIT Lisansı](LICENSE) ile yayımlanır. © 2026 Sweax Studios.

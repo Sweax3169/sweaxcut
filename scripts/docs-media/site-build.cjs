@@ -1,6 +1,8 @@
 'use strict'
 // docs/index.html içindeki üretilmiş bölümleri yeniler:
-//  1) /* fonts:start */ … /* fonts:end */ arası: docs/fonts'taki woff2 dosyaları için @font-face kuralları (fontsource unicode aralıklarıyla)
+//  1) /* fonts:start */ … /* fonts:end */ arası: docs/fonts'taki değişken woff2 dosyaları için @font-face kuralları
+//     (Mona Sans: wght 200–900 + wdth 75–125 %, Geist Mono: wght 100–900; yalnız latin + latin-ext, fontsource unicode aralıklarıyla).
+//     Dosyalar ve SIL OFL lisans metinleri node_modules/@fontsource-variable'dan kopyalanır; docs/fonts'ta başka bir şey kalmaz.
 //  2) <script id="fx-data" type="application/json"> … </script> arası: canlı önizlemenin geçiş/efekt GLSL kodu
 //
 // Kullanım: node scripts/docs-media/site-build.cjs [fx-dump.json]
@@ -12,29 +14,40 @@ const fs = require('fs')
 const path = require('path')
 const root = path.join(__dirname, '..', '..')
 const html = path.join(root, 'docs', 'index.html')
+const FONTS = path.join(root, 'docs', 'fonts')
 let page = fs.readFileSync(html, 'utf8')
 
 // ---------------------------------------------------------------- yazı tipleri
-const F = path.join(root, 'node_modules', '@fontsource')
-const WANT = {
-  'bodoni-moda': [['400', 'normal'], ['500', 'normal'], ['600', 'normal'], ['400', 'italic']],
-  manrope: [['400', 'normal'], ['500', 'normal'], ['600', 'normal'], ['700', 'normal']],
-  'jetbrains-mono': [['400', 'normal'], ['500', 'normal']],
-}
+const F = path.join(root, 'node_modules', '@fontsource-variable')
+const WANT = [
+  { pkg: 'mona-sans', css: 'standard.css', file: s => `mona-sans-${s}-standard-normal.woff2` },
+  { pkg: 'geist-mono', css: 'wght.css', file: s => `geist-mono-${s}-wght-normal.woff2` },
+]
+fs.mkdirSync(FONTS, { recursive: true })
+const keep = new Set()
 let css = ''
-for (const [fam, list] of Object.entries(WANT)) for (const [w, st] of list) {
-  const src = fs.readFileSync(path.join(F, fam, w + (st === 'italic' ? '-italic' : '') + '.css'), 'utf8')
+for (const w of WANT) {
+  const src = fs.readFileSync(path.join(F, w.pkg, w.css), 'utf8')
   const blocks = src.split('/* ').slice(1)
   for (const sub of ['latin-ext', 'latin']) {
-    const b = blocks.find(x => x.startsWith(`${fam}-${sub}-${w}-${st} */`))
-    if (!b) throw new Error('yok: ' + fam + ' ' + sub + ' ' + w + ' ' + st)
-    const file = `${fam}-${sub}-${w}-${st}.woff2`
-    fs.copyFileSync(path.join(F, fam, 'files', file), path.join(root, 'docs', 'fonts', file))
-    const ur = /unicode-range:\s*([^;]+);/.exec(b)[1].trim()
-    const name = /font-family:\s*'([^']+)'/.exec(b)[1]
-    css += `@font-face{font-family:"${name}";font-style:${st};font-weight:${w};font-display:swap;src:url(fonts/${file}) format("woff2");unicode-range:${ur}}\n`
+    const file = w.file(sub)
+    const b = blocks.find(x => x.includes(`/files/${file}`))
+    if (!b) throw new Error('yok: ' + w.pkg + ' ' + sub)
+    fs.copyFileSync(path.join(F, w.pkg, 'files', file), path.join(FONTS, file))
+    keep.add(file)
+    const get = re => { const m = re.exec(b); return m ? m[1].trim() : null }
+    const name = get(/font-family:\s*'([^']+)'/)
+    const weight = get(/font-weight:\s*([^;]+);/)
+    const stretch = get(/font-stretch:\s*([^;]+);/)
+    const ur = get(/unicode-range:\s*([^;]+);/)
+    css += `@font-face{font-family:"${name}";font-style:normal;font-weight:${weight};${stretch ? `font-stretch:${stretch};` : ''}font-display:swap;src:url(fonts/${file}) format("woff2");unicode-range:${ur}}\n`
   }
+  const lic = `LICENSE-${w.pkg}.txt`
+  fs.copyFileSync(path.join(F, w.pkg, 'LICENSE'), path.join(FONTS, lic))
+  keep.add(lic)
 }
+// eski yazı tipi dosyalarını kaldır (bodoni / manrope / jetbrains ve benzerleri)
+for (const f of fs.readdirSync(FONTS)) if (!keep.has(f)) { fs.unlinkSync(path.join(FONTS, f)); console.log('silindi: docs/fonts/' + f) }
 page = page.replace(/\/\* fonts:start \*\/[\s\S]*?\/\* fonts:end \*\//, '/* fonts:start */\n' + css + '/* fonts:end */')
 
 // ---------------------------------------------------------------- geçiş / efekt verisi

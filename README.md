@@ -1,7 +1,7 @@
 <a href="https://sweax3169.github.io/sweaxcut/">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/art/banner-en-dark.svg">
-    <img alt="SWEAXCUT: a free video editor for Windows. Captions, voice-over and the AI tools run on your PC, without the internet." src="docs/art/banner-en-light.svg" width="100%">
+    <img alt="SWEAXCUT, a video editor for Windows. A preview shows a caption filling in word by word while a red playhead crosses a cut on the timeline below." src="docs/art/banner-en-light.svg" width="100%">
   </picture>
 </a>
 
@@ -14,240 +14,279 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Sweax3169/sweaxcut/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/Sweax3169/sweaxcut?label=release&color=3FA9F5"></a>
-  <a href="https://github.com/Sweax3169/sweaxcut/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/Sweax3169/sweaxcut/total?color=121518"></a>
-  <img alt="Windows 10 and 11, 64-bit" src="https://img.shields.io/badge/Windows-10%20%7C%2011%20%C2%B7%2064--bit-121518">
-  <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-2EE6A6"></a>
+  <a href="https://github.com/Sweax3169/sweaxcut/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/Sweax3169/sweaxcut?label=release&color=ff4b3e"></a>
+  <a href="https://github.com/Sweax3169/sweaxcut/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/Sweax3169/sweaxcut/total?color=13161c"></a>
+  <img alt="Windows 10 and 11, 64-bit" src="https://img.shields.io/badge/Windows-10%20%7C%2011%20%C2%B7%2064--bit-13161c">
+  <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-36d39b"></a>
 </p>
 
 <br>
 
 <p align="center">
-  <img alt="The SWEAXCUT editor playing a 16:9 project: the title GECE SÜRÜŞÜ animates in, a cross-zoom transition cuts to the next clip, then the transitions browser opens and a new transition is applied" src="docs/media/tour.gif" width="900">
+  <a href="docs/media/tour.mp4"><img alt="Screen recording of SWEAXCUT 3: the start screen, a recipe building a beat montage that then plays, a project with automatic captions, caption style changes, the command palette and the export dialog" src="docs/media/tour.gif" width="900"></a>
 </p>
-<p align="center"><sub>One project played in the editor: an animated title, a cross-zoom cut, then a new transition picked from the browser. <a href="docs/media/tour.mp4">Watch the full 32-second tour (MP4)</a>.</sub></p>
+<p align="center"><sub>From the start screen to the export: a recipe builds a beat montage, a talking clip gets captions, their style changes, the command palette opens. <a href="docs/media/tour.mp4">Watch the tour as MP4</a>.</sub></p>
 
 <br>
 
 ## What it is
 
-SWEAXCUT is a video editor for Windows, made by Sweax Studios for people who cut gameplay clips, Shorts and YouTube videos. It has a multi-track timeline with a GPU preview, a large library of effects, transitions, text styles, stickers, music and sound effects, automatic captions, text to speech and a set of AI tools. All of it runs on your own computer, the speech recognition and the voices included.
+SWEAXCUT is a video editor for Windows, made by Sweax Studios. Drop your clips onto one of six recipes and it builds the edit: cuts on the beat of the music, removes the pauses in speech, finds the loud moments in gameplay, writes the captions word by word. Everything it builds stays editable on a multi-track timeline, drawn by the same WebGL2 compositor that renders the export.
 
-It is free to use and puts no watermark on what you export. There is no account to create.
+Speech recognition (whisper.cpp), text to speech (Piper) and the effects run on your computer. The source code is MIT-licensed.
 
 > [!NOTE]
-> The interface is in Turkish. Captions can be generated in 12 languages, and the downloadable voices cover 10.
+> The interface is in Turkish. Captions can be made in Turkish, English and other languages.
 
 <br>
 
-## What is inside
+## New in 3.0
+
+| | |
+|---|---|
+| **Redesigned from scratch** | Start screen, editor, every panel, the inspector, the timeline, the dialogs and the export. |
+| **Recipes on the start screen** | Drop files on a recipe card and the edit is built. Each card plays a small live preview. |
+| **Automatic tab** | Six recipes, Polish (eight steps) and eight looks that set colour, transitions and caption style together. |
+| **Captions** | One click from the clip, three accuracy levels, music and game sound skipped, a text editor, a style editor, 45 presets plus your own. |
+| **Command palette** | <kbd>Ctrl</kbd>+<kbd>K</kbd> searches commands, recipes and everything in the library. |
+| **For pros** | Keyframe curve editor, colour scopes, ambient light around the preview. |
+| **Export presets** | Six presets, from Social media to Audio only. |
+| **Guide** | Four steps on an empty timeline (Add, Automatic edit, Captions, Export), then a "next step" strip once files are in. |
+
+<br>
+
+## One-click edits
+
+<p align="center">
+  <img alt="Start screen: a drop area with Choose files and Blank project, five format cards from 9:16 to 21:9, six recipe cards with live previews, and the library counts" src="docs/media/home.webp" width="100%">
+</p>
+
+The start screen has a drop area, five formats (9:16 for TikTok, Reels and Shorts, 16:9, 1:1, 4:5 and 21:9) and the six recipes. Drop your videos onto a recipe card and the edit sets itself up; drop them on the drop area and they go onto the timeline as they are.
+
+| Recipe | What it builds |
+|---|---|
+| **Beat montage** | Cuts on the beat of the music, a zoom transition every two bars, emphasis zooms, vivid colour |
+| **Talk + captions** | Cuts the silences, adds jump zooms and voice clean-up, writes captions word by word, ducks the music under speech |
+| **Game moments** | Finds the moments where the sound gets loud and adds a zoom and a flash |
+| **Vlog** | Clips in order, soft transitions, golden-hour colour, a date title |
+| **Photo slideshow** | A slow zoom or pan for every bar of music |
+| **Short recap** | A 30-second recap from a long video |
+
+The tracks in the app's music library have a known tempo, so their beat grid is exact. With your own music, the beats are detected.
 
 <table>
 <tr>
-<td width="33%" valign="top">
-<img alt="Transitions browser: 197 transitions with previews" src="docs/art/panel-transitions.webp" width="100%">
-<h3>197 transitions</h3>
-<p>Whips, zooms, light bursts, glitches, 3D cubes and shape reveals. 125 come from gl-transitions, 72 were written for SWEAXCUT.</p>
-</td>
-<td width="33%" valign="top">
-<img alt="Effects browser with 161 effects" src="docs/art/panel-effects.webp" width="100%">
-<h3>161 effects</h3>
-<p>VHS, CRT, film grain, glitch, weather, light leaks, camera shake, game-style frames. Put one on a clip or on its own layer.</p>
-</td>
-<td width="33%" valign="top">
-<img alt="Text templates browser with 126 templates" src="docs/art/panel-text.webp" width="100%">
-<h3>126 text templates</h3>
-<p>101 fonts that all contain the Turkish letters, 88 text animations, outlines, shadow, glow, a background box and curved text.</p>
-</td>
+<td width="50%" valign="top"><img alt="Automatic edit dialog: the six recipes on the left; music, length (15 s, 30 s, 1 min, all) and automatic captions on the right" src="docs/media/autoedit.webp" width="100%"></td>
+<td width="50%" valign="top"><img alt="The Beat montage recipe running: preparing the music, with the stages Music, Clips, Edit, Done" src="docs/media/autoedit-run.webp" width="100%"></td>
 </tr>
 <tr>
-<td width="33%" valign="top">
-<img alt="Automatic captions panel: source, language, model and caption styles" src="docs/art/panel-captions.webp" width="100%">
-<h3>Automatic captions</h3>
-<p>whisper.cpp turns speech into word-timed captions on your PC, with 45 caption styles, keyword highlights and emoji.</p>
-</td>
-<td width="33%" valign="top">
-<img alt="Text-to-speech panel with the bundled Turkish voice Fahrettin" src="docs/art/panel-voice.webp" width="100%">
-<h3>Text to speech</h3>
-<p>Piper voices that work offline, with a Turkish voice in the installer. The voices built into Windows can be used too.</p>
-</td>
-<td width="33%" valign="top">
-<img alt="Sticker browser with 777 stickers" src="docs/art/panel-stickers.webp" width="100%">
-<h3>777 stickers</h3>
-<p>649 Twemoji emoji, 117 animated vector stickers (subscribe buttons, health bars, kill counters, comic bursts) and 11 shapes.</p>
-</td>
-</tr>
-<tr>
-<td width="33%" valign="top">
-<img alt="Music library with 22 tracks synthesised by the app" src="docs/art/panel-audio.webp" width="100%">
-<h3>Music and sound effects</h3>
-<p>22 music tracks and 102 sound effects, all synthesised by the app. 40 voice changers, noise reduction and ducking.</p>
-</td>
-<td width="33%" valign="top">
-<img alt="AI tools panel: cut silences, captions, highlights, beats" src="docs/art/panel-tools.webp" width="100%">
-<h3>AI tools</h3>
-<p>Background removal, stabilisation, auto reframe, scene detection, silence cutting, highlight finding and beat detection.</p>
-</td>
-<td width="33%" valign="top">
-<img alt="Colour filter browser with 93 filters" src="docs/art/panel-filters.webp" width="100%">
-<h3>Colour</h3>
-<p>93 colour filters, light and colour controls, and HSL adjustments for eight colour ranges. The light and colour sliders can be keyframed.</p>
-</td>
+<td valign="top"><sub>Pick a recipe, the music and the length. The dialog says what the recipe will do before it runs.</sub></td>
+<td valign="top"><sub>The recipe runs in four stages: music, clips, edit, done. In the packaged app, three clips dropped on the Beat montage card became a 30-second montage with 38 cuts in 6.3 s.</sub></td>
 </tr>
 </table>
 
+### Polish
+
+Polish runs over an edit you already have. Each step can be switched on or off before it runs.
+
+| Step | What it does | On by default |
+|---|---|:---:|
+| Cut silences | Removes the pauses in speech | |
+| Clean up and level the voice | Noise reduction, clarity, loudness levelling | ✓ |
+| Improve the colour | A little contrast and vibrance | ✓ |
+| Transitions on the cuts | A soft blend, 0.35 s | ✓ |
+| Emphasis zoom | Zooms in where the sound gets louder | |
+| Automatic captions | Writes the speech word by word | |
+| Background music | Ducks by itself under speech | |
+| Intro and outro | Fades in at the start and out at the end | ✓ |
+
+### Looks
+
+A look sets the colour filter, the transitions and the caption style in one click. There are eight: **Cinematic, Energetic, Clean, Gaming, Warm vlog, Retro, Neon night** and **Black and white**.
+
+### Command palette
+
+<p align="center">
+  <img alt="Command palette over the editor: the search 'altyazı' finds the command Create automatic captions and the recipe Talk + captions" src="docs/media/command.webp" width="100%">
+</p>
+
+<kbd>Ctrl</kbd>+<kbd>K</kbd> opens *Ne yapmak istiyorsun?* ("What do you want to do?"). One search covers the commands, the recipes and every effect, transition, filter, text template and music track in the library.
+
 <br>
 
-## Counted from the code
+## Automatic captions
 
-These numbers come from the content registry of the running app (`src/engine/registry.js`, version 2.0.1), not from a feature list.
+Captions are made by [whisper.cpp](https://github.com/ggml-org/whisper.cpp) (release `b5454`) on your own computer. Each word gets its own timing, so the spoken word can be highlighted.
 
-| | Count | Detail |
+<table>
+<tr>
+<th width="33%">1 · Create</th>
+<th width="33%">2 · Edit</th>
+<th width="33%">3 · Style</th>
+</tr>
+<tr>
+<td valign="top"><img alt="Captions panel while speech is being transcribed at 8 percent: source Main track, language Turkish, accuracy Accurate selected" src="docs/media/captions-running.webp" width="100%"></td>
+<td valign="top"><img alt="Caption text editor: 22 lines with their start times, the current word SONRA highlighted while the preview shows SONRA MERDİVENLERDEN" src="docs/media/captions.webp" width="100%"></td>
+<td valign="top"><img alt="Caption style editor: preset styles, font, size, weight, letter spacing, colour and uppercase, with the vertical preview" src="docs/media/caption-style.webp" width="100%"></td>
+</tr>
+</table>
+
+**Create.** Click *Altyazı oluştur* in the clip's inspector, *Altyazı* on the timeline toolbar, or use the clip's right-click menu.
+
+| Accuracy | Model | Download |
+|---|---|---:|
+| Fast | small | 190 MB |
+| **Accurate** (recommended) | medium | 539 MB |
+| Large | large-v3-turbo | 574 MB |
+
+Word timing comes from DTW. *Skip music and game sound* runs Silero VAD first, and a filter drops made-up text, such as the "bzzzz" a model can write over gameplay sound with no speech in it.
+
+**Edit.** All the lines read like one document:
+
+- click a word to jump to that moment, double-click to type
+- <kbd>Enter</kbd> splits the line at the cursor, <kbd>Backspace</kbd> at the start of a line joins it to the previous one
+- move a start or end frame by frame (<kbd>Shift</kbd>: 0.1 s), or shift every caption at once to fix the sync
+- find and replace
+- export as SRT, VTT, ASS or TXT; import SRT, VTT or ASS
+
+**Style.** Changes apply to every line at once and show live in the preview.
+
+| | Options |
+|---|---|
+| Text | font, size, weight, letter spacing, colour, UPPERCASE with the Turkish rules (i → İ) |
+| Spoken word | Colour, Box, Underline, Karaoke fill or None, with its colour, box corner radius, grow and bounce |
+| Words still to come | their own opacity |
+| Word entrance | Pop, Fade in, Slide, Drop, Punch, Blur, Typewriter, Spin, Stretch |
+| Continuous motion | Pulse, Sway, Float |
+| Extras | emoji, outline, shadow, glow |
+| Background | per line, as a block, or behind each word |
+| Layout | top, middle or bottom, vertical and horizontal offset, width, words per line (re-split using the word timings) |
+
+45 preset styles are drawn with the real caption renderer. *Bu stili kaydet* saves your own style under *Kaydettiklerim* (`caption-styles.json` in the app's data folder).
+
+### Measured accuracy
+
+66 seconds of Turkish speech made with a TTS voice, all five models run by `scripts/test-captions.cjs --models=all` on an AMD Ryzen 5 7600, on the processor (whisper did not use the GPU).
+
+| Model | Word error rate | Time for 66 s |
+|---|---:|---:|
+| tiny | 23.9 % | |
+| base | 16.2 % | |
+| small · *Fast* | 6.0 % | 13.5 s |
+| **medium · *Accurate*** | **2.6 %** | **42.6 s** |
+| large-v3-turbo · *Large* | 5.1 % | 78.3 s |
+
+The median error of a word's timing was 29 to 49 ms. On 39 seconds of English (the Windows voice Zira), medium got every word right in about 26 to 32 s. In the packaged app, the clip's *Altyazı oluştur* button turned 32 seconds of Turkish speech into 22 lines and 53 words in 43 s with medium.
+
+<br>
+
+## The library
+
+<table>
+<tr>
+<td width="33%" valign="top" align="center"><img alt="Automatic panel: recipes, Polish and looks" src="docs/art/panel-auto.webp" width="100%"><br><b>Automatic</b><br><sub>6 recipes · Polish · 8 looks</sub></td>
+<td width="33%" valign="top" align="center"><img alt="Transitions panel with previews" src="docs/art/panel-transitions.webp" width="100%"><br><b>197 transitions</b><br><sub>125 from gl-transitions, 72 written for SWEAXCUT</sub></td>
+<td width="33%" valign="top" align="center"><img alt="Effects panel" src="docs/art/panel-effects.webp" width="100%"><br><b>161 effects</b><br><sub>on a clip or on their own layer</sub></td>
+</tr>
+<tr>
+<td valign="top" align="center"><img alt="Colour filters panel" src="docs/art/panel-filters.webp" width="100%"><br><b>93 colour filters</b><br><sub>with HSL and an adjustment layer</sub></td>
+<td valign="top" align="center"><img alt="Text panel with templates" src="docs/art/panel-text.webp" width="100%"><br><b>126 text templates</b><br><sub>88 animations, 101 fonts with Turkish letters</sub></td>
+<td valign="top" align="center"><img alt="Stickers panel" src="docs/art/panel-stickers.webp" width="100%"><br><b>777 stickers</b><br><sub>Twemoji and vector stickers</sub></td>
+</tr>
+<tr>
+<td valign="top" align="center"><img alt="Audio panel with music and sound effects" src="docs/art/panel-audio.webp" width="100%"><br><b>102 sound effects, 22 tracks</b><br><sub>synthesised by the app; 40 voice changers</sub></td>
+<td valign="top" align="center"><img alt="Tools panel" src="docs/art/panel-tools.webp" width="100%"><br><b>Tools</b><br><sub>background removal, stabilisation, reframe, scenes</sub></td>
+<td valign="top" align="center"><img alt="Layouts panel" src="docs/art/panel-layouts.webp" width="100%"><br><b>13 layouts</b><br><sub>facecam, split screen and more</sub></td>
+</tr>
+</table>
+
+Counted from the app's content registry (`src/engine/registry.js`):
+
+| | Count | |
 |---|---:|---|
-| <img src="https://img.shields.io/badge/-%20-FFD23F?style=flat-square" alt=""> Effects | **161** | 11 categories, from basic and gaming to glitch, retro and weather |
-| <img src="https://img.shields.io/badge/-%20-3FA9F5?style=flat-square" alt=""> Transitions | **197** | 12 categories · 125 from gl-transitions, 72 original |
-| <img src="https://img.shields.io/badge/-%20-3FA9F5?style=flat-square" alt=""> Colour filters | **93** | 8 categories |
-| <img src="https://img.shields.io/badge/-%20-3FA9F5?style=flat-square" alt=""> Clip animations | **137** | 46 in · 56 out · 35 loop |
-| <img src="https://img.shields.io/badge/-%20-3FA9F5?style=flat-square" alt=""> Speed curves | **22** | 5 categories |
-| <img src="https://img.shields.io/badge/-%20-3FA9F5?style=flat-square" alt=""> Layouts | **13** | facecam with gameplay, split screen, cinema bars and more |
-| <img src="https://img.shields.io/badge/-%20-FF5DA2?style=flat-square" alt=""> Text templates | **126** | 10 categories |
-| <img src="https://img.shields.io/badge/-%20-FF5DA2?style=flat-square" alt=""> Text animations | **88** | 36 in · 28 out · 24 loop |
-| <img src="https://img.shields.io/badge/-%20-FF5DA2?style=flat-square" alt=""> Caption styles | **45** | 6 categories |
-| <img src="https://img.shields.io/badge/-%20-FF5DA2?style=flat-square" alt=""> Fonts | **101** | 7 groups, each checked for all 12 Turkish letters |
-| <img src="https://img.shields.io/badge/-%20-B98CFF?style=flat-square" alt=""> Stickers | **777** | 649 emoji · 117 animated vector · 11 shapes |
-| <img src="https://img.shields.io/badge/-%20-2EE6A6?style=flat-square" alt=""> Sound effects | **102** | 8 categories, synthesised in the app |
-| <img src="https://img.shields.io/badge/-%20-2EE6A6?style=flat-square" alt=""> Music tracks | **22** | 10 genres, synthesised in the app |
-| <img src="https://img.shields.io/badge/-%20-2EE6A6?style=flat-square" alt=""> Voice changers | **40** | 6 categories |
-| Easing curves | **38** | for keyframes (`src/core/easing.js`) |
-| Blend modes | **24** | `src/engine/shaders.js` |
-| Mask shapes | **8** | linear, mirror, circle, rectangle, heart, star, diamond, hexagon |
-| Aspect ratios | **9** | 9:16, 16:9, 1:1, 4:5, 3:4, 4:3, 21:9, 2:1, 2.35:1 |
+| <img src="https://img.shields.io/badge/-%20-ff6b8b?style=flat-square" alt=""> Effects | **161** | |
+| <img src="https://img.shields.io/badge/-%20-4d8dff?style=flat-square" alt=""> Transitions | **197** | 125 gl-transitions + 72 written for SWEAXCUT |
+| <img src="https://img.shields.io/badge/-%20-4fd6e8?style=flat-square" alt=""> Colour filters | **93** | |
+| <img src="https://img.shields.io/badge/-%20-e070ee?style=flat-square" alt=""> Text templates | **126** | |
+| <img src="https://img.shields.io/badge/-%20-e070ee?style=flat-square" alt=""> Text animations | **88** | |
+| <img src="https://img.shields.io/badge/-%20-e070ee?style=flat-square" alt=""> Fonts | **101** | all with the Turkish letters |
+| <img src="https://img.shields.io/badge/-%20-e070ee?style=flat-square" alt=""> Caption styles | **45** | plus the ones you save |
+| <img src="https://img.shields.io/badge/-%20-ffb84d?style=flat-square" alt=""> Stickers | **777** | Twemoji (CC-BY 4.0) and vector |
+| <img src="https://img.shields.io/badge/-%20-36d39b?style=flat-square" alt=""> Sound effects | **102** | synthesised by the app |
+| <img src="https://img.shields.io/badge/-%20-36d39b?style=flat-square" alt=""> Music tracks | **22** | synthesised by the app |
+| <img src="https://img.shields.io/badge/-%20-36d39b?style=flat-square" alt=""> Voice changers | **40** | |
+| <img src="https://img.shields.io/badge/-%20-4d8dff?style=flat-square" alt=""> Clip animations | **137** | |
+| <img src="https://img.shields.io/badge/-%20-4d8dff?style=flat-square" alt=""> Speed curves | **22** | plus a custom curve |
+| <img src="https://img.shields.io/badge/-%20-4d8dff?style=flat-square" alt=""> Layouts | **13** | |
+| <img src="https://img.shields.io/badge/-%20-ff4b3e?style=flat-square" alt=""> Automatic edit recipes | **6** | |
+| <img src="https://img.shields.io/badge/-%20-ff4b3e?style=flat-square" alt=""> Looks | **8** | |
+| <img src="https://img.shields.io/badge/-%20-ff4b3e?style=flat-square" alt=""> Export presets | **6** | |
 
 <br>
 
-## Editing
+## For pros
 
 <p align="center">
-  <img alt="A 16:9 project: the transitions browser on the left, a Cross Zoom transition half-way through in the preview, its settings on the right, and the timeline with effect, text, sticker, video and music tracks" src="docs/media/transitions.png" width="100%">
+  <img alt="Editor with the keyframe curve editor open in the inspector (an ease in-out curve with two gold handles and six presets) and the luma waveform scope over the preview" src="docs/media/pro-curve-scopes.webp" width="100%">
 </p>
 
-<table>
-<tr>
-<td width="50%" valign="top"><img alt="Text style inspector next to the title GECE SÜRÜŞÜ on the preview" src="docs/media/text.png" width="100%"></td>
-<td width="50%" valign="top"><img alt="A VHS effect layer over the tunnel clip with its intensity and speed settings" src="docs/media/effects.png" width="100%"></td>
-</tr>
-<tr>
-<td valign="top"><sub>Text templates and the style inspector: outline, second outline, shadow, glow, background box.</sub></td>
-<td valign="top"><sub>An effect on its own layer changes everything under it for as long as the layer lasts.</sub></td>
-</tr>
-<tr>
-<td width="50%" valign="top"><img alt="Animated sticker Abone Ol over the aurora clip with position and opacity settings" src="docs/media/stickers.png" width="100%"></td>
-<td width="50%" valign="top"><img alt="Colour filters and light controls for the blocks clip" src="docs/media/filters.png" width="100%"></td>
-</tr>
-<tr>
-<td valign="top"><sub>Stickers are clips like any other: move, scale, animate, blend.</sub></td>
-<td valign="top"><sub>A colour filter with an intensity slider, followed by light, colour and HSL controls.</sub></td>
-</tr>
-</table>
+New in 3.0:
 
-- **Timeline.** The main track is magnetic, so its clips stay butted together; overlays, text, stickers, effects and audio go on their own tracks. Split, trim from either side, ripple delete, copy, duplicate, markers and an in/out range.
-- **Keyframes** on position, scale, rotation, opacity, volume, colour and effect parameters, with 38 easing curves.
-- **Speed** from 0.1× to 100× on a logarithmic slider, 22 speed curves, reverse, freeze frame and pitch preservation.
-- **Masks, blending, keying.** 8 mask shapes with feather, rounded corners and invert, 24 blend modes, and a chroma key with spill control.
-- **Projects** in 9 aspect ratios at 24, 25, 30, 50 or 60 fps. 13 one-click layouts arrange a facecam and gameplay for vertical video.
-- **Heavy recordings** (formats the preview cannot play, anything above 1440p, long keyframe intervals) get a light preview copy in the background, and you can keep editing while it is being made.
+- **Keyframe curve editor.** A two-handle Bézier between two keyframes, with values from −0.5 to 1.5 so a move can overshoot or pull back first. Six presets: Smooth, Speed up, Slow down, Punchy, Overshoot, Anticipate.
+- **Colour scopes.** Histogram, luma waveform, RGB parade and vectorscope with a skin-tone line.
+- **Ambient light.** The area around the preview takes its colour from the frame.
+
+Still there from earlier versions:
+
+| Area | |
+|---|---|
+| Animation | keyframes, 137 clip animations, 22 speed curves and a custom curve |
+| Compositing | masks, chroma key, blend modes, adjustment layers |
+| Colour | 93 filters, HSL |
+| Video tools | background removal (MediaPipe), stabilisation (ffmpeg vidstab), auto reframe, scene splitting |
+| Audio | noise reduction, voice clarity, loudness levelling, ducking, 40 voice changers |
+| Voice-over | Piper text to speech, with the Turkish voice Fahrettin built in |
 
 <br>
 
-## Captions and voice
-
-<table>
-<tr>
-<td width="34%" valign="top" align="center">
-<img alt="Vertical clip with automatic captions highlighted word by word" src="docs/media/captions.gif" width="288">
-</td>
-<td width="66%" valign="top">
-<img alt="9:16 project with automatic captions on the timeline and the caption style inspector" src="docs/media/captions.png" width="100%">
-<p><sub>The voice in this clip was made by the bundled Piper voice "Fahrettin", and whisper.cpp made the captions from it on the same PC. One misheard word was corrected in the caption word editor, the way you would fix it yourself.</sub></p>
-</td>
-</tr>
-</table>
-
-**Automatic captions** use [whisper.cpp](https://github.com/ggml-org/whisper.cpp) (v1.9.5, BLAS build), started as a separate process. Every word gets its own timing, so the caption styles can highlight the word being spoken. Captions can be made from the main track, from selected clips or from the voice-over track, in 12 languages or with automatic language detection. Filler words can be marked on the timeline. Subtitle files can be imported as SRT, VTT or ASS, and exported as SRT.
-
-The speech model is downloaded the first time you make captions and then stays on your disk:
-
-| Model | Size | |
-|---|---:|---|
-| Tiny | 32 MB | fastest |
-| Base | 60 MB | fast |
-| **Small** | **190 MB** | **default, recommended for Turkish** |
-| Medium | 539 MB | more accurate |
-| Large v3 Turbo | 574 MB | most accurate |
+## Export
 
 <p align="center">
-  <img alt="Text-to-speech panel with Turkish and other voices, and the voice-over tab of a caption clip" src="docs/media/voice.png" width="100%">
+  <img alt="Export dialog: six presets (Social media, YouTube, Highest, Quick share, GIF, Audio only), file name, folder, format, resolution, frame rate, quality, codec, hardware and audio quality" src="docs/media/export.webp" width="100%">
 </p>
 
-**Text to speech** uses [Piper](https://github.com/rhasspy/piper). The Turkish voice *Fahrettin* comes with the installer, and 21 more voices in 10 languages can be downloaded inside the app. The voices built into Windows (OneCore and SAPI, for example *Microsoft Tolga*) are in the same list. Any text clip can be voiced from its own inspector tab; the voice-over lands on an audio track under it. You can also record from a microphone.
+| Preset | Output |
+|---|---|
+| Social media | 1080p, 30 fps, H.264 |
+| YouTube | 1080p, 60 fps |
+| Highest | 4K, H.265 |
+| Quick share | 720p |
+| GIF | a looping animated image |
+| Audio only | MP3, 320 kbps |
 
-<br>
-
-## AI tools
-
-<p align="center">
-  <img alt="Tools panel with silence cutting, captions, highlights, beats, scene detection and stabilisation; the colour inspector is open on the right" src="docs/media/tools.png" width="100%">
-</p>
-
-| Tool | What it does | How |
-|---|---|---|
-| Remove background | Separates a person from the background without a green screen | MediaPipe Selfie Segmenter, on the GPU with a CPU fallback |
-| Stabilise | Smooths shaky footage and zooms in slightly to hide the edges | ffmpeg vidstab, two passes |
-| Auto reframe | Turns 16:9 into 9:16 (or the other way) while following the subject | MediaPipe face detection, or motion when there is no face |
-| Split into scenes | Cuts a clip at every scene change | ffmpeg scene detection |
-| Find highlights | Marks sudden loud moments (hits, explosions, shouts) and can add zooms | short-term loudness against the clip's baseline |
-| Zoom punch | Adds a short, hard zoom at the playhead | keyframes |
-| Cut silences | Finds pauses in speech and removes them | ffmpeg silencedetect |
-| Find beats | Marks the beats of the music so cuts snap to them | onset detection and beat tracking |
-| Split for Shorts | Splits a long video into equal parts or around its highlights | timeline markers |
-| Even out loudness | Brings every clip to the same loudness | ffmpeg loudnorm, applied on export |
-| Chroma key | Removes a green screen, or any other colour | compositor shader |
-
-<br>
-
-## Export and GPU acceleration
+Every field under the presets can still be changed by hand. Encoding uses the graphics card when it can (NVIDIA NVENC, AMD AMF, Intel Quick Sync), and the frames come from the same WebGL2 compositor as the preview. The dialog adds no watermark.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/art/pipeline-en-dark.svg">
-    <img alt="Export pipeline: one ffmpeg decoder per clip, YUV planes uploaded to the GPU, the same WebGL2 compositor as the preview, BT.709 YUV 4:2:0 packing on the GPU, asynchronous read-back, then NVENC, AMF, Quick Sync or a CPU encoder; the audio is mixed to WAV in parallel and muxed into the file" src="docs/art/pipeline-en-light.svg" width="760">
+    <img alt="Architecture: files go through import (ffprobe, proxy copies) into the timeline model; whisper.cpp captions and Piper voice-over feed the timeline; one WebGL2 compositor draws the preview and, during export, frames from one ffmpeg decoder per clip; the frames are packed to BT.709 YUV 4:2:0 on the GPU, read back and sent to NVENC, AMF, Quick Sync or a CPU encoder" src="docs/art/pipeline-en-light.svg" width="100%">
   </picture>
 </p>
 
-The preview and the export are drawn by the same WebGL2 compositor (`src/engine/compositor.js`), so what you see while editing is what ends up in the file. During export each clip is decoded frame-accurately by its own ffmpeg process, every frame is composited and converted to YUV on the graphics card, and only then read back and handed to the encoder.
+During an export, each clip is decoded by its own ffmpeg process, every frame is composited by the WebGL2 compositor (`src/engine/compositor.js`), converted to BT.709 YUV 4:2:0 on the graphics card, read back and handed to the encoder. The audio is mixed to WAV alongside and muxed in at the end. [An exported sample](docs/media/export-sample.mp4) is in the repository.
 
-A few seconds after the app starts, it runs a tiny test encode with each hardware encoder that ffmpeg lists (NVIDIA NVENC, AMD AMF, Intel Quick Sync) and remembers the result for three days. *Automatic* in the export dialog uses the first one that works and the CPU otherwise.
+<br>
 
-<table>
-<tr>
-<td width="62%" valign="top"><img alt="Export dialog: file name, folder, format, resolution, frame rate, quality, codec, hardware and audio quality" src="docs/media/export.png" width="100%"></td>
-<td width="38%" valign="top"><img alt="Export in progress at 96 frames per second, frame 143 of 960" src="docs/media/export-progress.png" width="100%">
-<p><sub>Measured on one machine (RTX 4070 SUPER, development build): the 32-second 1080p30 project in these screenshots, with four clips, three transitions, a title, a sticker, an effect layer and music, exported in <b>12.5 s</b> with <code>h264_nvenc</code>. <a href="docs/media/export-sample.mp4">See the exported video</a> (re-encoded to 960 px for the web).</sub></p>
-</td>
-</tr>
-</table>
+## Measured on one machine
 
-| | Options |
+Packaged app, end-to-end scripts, AMD Ryzen 5 7600.
+
+| Task | Result |
 |---|---|
-| Formats | MP4, MOV, WebM, GIF, and audio only as MP3 or WAV |
-| Video codecs | H.264, HEVC (H.265), AV1, VP9, ProRes |
-| Hardware encoders | NVIDIA NVENC, AMD AMF, Intel Quick Sync, for H.264, HEVC and AV1 where the card supports them |
-| CPU encoders | x264, x265, libaom AV1, libvpx VP9, ProRes (prores_ks) |
-| Resolution | project size, 480p, 720p, 1080p, 2K, 4K |
-| Frame rate | 24, 25, 30, 50, 60 |
-| Quality | Low, Medium, High, Maximum |
-| Audio | AAC (MP4, MOV), Opus (WebM), MP3 or WAV; 128 to 320 kbps for compressed audio |
-| Colour | BT.709, tagged in the file |
+| Three clips dropped on the *Beat montage* recipe card | a 30-second montage with 38 cuts, built in **6.3 s** |
+| *Altyazı oluştur* on a clip with 32 s of Turkish speech (medium) | 22 lines, 53 words in **43 s** |
+| Export of a 32-second 1080×1920 project with `h264_nvenc` | **23.8 s** |
+| Captions for 66 s of Turkish TTS speech, medium | 2.6 % word error rate in **42.6 s** |
 
 <br>
 
@@ -255,37 +294,37 @@ A few seconds after the app starts, it runs a tiny test encode with each hardwar
 
 | Key | Action | Key | Action |
 |---|---|---|---|
-| <kbd>Space</kbd> | Play / pause | <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd> | Shuttle back, stop, forward |
-| <kbd>Ctrl</kbd>+<kbd>B</kbd> or <kbd>S</kbd> | Split at the playhead | <kbd>←</kbd> <kbd>→</kbd> | One frame back / forward |
-| <kbd>Q</kbd> / <kbd>W</kbd> | Trim left / right of the playhead | <kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd> | One second back / forward |
-| <kbd>Delete</kbd> | Delete | <kbd>↑</kbd> <kbd>↓</kbd> | Previous / next cut |
-| <kbd>Shift</kbd>+<kbd>Delete</kbd> | Ripple delete | <kbd>Home</kbd> <kbd>End</kbd> | Start / end |
-| <kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd> | Undo / redo | <kbd>I</kbd> <kbd>O</kbd> | Range in / out |
-| <kbd>Ctrl</kbd>+<kbd>C</kbd> <kbd>X</kbd> <kbd>V</kbd> | Copy, cut, paste | <kbd>M</kbd> | Add a marker |
-| <kbd>Ctrl</kbd>+<kbd>D</kbd> | Duplicate | <kbd>T</kbd> | Add text |
-| <kbd>Ctrl</kbd>+<kbd>A</kbd> | Select all | <kbd>Alt</kbd>+<kbd>K</kbd> | Add a scale keyframe |
-| <kbd>Esc</kbd> | Clear the selection and range | <kbd>[</kbd> <kbd>]</kbd> | Previous / next keyframe |
+| <kbd>Ctrl</kbd>+<kbd>K</kbd> | Command palette | <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd> | Shuttle back, stop, forward |
+| <kbd>Space</kbd> | Play / pause | <kbd>←</kbd> <kbd>→</kbd> | One frame back / forward |
+| <kbd>Ctrl</kbd>+<kbd>B</kbd> or <kbd>S</kbd> | Split at the playhead | <kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd> | One second back / forward |
+| <kbd>Q</kbd> / <kbd>W</kbd> | Trim left / right of the playhead | <kbd>↑</kbd> <kbd>↓</kbd> | Previous / next cut |
+| <kbd>Delete</kbd> | Delete | <kbd>Home</kbd> <kbd>End</kbd> | Start / end |
+| <kbd>Shift</kbd>+<kbd>Delete</kbd> | Delete and close the gap | <kbd>I</kbd> <kbd>O</kbd> | Range in / out |
+| <kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd> | Undo / redo | <kbd>M</kbd> | Add a marker |
+| <kbd>Ctrl</kbd>+<kbd>C</kbd> <kbd>X</kbd> <kbd>V</kbd> | Copy, cut, paste | <kbd>T</kbd> | Add text |
+| <kbd>Ctrl</kbd>+<kbd>D</kbd> | Duplicate | <kbd>Alt</kbd>+<kbd>K</kbd> | Add a keyframe |
+| <kbd>Ctrl</kbd>+<kbd>A</kbd> | Select all | <kbd>[</kbd> <kbd>]</kbd> | Previous / next keyframe |
 | <kbd>Ctrl</kbd>+<kbd>+</kbd> / <kbd>−</kbd> | Zoom the timeline | <kbd>N</kbd> | Snapping on / off |
 | <kbd>Shift</kbd>+<kbd>Z</kbd> | Fit the timeline | <kbd>F</kbd> | Full-screen preview |
 | <kbd>Ctrl</kbd>+<kbd>S</kbd> | Save | <kbd>Ctrl</kbd>+<kbd>O</kbd> | Open a project |
 | <kbd>Ctrl</kbd>+<kbd>E</kbd> | Export | <kbd>Ctrl</kbd>+<kbd>I</kbd> | Import media |
 
-With the mouse: <kbd>Ctrl</kbd> or <kbd>Alt</kbd> + wheel zooms the timeline, <kbd>Shift</kbd> + wheel scrolls between tracks, <kbd>Alt</kbd> + wheel over the preview scales the selected clip, holding <kbd>Shift</kbd> while dragging turns snapping off for that drag, and <kbd>Alt</kbd>+<kbd>1</kbd>…<kbd>9</kbd> switches the inspector tabs. The list is also in the app under **Yardım → Klavye kısayolları**.
+The same list is in the app under **Yardım → Klavye kısayolları** (`src/ui/shortcuts.js`).
 
 <br>
 
 ## Privacy
 
-SWEAXCUT does its work on your computer. Your videos are not uploaded anywhere, there is no account, and the code has no analytics, telemetry or update check.
+Your videos are edited on your computer and are not uploaded anywhere. There is no account, and the code has no analytics, telemetry or update check.
 
 The app goes online in two situations, and only when you start them:
 
 | When | From | What |
 |---|---|---|
-| You make captions with a speech model that is not on your disk yet | `huggingface.co/ggerganov/whisper.cpp`, then the `hf-mirror.com` mirror if that fails twice | the model file, checked against its size and SHA-256 |
-| You choose a Piper voice that is not installed yet | `huggingface.co` (`rhasspy/piper-voices`, `speaches-ai`) | the voice model and its config, checked against its size and checksum |
+| You make captions with a model that is not on your disk yet | `huggingface.co/ggerganov/whisper.cpp`, or the `hf-mirror.com` mirror | the model file, checked against its size and SHA-256 |
+| You pick a Piper voice that is not installed yet | `huggingface.co` (`rhasspy/piper-voices`, `speaches-ai`) | the voice model and its config |
 
-Everything else, including the MediaPipe models, fonts, stickers, music and sound effects, comes with the installer.
+Everything else (the Silero VAD model, the MediaPipe models, fonts, stickers, music and sound effects) comes with the installer.
 
 <br>
 
@@ -294,25 +333,19 @@ Everything else, including the MediaPipe models, fonts, stickers, music and soun
 | What | Where |
 |---|---|
 | Projects (`.sweax`) | `Documents\SWEAXCUT\Projeler` |
-| Autosave, every 45 seconds | `%APPDATA%\SWEAXCUT\autosave\` (offered back on the start screen after a crash) |
-| Preview copies, waveforms, thumbnails | `%APPDATA%\SWEAXCUT\cache\` and `thumbs\` |
-| Downloaded speech models and voices | `%APPDATA%\SWEAXCUT\models\` |
+| Autosave, every 45 seconds | `%APPDATA%\SWEAXCUT\autosave\` |
+| Saved caption styles | `%APPDATA%\SWEAXCUT\caption-styles.json` |
+| Preview copies, waveforms, thumbnails | `%APPDATA%\SWEAXCUT\cache\` |
+| Downloaded speech models | `%APPDATA%\SWEAXCUT\models\whisper\` |
 | Exports | `Videos\SWEAXCUT`, or any folder you pick in the export dialog |
-| The program | `%LOCALAPPDATA%\Programs\sweaxcut` |
-
-A project remembers where your media files are, so moving them breaks the link. Uninstalling keeps everything in `%APPDATA%\SWEAXCUT`.
 
 <br>
 
 ## Install
 
-<p align="center">
-  <img alt="Start screen: choose an aspect ratio, open a project or pick a video" src="docs/media/home.png" width="430">
-</p>
-
-1. Download `SWEAXCUT-Kurulum-2.0.2.exe` (about 213 MB) from the [latest release](https://github.com/Sweax3169/sweaxcut/releases/latest).
-2. Run it. It installs for your user account only, adds desktop and Start menu shortcuts, registers `.sweax` project files and opens the app.
-3. On the start screen, pick an aspect ratio (9:16 for Shorts, TikTok and Reels, 16:9 for YouTube) and drop a video onto the window.
+1. Download `SWEAXCUT-Kurulum-3.0.0.exe` (about 214 MB) from the [latest release](https://github.com/Sweax3169/sweaxcut/releases/latest).
+2. Run it. It installs for your user account, adds desktop and Start menu shortcuts, registers `.sweax` project files and opens the app.
+3. Drop your videos on a recipe card, or on the drop area to edit them yourself.
 
 > [!IMPORTANT]
 > The installer is not code-signed, so Windows SmartScreen may show a blue warning the first time. Click **More info**, then **Run anyway**.
@@ -321,24 +354,70 @@ A project remembers where your media files are, so moving them breaks the link. 
 
 <br>
 
+## FAQ
+
+<details>
+<summary><b>Does it need the internet?</b></summary>
+<br>
+Only to download a speech model the first time you make captions with it, and to download extra Piper voices. Editing, effects, the recipes, the bundled Turkish voice and the export work offline.
+</details>
+
+<details>
+<summary><b>Is there an English interface?</b></summary>
+<br>
+Not yet; the interface is in Turkish. Captions can be made in English: pick <i>English</i> (or <i>Otomatik</i> for automatic detection) under <i>Dil</i> in the captions panel.
+</details>
+
+<details>
+<summary><b>Which caption accuracy should I pick?</b></summary>
+<br>
+<i>Doğru</i> (Accurate, medium) is the recommended one and made the fewest errors in the measurement above, 2.6 % on Turkish. <i>Hızlı</i> (Fast, small) took 13.5 s instead of 42.6 s for the same 66 seconds, with 6.0 % errors.
+</details>
+
+<details>
+<summary><b>The captions wrote nonsense over a gameplay clip with no talking.</b></summary>
+<br>
+Turn on <i>Müzik ve oyun sesini atla</i> (skip music and game sound). It runs voice activity detection before whisper, and a filter removes made-up text such as "bzzzz".
+</details>
+
+<details>
+<summary><b>Can I use the downloadable Turkish voice <code>tr_TR-dfki-medium</code> in a commercial video?</b></summary>
+<br>
+No. That voice is licensed CC BY-NC-SA 4.0, which does not allow commercial use. The bundled voice Fahrettin is CC0. <a href="THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES.md</a> lists the licence of every voice.
+</details>
+
+<details>
+<summary><b>Windows says the installer is from an unknown publisher.</b></summary>
+<br>
+The installer is not code-signed. Click <b>More info</b>, then <b>Run anyway</b>. You can also build it yourself from this repository.
+</details>
+
+<details>
+<summary><b>The app closed unexpectedly. Is my project gone?</b></summary>
+<br>
+The project is autosaved every 45 seconds to <code>%APPDATA%\SWEAXCUT\autosave\</code>, and the start screen offers to restore it the next time you open the app.
+</details>
+
+<br>
+
 ## Build from source
 
 ```bash
 git clone https://github.com/Sweax3169/sweaxcut.git
 cd sweaxcut
-npm install                # also copies the MediaPipe wasm runtime into public/ (scripts/copy-mediapipe.cjs)
-npm run prepare:vendor     # downloads Piper, the bundled Turkish voice, the RNNoise models and FFprobe into vendor/
+npm install                # also copies the MediaPipe wasm runtime into public/
+npm run prepare:vendor     # downloads Piper, the bundled Turkish voice and FFprobe into vendor/
 ```
 
-whisper.cpp is not fetched by a script. Put the files from `whisper-blas-bin-x64.zip` of the [`b5454` release](https://github.com/ggml-org/whisper.cpp/releases/tag/b5454) and the Microsoft Visual C++ runtime DLLs (`msvcp140.dll`, `vcruntime140.dll`, `vcruntime140_1.dll`, `vcomp140.dll`) into `vendor/whisper/bin/`. None of these binaries are kept in git; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+whisper.cpp is not fetched by a script. Put the files from `whisper-blas-bin-x64.zip` of the [`b5454` release](https://github.com/ggml-org/whisper.cpp/releases/tag/b5454) and the Microsoft Visual C++ runtime DLLs into `vendor/whisper/bin/`. None of these binaries are kept in git; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ```bash
-npm run dev                # Vite dev server on port 5199
+npm run dev                # Vite dev server
 npm run start:dev          # Electron window connected to it
 npm run dist               # production build and NSIS installer in release/
 ```
 
-The images in this README come from the real app. `scripts/docs-media/footage.html` renders the sample footage from original GLSL scenes, `drive.cjs` opens the app with a throw-away profile and drives it over the Chrome DevTools Protocol, `encode.cjs` turns the recorded frames into the MP4 and GIFs, and `readme-art.cjs` draws the banner and the pipeline diagram.
+The images in this README come from the running app. `scripts/docs-media/footage.html` renders the sample footage from original GLSL scenes, `drive.cjs` drives the app over the Chrome DevTools Protocol, `encode.cjs` makes the MP4 and GIF, `readme-art.cjs` draws the banner and the architecture diagram, and `site-build.cjs` updates the website's fonts and shader data.
 
 <br>
 
@@ -348,19 +427,18 @@ The images in this README come from the real app. `scripts/docs-media/footage.ht
 sweaxcut/
 ├─ electron/main.cjs        main process: window, file dialogs, paths
 ├─ src/
-│  ├─ core/                 project model, undo store, timeline operations, keyframes, easing, media import
-│  ├─ engine/               WebGL2 compositor, shaders, playback, audio engine, text and sticker rendering
+│  ├─ core/                 project model, undo store, timeline operations, keyframes, media import
+│  ├─ engine/               WebGL2 compositor, shaders, playback, audio, text and sticker rendering
 │  │  └─ export/            decoders, GPU YUV packing, encoder selection, audio mix
-│  ├─ features/             captions (whisper.cpp), tts (Piper, Windows voices), video (AI tools), audio (analysis)
-│  ├─ packs/                effects, transitions, filters, text, fonts, stickers, sfx, music, speed curves, voice fx, layouts
+│  ├─ features/             autoedit (recipes, Polish, looks), captions (whisper.cpp), tts (Piper),
+│  │                        video (background removal, stabilise, reframe, scenes), audio (beats, silence)
+│  ├─ packs/                effects, transitions, filters, text, fonts, stickers, sfx, music, layouts
 │  ├─ platform/node.js      the only place the interface touches Node
-│  └─ ui/                   start screen, editor, library, inspector, timeline, preview
+│  └─ ui/                   start screen, editor, library, inspector, timeline, preview, styles
 ├─ public/                  fonts, Twemoji SVGs, MediaPipe models
-├─ vendor/                  Piper, RNNoise models, whisper.cpp, FFprobe (binaries not in git)
-├─ scripts/                 vendor download, app drivers for tests and for the documentation media
-├─ dev/                     test pages for each content pack
-├─ docs/                    website, README art, screenshots, licence notes
-└─ legacy/                  source of version 1 (vertical video converter)
+├─ vendor/                  Piper, whisper.cpp, FFprobe (binaries not in git)
+├─ scripts/                 vendor download, test drivers, documentation media
+└─ docs/                    website, README art, screenshots, licence notes
 ```
 
 <br>
@@ -369,16 +447,18 @@ sweaxcut/
 
 SWEAXCUT is made by **Sweax Studios** and builds on these open projects:
 
-- **[Twemoji](https://github.com/jdecked/twemoji)**: emoji graphics © Twitter, Inc and other contributors, licensed under [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/).
-- **[gl-transitions](https://github.com/gl-transitions/gl-transitions)**: 125 of the transitions (MIT; two of them BSD).
-- **[whisper.cpp](https://github.com/ggml-org/whisper.cpp)** (MIT) with the OpenAI Whisper models (MIT) and Silero VAD (MIT) for captions.
-- **[Piper](https://github.com/rhasspy/piper)** (MIT) and eSpeak NG (GPL-3.0) for text to speech. The bundled *Fahrettin* voice is CC0; the optional *dfki* Turkish voice is CC BY-NC-SA 4.0 and may not be used commercially.
-- **[FFmpeg](https://ffmpeg.org)** (GPL-3.0 build by gyan.dev), run as a separate program for decoding, encoding, stabilisation and audio filters.
-- **[MediaPipe](https://github.com/google-ai-edge/mediapipe)** (Apache-2.0) for background removal and face detection.
-- **[Electron](https://www.electronjs.org)**, **[React](https://react.dev)** and **[Vite](https://vite.dev)** (MIT).
-- **101 font families** from Google Fonts through Fontsource: 100 under the SIL Open Font License, Luckiest Guy under Apache-2.0.
+| Component | Used for | Licence |
+|---|---|---|
+| [FFmpeg](https://ffmpeg.org) 6.1.1, build by [gyan.dev](https://www.gyan.dev/ffmpeg/builds/) | decoding, encoding, stabilisation, audio filters; run as a separate program | GPL |
+| [whisper.cpp](https://github.com/ggml-org/whisper.cpp) | automatic captions | MIT |
+| [Piper](https://github.com/rhasspy/piper) and [eSpeak NG](https://github.com/espeak-ng/espeak-ng) | text to speech | MIT, GPL |
+| [MediaPipe](https://github.com/google-ai-edge/mediapipe) | background removal, face detection | Apache-2.0 |
+| [gl-transitions](https://github.com/gl-transitions/gl-transitions) | 125 of the 197 transitions | MIT |
+| [Twemoji](https://github.com/jdecked/twemoji) | emoji stickers | CC-BY 4.0 |
+| 101 font families from Google Fonts via Fontsource, plus Mona Sans and Geist Mono | text templates, the interface | SIL Open Font License (Luckiest Guy: Apache-2.0) |
+| Piper voice `tr_TR-dfki-medium` (optional download) | Turkish voice | CC BY-NC-SA 4.0, **non-commercial** |
 
-Every bundled component with its licence and source is listed in **[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)**. The effects, filters, 72 of the transitions, the vector stickers, the music and the sound effects were made for SWEAXCUT and use no third-party assets.
+Every bundled component, its licence and its source are listed in **[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)**. The effects, filters, 72 of the transitions, the vector stickers, the music and the sound effects were made for SWEAXCUT.
 
 ## License
 
