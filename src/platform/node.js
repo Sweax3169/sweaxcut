@@ -49,7 +49,9 @@ export function ensureDir(dir) {
 
 export function cacheDir(...parts) {
   const p = appPaths()
-  return ensureDir(path ? path.join(p.userData, 'cache', ...parts) : '/tmp/cache')
+  // 'cache' DEĞİL: Windows'ta harf ayrımı olmadığından userData\Cache (Chromium'un HTTP önbelleği) ile aynı klasör olur ve
+  // Chromium her açılışta orada kendi Cache_Data'sı dışındaki her şeyi siler (vekiller, dökümler, TTS her seferinde gidiyordu)
+  return ensureDir(path ? path.join(p.userData, 'Onbellek', ...parts) : '/tmp/cache')
 }
 
 export function hashString(s) {

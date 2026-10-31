@@ -48,7 +48,8 @@ export function ensureDirSync(dir) {
 export function workDir() {
   const { path, userData } = capEnv()
   if (!path) throw new Error('Otomatik altyazı yalnızca masaüstü uygulamasında çalışır')
-  return ensureDirSync(path.join(userData, 'cache', 'whisper'))
+  // platform/node.js cacheDir ile aynı kök (userData\Cache Chromium'a ait, açılışta temizlenir)
+  return ensureDirSync(path.join(userData, 'Onbellek', 'whisper'))
 }
 
 export function fileSize(p) {
