@@ -1,7 +1,7 @@
 {
   "name": "sweaxcut",
   "productName": "SWEAXCUT",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Sweax Studios — oyun içerik üreticileri için ücretsiz, tam donanımlı video kurgu programı",
   "author": "Sweax Studios",
   "license": "MIT",
@@ -11,13 +11,12 @@
     "build:renderer": "vite build",
     "start": "electron .",
     "start:dev": "node scripts/dev-electron.cjs",
-    "dist": "node scripts/fetch-piper.cjs && node scripts/copy-mediapipe.cjs && vite build && electron-builder --win nsis",
-    "prepare:vendor": "node scripts/fetch-piper.cjs && node scripts/copy-mediapipe.cjs",
+    "dist": "node scripts/fetch-piper.cjs && node scripts/fetch-ffprobe.cjs && node scripts/copy-mediapipe.cjs && vite build && electron-builder --win nsis",
+    "prepare:vendor": "node scripts/fetch-piper.cjs && node scripts/fetch-ffprobe.cjs && node scripts/copy-mediapipe.cjs",
     "postinstall": "node scripts/copy-mediapipe.cjs"
   },
   "dependencies": {
-    "ffmpeg-static": "^5.2.0",
-    "ffprobe-static": "^3.1.0"
+    "ffmpeg-static": "^5.2.0"
   },
   "devDependencies": {
     "@fontsource/abril-fatface": "^5.3.0",
@@ -121,17 +120,17 @@
     "@fontsource/vt323": "^5.3.0",
     "@fontsource/work-sans": "^5.3.0",
     "@fontsource/yeseva-one": "^5.3.0",
+    "@mediapipe/tasks-vision": "1.1.1",
     "@vitejs/plugin-react": "^4.3.4",
     "electron": "^33.3.1",
     "electron-builder": "^25.1.8",
+    "immer": "^10.2.0",
     "png-to-ico": "^3.0.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "sharp": "^0.35.3",
     "vite": "^6.0.7",
-    "ws": "^8.21.3",
-    "@mediapipe/tasks-vision": "1.1.1",
-    "immer": "^10.2.0"
+    "ws": "^8.21.3"
   },
   "build": {
     "appId": "com.sweaxstudios.sweaxcut",
@@ -143,14 +142,10 @@
     "files": [
       "electron/**/*",
       "dist/**/*",
-      "package.json",
-      "!node_modules/ffprobe-static/bin/darwin/**",
-      "!node_modules/ffprobe-static/bin/linux/**",
-      "!node_modules/ffprobe-static/bin/win32/ia32/**"
+      "package.json"
     ],
     "asarUnpack": [
-      "node_modules/ffmpeg-static/**",
-      "node_modules/ffprobe-static/**"
+      "node_modules/ffmpeg-static/**"
     ],
     "win": {
       "target": "nsis",

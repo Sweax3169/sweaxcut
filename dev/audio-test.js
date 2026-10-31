@@ -13,7 +13,7 @@ fs.mkdirSync(OUT, { recursive: true })
 const PATHS = {
   userData: path.join(ROOT, 'test-videos', 'out', 'audio', 'userdata'), documents: OUT, temp: OUT,
   ffmpeg: path.join(ROOT, 'node_modules', 'ffmpeg-static', 'ffmpeg.exe'),
-  ffprobe: path.join(ROOT, 'node_modules', 'ffprobe-static', 'bin', 'win32', 'x64', 'ffprobe.exe'),
+  ffprobe: path.join(ROOT, 'vendor', 'ffprobe', 'ffprobe.exe'),
   appRoot: ROOT, resources: ROOT, vendor: path.join(ROOT, 'vendor'), isPackaged: false,
 }
 // devshot ana süreci app:paths yanıtlamaz → test için yamala (platform/node.js tembel çağırır)

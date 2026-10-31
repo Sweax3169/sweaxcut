@@ -31,7 +31,7 @@ require('electron').ipcMain.on('app:paths', e => {
   const root = path.join(__dirname, '..')
   let ffmpeg = 'ffmpeg', ffprobe = 'ffprobe'
   try { ffmpeg = require('ffmpeg-static') } catch (er) { /* */ }
-  try { ffprobe = require('ffprobe-static').path } catch (er) { /* */ }
+  if (fs.existsSync(path.join(root, 'vendor', 'ffprobe', 'ffprobe.exe'))) ffprobe = path.join(root, 'vendor', 'ffprobe', 'ffprobe.exe')
   e.returnValue = { userData: app.getPath('userData'), temp: app.getPath('temp'), documents: app.getPath('documents'), videos: app.getPath('videos'), ffmpeg, ffprobe, appRoot: root, resources: root, vendor: path.join(root, 'vendor'), isPackaged: false, version: 'dev' }
 })
 

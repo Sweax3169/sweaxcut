@@ -26,6 +26,7 @@ vendor/whisper/bin-gpu/
 vendor/whisper/models/
 vendor/piper/*
 !vendor/piper/NOTICE.txt
+vendor/ffprobe/
 # MediaPipe wasm çalışma zamanı (13 MB): npm install sırasında scripts/copy-mediapipe.cjs kopyalar
 public/models/mediapipe/wasm/
 

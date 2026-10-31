@@ -25,7 +25,7 @@ const log = (s) => { fs.appendFileSync(logFile, s + '\n'); try { process.stdout.
 
 let ffmpeg = 'ffmpeg', ffprobe = 'ffprobe'
 try { ffmpeg = require(path.join(root, 'node_modules', 'ffmpeg-static')) } catch (e) { /* */ }
-try { ffprobe = require(path.join(root, 'node_modules', 'ffprobe-static')).path } catch (e) { /* */ }
+if (fs.existsSync(path.join(root, 'vendor', 'ffprobe', 'ffprobe.exe'))) ffprobe = path.join(root, 'vendor', 'ffprobe', 'ffprobe.exe')
 
 ipcMain.on('app:paths', e => {
   e.returnValue = {

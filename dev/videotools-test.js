@@ -18,7 +18,7 @@ const ROOT = window.__ROOT
 const TV = path.join(ROOT, 'test-videos')
 const OUT = path.join(TV, 'out', 'videotools')
 const FF = path.join(ROOT, 'node_modules', 'ffmpeg-static', 'ffmpeg.exe')
-const FP = path.join(ROOT, 'node_modules', 'ffprobe-static', 'bin', 'win32', 'x64', 'ffprobe.exe')
+const FP = path.join(ROOT, 'vendor', 'ffprobe', 'ffprobe.exe')
 if (q.get('fresh') === '1') { try { fs.rmSync(path.join(OUT, 'userdata', 'cache'), { recursive: true, force: true }) } catch (e) { /* */ } }
 
 const logEl = document.getElementById('log')

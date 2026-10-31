@@ -185,7 +185,7 @@ These files are fetched or copied at build time and packed by electron-builder i
 |---|---|---|---|---|
 | Electron (includes Chromium, Node.js, V8, and Chromium's `ffmpeg.dll`) | 33.x (33.4.11 in `node_modules`) | install root | Electron: MIT. Chromium and its dependencies: BSD-3-Clause and others; the full list ships as `LICENSES.chromium.html`, Electron's license as `LICENSE.electron.txt` | https://github.com/electron/electron |
 | FFmpeg `ffmpeg.exe`, gyan.dev "essentials" static build, via `ffmpeg-static` 5.3.0 | 6.1.1 | `resources/app.asar.unpacked/node_modules/ffmpeg-static/` | **GPL-3.0-or-later**. Build configured with `--enable-gpl --enable-version3`, no `--enable-nonfree`. Includes GPL libraries such as libx264, libx265, librubberband and libvidstab. GPL text ships as `ffmpeg.exe.LICENSE` | Source: https://github.com/FFmpeg/FFmpeg/commit/e38092ef93 · Builds: https://www.gyan.dev/ffmpeg/builds/ · https://github.com/GyanD/codexffmpeg |
-| FFprobe `ffprobe.exe` via `ffprobe-static` 3.1.0 (wrapper package: MIT) | 4.0.2 (Zeranoe build, 2018) | `resources/app.asar.unpacked/node_modules/ffprobe-static/bin/win32/x64/` | **GPL-3.0** (built with `--enable-gpl --enable-version3`) | https://ffmpeg.org/releases/ffmpeg-4.0.2.tar.xz · https://github.com/joshwnj/ffprobe-static |
+| FFprobe `ffprobe.exe` from the same gyan.dev "essentials" build as `ffmpeg.exe` (`ffmpeg-6.1.1-essentials_build.zip`, fetched and SHA-256 checked by `scripts/fetch-ffprobe.cjs`) | 6.1.1 | `resources/vendor/ffprobe/` | **GPL-3.0-or-later**, same build configuration as `ffmpeg.exe`. GPL text ships as `ffprobe.exe.LICENSE`, gyan.dev's build notes as `ffprobe.exe.README` | Source: https://github.com/FFmpeg/FFmpeg/commit/e38092ef93 · Builds: https://www.gyan.dev/ffmpeg/builds/ · https://github.com/GyanD/codexffmpeg/releases/tag/6.1.1 |
 | MediaPipe Tasks Vision (`vision_bundle` JS + `vision_wasm_internal.js/.wasm`, SIMD build) | 1.1.1 | `resources/app.asar` (`dist/assets`, `dist/models/mediapipe/wasm`) | Apache-2.0 | https://www.npmjs.com/package/@mediapipe/tasks-vision · https://github.com/google-ai-edge/mediapipe |
 | whisper.cpp `whisper-cli.exe`, `whisper.dll`, `ggml*.dll` (9 CPU variants) | 1.9.5, release asset `whisper-blas-bin-x64.zip` (tag `b5454` per `docs/licenses/captions.md`) | `resources/vendor/whisper/bin/` | MIT, © The ggml authors | https://github.com/ggml-org/whisper.cpp |
 | OpenBLAS `libopenblas.dll` (from the same whisper.cpp zip) | DYNAMIC_ARCH | `resources/vendor/whisper/bin/` | BSD-3-Clause | https://github.com/OpenMathLib/OpenBLAS |
@@ -308,17 +308,14 @@ no font files.
   license, with the conditions below. The only non-commercial asset in the catalogs (`tr_TR-dfki-medium`) is
   downloaded by the user and never redistributed.
 - **GPL (FFmpeg, FFprobe, eSpeak NG).** The installer contains GPL binaries. Their license texts ship with them
-  (`ffmpeg.exe.LICENSE`; `vendor/piper/NOTICE.txt` names eSpeak NG's licence and source). Put the source links
-  from section B into the GitHub release notes as the written source offer.
-- **FFprobe 4.0.2 source.** `ffprobe-static` uses a 2018 Zeranoe build. Zeranoe's build site has closed, so the
-  exact build scripts for that binary are no longer published. The FFmpeg 4.0.2 source tarball is still available
-  (link above). To be on firmer ground, consider using the `ffprobe.exe` from the same gyan.dev 6.1.1 build as
-  `ffmpeg.exe`.
-- **Notices in the installer.** The 2.0.1 installer does not carry the whisper.cpp (MIT) and OpenBLAS (BSD)
-  notices, the font licenses, the Twemoji CC-BY attribution file or the gl-transitions BSD texts as files
-  (Help → About names them and points to `docs/licenses`). From the next build on, `package.json` copies
-  `LICENSE`, this file and `docs/licenses/` into the install folder (`extraResources`), which closes the gap.
-  Rebuilding the installer before the first public release is recommended.
+  (`ffmpeg.exe.LICENSE`, `ffprobe.exe.LICENSE`; `vendor/piper/NOTICE.txt` names eSpeak NG's licence and source).
+  Put the source links from section B into the GitHub release notes as the written source offer.
+- **FFprobe.** Since 2.0.2, `ffprobe.exe` comes from the same gyan.dev 6.1.1 build as `ffmpeg.exe`, so one source
+  link covers both. Up to 2.0.1 the installer carried `ffprobe-static` 3.1.0, a 2018 Zeranoe build of FFprobe
+  4.0.2; its source is https://ffmpeg.org/releases/ffmpeg-4.0.2.tar.xz.
+- **Notices in the installer.** `package.json` copies `LICENSE`, this file and `docs/licenses/` into the install
+  folder (`extraResources`), so the whisper.cpp (MIT) and OpenBLAS (BSD) notices, the font licenses, the Twemoji
+  CC-BY attribution and the gl-transitions BSD texts ship as files. Every published installer includes them.
 - **Twemoji.** Keep the CC-BY 4.0 attribution (above) in the README, the website and the app's About dialog.
 - **Visual C++ runtime DLLs** stay out of git (`vendor/whisper/bin/` is ignored). They are only redistributed
   inside the installer, next to `whisper-cli.exe`.

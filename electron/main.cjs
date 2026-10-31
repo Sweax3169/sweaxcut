@@ -27,7 +27,9 @@ function fixAsar(p) {
 let ffmpegPath = 'ffmpeg'
 let ffprobePath = 'ffprobe'
 try { ffmpegPath = fixAsar(require('ffmpeg-static')) } catch (e) { /* yok */ }
-try { ffprobePath = fixAsar(require('ffprobe-static').path) } catch (e) { /* yok */ }
+// ffprobe, ffmpeg.exe ile aynı gyan.dev 6.1.1 derlemesinden: scripts/fetch-ffprobe.cjs vendor/ffprobe/ altına koyar
+const bundledProbe = path.join(app.isPackaged ? process.resourcesPath : path.join(__dirname, '..'), 'vendor', 'ffprobe', 'ffprobe.exe')
+if (fs.existsSync(bundledProbe)) ffprobePath = bundledProbe
 
 const MEDIA_EXTS = ['.mp4', '.mov', '.mkv', '.avi', '.webm', '.m4v', '.ts', '.mts', '.m2ts', '.wmv', '.flv', '.3gp', '.mpg', '.mpeg',
   '.mp3', '.wav', '.m4a', '.aac', '.ogg', '.opus', '.flac', '.wma', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', '.svg', '.sweax']

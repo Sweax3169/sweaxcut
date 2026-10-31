@@ -310,7 +310,7 @@ Proje, kullandığın medya dosyalarının yerini hatırlar; dosyaları taşırs
   <img alt="Başlangıç ekranı: en-boy oranı seç, proje aç ya da video seç" src="docs/media/home.png" width="430">
 </p>
 
-1. [Son sürümden](https://github.com/Sweax3169/sweaxcut/releases/latest) `SWEAXCUT-Kurulum-2.0.1.exe` dosyasını indir (yaklaşık 207 MB).
+1. [Son sürümden](https://github.com/Sweax3169/sweaxcut/releases/latest) `SWEAXCUT-Kurulum-2.0.2.exe` dosyasını indir (yaklaşık 213 MB).
 2. Çalıştır. Yalnız senin kullanıcı hesabına kurulur, masaüstüne ve Başlat menüsüne kısayol koyar, `.sweax` proje dosyalarını tanır ve programı açar.
 3. Başlangıç ekranında en-boy oranını seç (Shorts, TikTok ve Reels için 9:16, YouTube için 16:9), sonra videonu pencereye sürükle.
 
@@ -327,7 +327,7 @@ Proje, kullandığın medya dosyalarının yerini hatırlar; dosyaları taşırs
 git clone https://github.com/Sweax3169/sweaxcut.git
 cd sweaxcut
 npm install                # MediaPipe wasm çalışma zamanını public/ altına da kopyalar (scripts/copy-mediapipe.cjs)
-npm run prepare:vendor     # Piper'ı, gömülü Türkçe sesi ve RNNoise modellerini vendor/ altına indirir
+npm run prepare:vendor     # Piper'ı, gömülü Türkçe sesi, RNNoise modellerini ve FFprobe'u vendor/ altına indirir
 ```
 
 whisper.cpp'yi indiren bir betik yok. [`b5454` sürümündeki](https://github.com/ggml-org/whisper.cpp/releases/tag/b5454) `whisper-blas-bin-x64.zip` dosyalarını ve Microsoft Visual C++ çalışma zamanı DLL'lerini (`msvcp140.dll`, `vcruntime140.dll`, `vcruntime140_1.dll`, `vcomp140.dll`) `vendor/whisper/bin/` içine koy. Bu ikililerin hiçbiri git'te tutulmuyor; ayrıntılar [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) dosyasında.
@@ -356,7 +356,7 @@ sweaxcut/
 │  ├─ platform/node.js      arayüzün Node'a eriştiği tek yer
 │  └─ ui/                   başlangıç ekranı, düzenleyici, kütüphane, özellik paneli, zaman çizelgesi, önizleme
 ├─ public/                  yazı tipleri, Twemoji SVG'leri, MediaPipe modelleri
-├─ vendor/                  Piper, RNNoise modelleri, whisper.cpp (ikililer git'te değil)
+├─ vendor/                  Piper, RNNoise modelleri, whisper.cpp, FFprobe (ikililer git'te değil)
 ├─ scripts/                 vendor indirme, testler ve belge görselleri için program sürücüleri
 ├─ dev/                     her içerik paketi için test sayfaları
 ├─ docs/                    internet sitesi, README görselleri, ekran görüntüleri, lisans notları

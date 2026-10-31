@@ -11,7 +11,7 @@
   ipcRenderer.sendSync = (ch, ...a) => ch === 'app:paths' ? {
     userData: path.join(os.tmpdir(), 'sweaxcut-test-ud'), documents: os.tmpdir(), temp: os.tmpdir(), videos: os.tmpdir(),
     ffmpeg: path.join(root, 'node_modules', 'ffmpeg-static', 'ffmpeg.exe'),
-    ffprobe: path.join(root, 'node_modules', 'ffprobe-static', 'bin', 'win32', 'x64', 'ffprobe.exe'),
+    ffprobe: path.join(root, 'vendor', 'ffprobe', 'ffprobe.exe'),
     appRoot: root, resources: root, vendor: path.join(root, 'vendor'), isPackaged: false, version: 'test',
   } : orig(ch, ...a)
 })()

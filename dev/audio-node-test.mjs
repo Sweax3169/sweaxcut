@@ -13,7 +13,7 @@ const OUT = nodePath.join(ROOT, 'test-videos', 'out', 'audio')
 nodeFs.mkdirSync(OUT, { recursive: true })
 const PATHS = {
   userData: nodePath.join(OUT, 'userdata'), documents: OUT, temp: OUT,
-  ffmpeg: require('ffmpeg-static'), ffprobe: require('ffprobe-static').path,
+  ffmpeg: require('ffmpeg-static'), ffprobe: nodePath.join(ROOT, 'vendor', 'ffprobe', 'ffprobe.exe'),
   appRoot: ROOT, resources: ROOT, vendor: nodePath.join(ROOT, 'vendor'), isPackaged: false,
 }
 globalThis.window = { require: m => m === 'electron' ? { ipcRenderer: { sendSync: () => PATHS } } : require(m) }

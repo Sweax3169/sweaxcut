@@ -310,7 +310,7 @@ A project remembers where your media files are, so moving them breaks the link. 
   <img alt="Start screen: choose an aspect ratio, open a project or pick a video" src="docs/media/home.png" width="430">
 </p>
 
-1. Download `SWEAXCUT-Kurulum-2.0.1.exe` (about 207 MB) from the [latest release](https://github.com/Sweax3169/sweaxcut/releases/latest).
+1. Download `SWEAXCUT-Kurulum-2.0.2.exe` (about 213 MB) from the [latest release](https://github.com/Sweax3169/sweaxcut/releases/latest).
 2. Run it. It installs for your user account only, adds desktop and Start menu shortcuts, registers `.sweax` project files and opens the app.
 3. On the start screen, pick an aspect ratio (9:16 for Shorts, TikTok and Reels, 16:9 for YouTube) and drop a video onto the window.
 
@@ -327,7 +327,7 @@ A project remembers where your media files are, so moving them breaks the link. 
 git clone https://github.com/Sweax3169/sweaxcut.git
 cd sweaxcut
 npm install                # also copies the MediaPipe wasm runtime into public/ (scripts/copy-mediapipe.cjs)
-npm run prepare:vendor     # downloads Piper, the bundled Turkish voice and the RNNoise models into vendor/
+npm run prepare:vendor     # downloads Piper, the bundled Turkish voice, the RNNoise models and FFprobe into vendor/
 ```
 
 whisper.cpp is not fetched by a script. Put the files from `whisper-blas-bin-x64.zip` of the [`b5454` release](https://github.com/ggml-org/whisper.cpp/releases/tag/b5454) and the Microsoft Visual C++ runtime DLLs (`msvcp140.dll`, `vcruntime140.dll`, `vcruntime140_1.dll`, `vcomp140.dll`) into `vendor/whisper/bin/`. None of these binaries are kept in git; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
@@ -356,7 +356,7 @@ sweaxcut/
 │  ├─ platform/node.js      the only place the interface touches Node
 │  └─ ui/                   start screen, editor, library, inspector, timeline, preview
 ├─ public/                  fonts, Twemoji SVGs, MediaPipe models
-├─ vendor/                  Piper, RNNoise models, whisper.cpp (binaries not in git)
+├─ vendor/                  Piper, RNNoise models, whisper.cpp, FFprobe (binaries not in git)
 ├─ scripts/                 vendor download, app drivers for tests and for the documentation media
 ├─ dev/                     test pages for each content pack
 ├─ docs/                    website, README art, screenshots, licence notes
