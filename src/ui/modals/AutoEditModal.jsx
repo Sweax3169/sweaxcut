@@ -12,8 +12,13 @@ const LANGS = [['tr', 'Türkçe'], ['en', 'İngilizce'], ['auto', 'Otomatik']]
 export default function AutoEditModal({ onClose, recipe: rid = 'beat', mediaIds = null, autorun = false }) {
   const [rec, setRec] = useState(rid)
   const R = recipe(rec) || RECIPES[0]
-  const [music, setMusic] = useState(R.music)
-  const [musicTouched, setMusicTouched] = useState(false)
+  // videolarla birlikte bir şarkı bırakıldıysa tarif onu kullanır (kesimler o şarkının vuruşuna oturur)
+  const droppedSong = useMemo(() => {
+    const md = store.get().project.media
+    return (mediaIds || []).map(id => md[id]).find(m => m && m.type === 'audio' && !m.generated) || null
+  }, []) // eslint-disable-line
+  const [music, setMusic] = useState(droppedSong ? droppedSong.id : R.music)
+  const [musicTouched, setMusicTouched] = useState(!!droppedSong)
   const [length, setLength] = useState(R.length || 30)
   const [captions, setCaptions] = useState(!!R.captions)
   const [lang, setLang] = useState('tr')
