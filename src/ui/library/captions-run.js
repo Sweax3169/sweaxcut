@@ -68,7 +68,7 @@ export async function downloadModel(id, onProgress, signal) {
 // Döküm → biçimlenmiş altyazı klipleri (zaman çizelgesi zamanı)
 export function captionClipsFromResult(B, res, mediaClip, o) {
   const lang = o.language === 'auto' || !o.language ? (res.language || 'tr') : o.language
-  const opts = { styleId: o.styleId, maxWords: o.maxWords, uppercase: o.uppercase, emoji: o.emoji, highlightKeywords: o.highlightKeywords, mediaClip, lang }
+  const opts = { styleId: o.styleId, maxWords: o.maxWords, uppercase: o.uppercase, emoji: o.emoji, highlightKeywords: o.highlightKeywords, mediaClip, lang, groupId: o.groupId }
   const out = B.buildCaptionClips(res, opts) || []
   const clips = styleClips(Array.isArray(out) ? out : out.clips || [], o.styleId)
   for (const c of clips) if (c.caption) c.caption.maxWords = o.maxWords
@@ -93,31 +93,40 @@ export async function runCaptions(o) {
     const built = []
     const fillers = []
     const base = captionJob.get().progress
-    for (let i = 0; i < clips.length; i++) {
+    // tek çalıştırma = tek altyazı grubu (stil ve düzenleme hepsine birden)
+    const oo = { ...o, groupId: o.groupId || uid('cap') }
+    // aynı medyadan gelen parçalar (ör. sessizliği kesilmiş konuşma) tek seferde çözülür, kelimeler parçalara dağıtılır
+    const byMedia = new Map()
+    for (const c of clips) { if (!byMedia.has(c.mediaId)) byMedia.set(c.mediaId, []); byMedia.get(c.mediaId).push(c) }
+    const jobs = [...byMedia.entries()]
+    for (let i = 0; i < jobs.length; i++) {
       if (ctrl.signal.aborted) throw new DOMException('iptal', 'AbortError')
-      const c = clips[i]
-      const m = p.media[c.mediaId]
-      const lo = Math.min(c.in ?? 0, c.out ?? 0), hi = Math.max(c.in ?? 0, c.out ?? c.duration)
-      captionJob.set({ label: clips.length > 1 ? `Konuşma çözümleniyor · ${i + 1}/${clips.length}` : 'Konuşma çözümleniyor…' })
+      const [mid, parts] = jobs[i]
+      const m = p.media[mid]
+      const lo = Math.min(...parts.map(c => Math.min(c.in ?? 0, c.out ?? 0)))
+      const hi = Math.max(...parts.map(c => Math.max(c.in ?? 0, c.out ?? c.duration)))
+      captionJob.set({ label: jobs.length > 1 ? `Konuşma çözümleniyor · ${i + 1}/${jobs.length}` : 'Konuşma çözümleniyor…' })
       const res = await W.transcribe(m, {
         language: o.language || 'tr',
         model: o.model, signal: ctrl.signal, range: { start: lo, end: hi },
         quality: o.quality || 'fast', vad: o.vad !== false, verbatim: !!o.markFillers,
         onProgress: (x) => {
           const v = typeof x === 'number' ? x : (x && x.progress) || 0
-          captionJob.set({ progress: base + (1 - base) * ((i + Math.max(0, Math.min(1, v))) / clips.length) * 0.97, ...(x && x.label ? { label: (clips.length > 1 ? `${i + 1}/${clips.length} · ` : '') + x.label } : {}) })
+          captionJob.set({ progress: base + (1 - base) * ((i + Math.max(0, Math.min(1, v))) / jobs.length) * 0.97, ...(x && x.label ? { label: (jobs.length > 1 ? `${i + 1}/${jobs.length} · ` : '') + x.label } : {}) })
         },
       })
       if (ctrl.signal.aborted) throw new DOMException('iptal', 'AbortError')
       const lang = o.language === 'auto' ? (res.language || 'tr') : o.language
-      built.push(...captionClipsFromResult(B, res, c, o))
-      if (o.markFillers && B.findFillers) {
-        try {
-          for (const f of B.findFillers(res, lang) || []) {
-            const t = B.sourceToTimeline ? B.sourceToTimeline(c, f.s) : null
-            if (t != null) fillers.push({ time: t, word: f.w })
-          }
-        } catch (e) { /* */ }
+      for (const c of parts) {
+        built.push(...captionClipsFromResult(B, res, c, oo))
+        if (o.markFillers && B.findFillers) {
+          try {
+            for (const f of B.findFillers(res, lang) || []) {
+              const t = B.sourceToTimeline ? B.sourceToTimeline(c, f.s) : null
+              if (t != null) fillers.push({ time: t, word: f.w })
+            }
+          } catch (e) { /* */ }
+        }
       }
     }
     if (!built.length) { captionJob.set({ running: false, ctrl: null, progress: 1, error: 'Konuşma bulunamadı', done: null }); return }
