@@ -23,6 +23,7 @@ Contents:
 | Component | Where | License | Link |
 |---|---|---|---|
 | 101 font families (latin + latin-ext `.woff2` only) | `public/fonts/` | SIL OFL 1.1 (100 families), Apache-2.0 (Luckiest Guy) | Table below |
+| Interface fonts: Mona Sans (variable, wdth + wght) and Geist Mono (variable, wght) | bundled by Vite from `@fontsource-variable/mona-sans` 5.3.0 and `@fontsource-variable/geist-mono` 5.3.0 | SIL OFL 1.1 | https://github.com/github/mona-sans · https://github.com/vercel/geist-font · full texts in `docs/licenses/OFL-mona-sans.txt`, `docs/licenses/OFL-geist-mono.txt` |
 | Twemoji, 649 emoji SVGs from `@twemoji/svg@15.0.0` | `public/stickers/emoji/` | Graphics: CC-BY 4.0. Code: MIT | https://github.com/jdecked/twemoji |
 | gl-transitions 2.0.0, 125 GLSL ES 3.00 transitions | `src/packs/transitions/gl-vendor.json` | MIT (123), BSD-3-Clause (1), BSD-2-Clause (1) | https://github.com/gl-transitions/gl-transitions |
 | Material Icons path data (`thumb`, `bell`, `reply`, `eye`, `person`) | `src/packs/stickers/vdef.js` | Apache-2.0 | https://github.com/google/material-design-icons |
@@ -56,6 +57,13 @@ Two transitions use other licenses. Their full license texts are reproduced in
 
 Changes: `LumaWipe` and `DisplacementMap` expect an extra texture; their texture lookups are replaced with
 procedural noise (`src/packs/transitions/gl-meta.js`, `GL_PATCHES`). The other 123 are unchanged.
+
+### Interface fonts
+
+The app's own interface uses **Mona Sans** (Copyright 2022 The Mona Sans Project Authors, https://github.com/github/mona-sans,
+with Reserved Font Name "Mona") and **Geist Mono** (Copyright 2024 The Geist Project Authors, https://github.com/vercel/geist-font).
+Both are under the SIL Open Font License 1.1; the full licence texts ship as `licenses/OFL-mona-sans.txt` and
+`licenses/OFL-geist-mono.txt`. They are not offered as text fonts for titles in the editor.
 
 ### Fonts
 

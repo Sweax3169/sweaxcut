@@ -4,6 +4,8 @@ Hepsi npm `@fontsource/*` paketlerinden (Google Fonts kaynaklı) kopyalandı. Ya
 
 | Aile | Lisans | Telif / kaynak |
 |---|---|---|
+| Mona Sans (arayüz) | OFL-1.1 | Copyright 2022 The Mona Sans Project Authors (https://github.com/github/mona-sans), Reserved Font Name "Mona" — tam metin: OFL-mona-sans.txt |
+| Geist Mono (arayüz) | OFL-1.1 | Copyright 2024 The Geist Project Authors (https://github.com/vercel/geist-font) — tam metin: OFL-geist-mono.txt |
 | Anton | OFL-1.1 | Copyright 2020 The Anton Project Authors (https://github.com/googlefonts/AntonFont.git) |
 | Bebas Neue | OFL-1.1 | Copyright 2019 The Bebas Neue Project Authors (https://github.com/dharmatype/Bebas-Neue) |
 | Archivo Black | OFL-1.1 | Copyright 2017 The Archivo Black Project Authors (https://github.com/Omnibus-Type/ArchivoBlack) |
