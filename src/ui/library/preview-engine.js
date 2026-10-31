@@ -168,6 +168,17 @@ export function textClipFromTemplate(tpl, opts = {}) {
   return clip
 }
 
+// Altyazı stilinden örnek klip: üç kelime, ortadaki vurgulu anda çizilir
+const CAP_WORDS = [{ w: 'Bu', s: 0, e: 0.42 }, { w: 'çok', s: 0.48, e: 0.9 }, { w: 'iyi', s: 0.96, e: 1.5 }]
+export function captionClipFromStyle(def, look) {
+  const clip = createTextClip({ start: 0, duration: 1.8 })
+  const base = createTextClip().text
+  clip.text = { ...clip.text, ...(def.text || {}), content: 'Bu çok iyi', uppercase: false }
+  for (const k of ['stroke', 'stroke2', 'shadow', 'glow', 'bg']) clip.text[k] = { ...base[k], ...((def.text || {})[k] || {}) }
+  clip.caption = { words: CAP_WORDS.map(w => ({ ...w })), styleId: def.id, groupId: 'onizleme', lang: 'tr', look: look || null }
+  return clip
+}
+
 // ---------------------------------------------------------------- çizim
 function paramDefaults(def) {
   const o = {}
@@ -201,6 +212,14 @@ function draw(kind, def, t, extra) {
       tt.clips = [clip]
       canvas.width = THUMB; canvas.height = THUMB
       c.render({ project: p, time: Math.min(t, clip.duration - 0.001), sources, scale: THUMB / TEXT_W })
+    } else if (kind === 'caption') {
+      const { p, tt } = textProject()
+      const clip = captionClipFromStyle(def)
+      clip.id = 'lib-cap-preview-' + def.id
+      clip.transform = { ...clip.transform, x: 0, y: 0, scale: capFit(def, clip, p) }
+      tt.clips = [clip]
+      canvas.width = THUMB; canvas.height = THUMB
+      c.render({ project: p, time: Math.min(t, clip.duration - 0.001), sources, scale: THUMB / TEXT_W })
     } else return null
     return canvas
   } catch (e) {
@@ -222,7 +241,20 @@ function textFit(def, clip, p) {
   return k
 }
 
+const capFitCache = new Map()
+function capFit(def, clip, p) {
+  if (capFitCache.has(def.id)) return capFitCache.get(def.id)
+  let k = 1
+  try {
+    const r = renderTextLayer({ ...clip, id: 'lib-cap-measure' }, 1.7, 1, p)
+    if (r && r.width) k = Math.max(0.3, Math.min(2.4, 1 / Math.max(r.width / (TEXT_W * 0.86), r.height / (TEXT_W * 0.6))))
+  } catch (e) { k = 1 }
+  capFitCache.set(def.id, k)
+  return k
+}
+
 function staticTime(kind, def) {
+  if (kind === 'caption') return 0.72
   if (kind === 'effect') return (def.previewDuration || 2) * 0.4
   if (kind === 'transition') return 0.5
   if (kind === 'text') {
@@ -234,7 +266,7 @@ function staticTime(kind, def) {
 
 function defOf(kind, id) {
   if (kind === 'text' && id === '__default') return { id: '__default' }
-  const reg = kind === 'effect' ? 'effects' : kind === 'filter' ? 'filters' : kind === 'transition' ? 'transitions' : kind === 'text' ? 'textTemplates' : null
+  const reg = kind === 'effect' ? 'effects' : kind === 'filter' ? 'filters' : kind === 'transition' ? 'transitions' : kind === 'text' ? 'textTemplates' : kind === 'caption' ? 'captionStyles' : null
   return reg ? regGet(reg, id) : null
 }
 
@@ -299,7 +331,7 @@ async function step() {
     if (thumbs.has(job.key)) continue
     const def = defOf(job.kind, job.id)
     if (!def) { thumbs.set(job.key, 'x'); notify(job.key); continue }
-    if (job.kind === 'text') { const w = ensureFont(def); if (w) await w }
+    if (job.kind === 'text' || job.kind === 'caption') { const w = ensureFont(def); if (w) await w }
     const ver = sampleVer
     const out = draw(job.kind, def, staticTime(job.kind, def))
     if (ver !== sampleVer) continue
@@ -357,8 +389,8 @@ export function startLive(kind, id, target) {
   live = me
   const fps = 20
   const t0 = performance.now()
-  let fontReady = kind !== 'text'
-  if (kind === 'text') { const w = ensureFont(def); if (w) w.then(() => { fontReady = true }); else fontReady = true }
+  let fontReady = kind !== 'text' && kind !== 'caption'
+  if (kind === 'text' || kind === 'caption') { const w = ensureFont(def); if (w) w.then(() => { fontReady = true }); else fontReady = true }
   const tick = () => {
     if (me.stop) return
     const el = (performance.now() - t0) / 1000
@@ -369,6 +401,7 @@ export function startLive(kind, id, target) {
       const L = 1.6, u = el % L
       t = u < 0.25 ? 0 : u > 1.25 ? 1 : (u - 0.25)
     } else if (kind === 'text') t = el % 3.2
+    else if (kind === 'caption') t = el % 2.1
     if (kind === 'filter') {
       // önce / sonra süpürmesi: filtreli kare + sol tarafta orijinal
       const filtered = me.filtered || (me.filtered = snapshot(draw('filter', def, 0)))
@@ -380,7 +413,7 @@ export function startLive(kind, id, target) {
         ctx2.save(); ctx2.beginPath(); ctx2.rect(0, 0, x * k, target.height); ctx2.clip()
         ctx2.drawImage(srcA(), 0, 0, target.width, target.height)
         ctx2.restore()
-        ctx2.fillStyle = '#e4ff3a'; ctx2.fillRect(x * k - 1, 0, 2, target.height)
+        ctx2.fillStyle = '#ff4b3e'; ctx2.fillRect(x * k - 1, 0, 2, target.height)
       }
     } else if (fontReady) {
       const out = draw(kind, def, t)

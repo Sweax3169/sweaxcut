@@ -23,7 +23,7 @@ export default function StickerTab({ ctx }) {
           <i className="fsw" style={{ background: 'var(--c-sticker)', overflow: 'hidden' }}>{def && def.src ? <img src={def.src} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /> : null}</i>
           <div className="col grow" style={{ gap: 2, minWidth: 0 }}>
             <span className="fname">{def ? def.name : clip.name || 'Çıkartma'}</span>
-            <span className="faint mono" style={{ fontSize: 9.5 }}>{(KIND_TR[kind] || kind || '').toLocaleUpperCase('tr-TR')}{def && def.loop && kind === 'vector' ? ' · ' + def.loop + ' SN DÖNGÜ' : ''}</span>
+            <span className="faint" style={{ fontSize: 11 }}>{KIND_TR[kind] || kind || ''}{def && def.loop && kind === 'vector' ? ' · ' + def.loop + ' sn döngü' : ''}</span>
           </div>
         </div>
         {kind !== 'vector' && !ownAnim && (

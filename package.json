@@ -1,8 +1,8 @@
 {
   "name": "sweaxcut",
   "productName": "SWEAXCUT",
-  "version": "2.0.2",
-  "description": "Sweax Studios — oyun içerik üreticileri için ücretsiz, tam donanımlı video kurgu programı",
+  "version": "3.0.0",
+  "description": "Sweax Studios — çevrimdışı, ücretsiz video kurgu programı: otomatik kurgu, kelime kelime altyazı, 161 efekt",
   "author": "Sweax Studios",
   "license": "MIT",
   "main": "electron/main.cjs",
@@ -19,6 +19,8 @@
     "ffmpeg-static": "^5.2.0"
   },
   "devDependencies": {
+    "@fontsource-variable/geist-mono": "^5.3.0",
+    "@fontsource-variable/mona-sans": "^5.3.0",
     "@fontsource/abril-fatface": "^5.3.0",
     "@fontsource/alfa-slab-one": "^5.3.0",
     "@fontsource/amatic-sc": "^5.3.0",

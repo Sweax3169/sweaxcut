@@ -94,7 +94,7 @@ export function PanelHead({ code, title, count, unit = 'öğe', right }) {
         <span className="lib-code mono">{code}</span>
         <h3>{title}</h3>
       </div>
-      {count != null && <span className="lib-count mono"><b>{String(count).padStart(3, '0')}</b> {unit}</span>}
+      {count != null && <span className="lib-count"><b>{count}</b> {unit}</span>}
       {right}
     </div>
   )
@@ -220,8 +220,8 @@ export function dragStart(e, kind, id, label, extra = {}) {
 export function dragEnd() { window.__sweaxDragObj = null }
 
 export const KIND_LABEL = {
-  media: 'MEDYA', text: 'YAZI', sticker: 'ÇIKARTMA', effect: 'EFEKT', filter: 'FİLTRE',
-  transition: 'GEÇİŞ', sfx: 'SES EFEKTİ', music: 'MÜZİK', layout: 'DÜZEN',
+  media: 'Medya', text: 'Yazı', sticker: 'Çıkartma', effect: 'Efekt', filter: 'Filtre',
+  transition: 'Geçiş', sfx: 'Ses efekti', music: 'Müzik', layout: 'Düzen',
 }
 
 // ---------------------------------------------------------------- kart
@@ -272,7 +272,7 @@ export function GLThumb({ kind, id, hover, fallback }) {
   }, [hover, kind, id])
   return (
     <div ref={ref} className="lib-gl">
-      {url && url !== 'x' ? <img src={url} alt="" draggable={false} /> : url === 'x' ? (fallback || <span className="lib-nopv mono">ÖNİZLEME YOK</span>) : <span className="lib-load" />}
+      {url && url !== 'x' ? <img src={url} alt="" draggable={false} /> : url === 'x' ? (fallback || <span className="lib-nopv">Önizleme yok</span>) : <span className="lib-load" />}
       {hover && url !== 'x' && <canvas ref={cv} width={176} height={176} className="lib-live" />}
     </div>
   )
@@ -283,7 +283,7 @@ export function RecentRow({ kind, ids, render }) {
   if (!ids.length) return null
   return (
     <div className="lib-recent">
-      <div className="edge">SON KULLANILANLAR</div>
+      <div className="edge">Son kullanılanlar</div>
       <div className="lib-recent-row">{ids.map(render)}</div>
     </div>
   )

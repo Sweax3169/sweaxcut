@@ -1,19 +1,27 @@
-// Altyazı sekmesi: otomatik altyazı (whisper), stil seçimi, altyazı dosyası içe/dışa aktarma.
+// Altyazı sekmesi: üç görünüm — Oluştur (konuşma → kelime zamanlı altyazı), Metin (satırları belge gibi düzenle),
+// Stil (yazı, vurgu, hareket, konum, kaydedilmiş stiller). Altyazı varsa panel doğrudan Metin'de açılır.
 import React, { useEffect, useMemo, useState } from 'react'
 import Icon from '../Icon.jsx'
 import { store, useStore } from '../../core/store.js'
-import { REG } from '../../engine/registry.js'
+import { playback } from '../../engine/playback.js'
 import { Slider, Toggle } from '../controls.jsx'
 import { isElectron } from '../../platform/node.js'
-import { PanelHead, useRegVersion, lsGet, lsSet, Bar } from './common.jsx'
+import { PanelHead, useRegVersion, lsGet, lsSet, Bar, useTabState } from './common.jsx'
 import { captionJob, cancelCaptions } from './jobs.js'
 import { hasFeature, feature } from './features.js'
-import { runCaptions, captionSources, importSubtitleFile, exportSubtitleFile, modelList, modelInstalled, downloadModel } from './captions-run.js'
-import { sampleA } from './samples.js'
+import { runCaptions, captionSources, importSubtitleFile, modelList, modelInstalled, downloadModel } from './captions-run.js'
+import { captionGroups } from '../../features/captions/edit.js'
+import { REG } from '../../engine/registry.js'
+import { usePlayhead } from '../inspector/hooks.js'
+import Transcript from '../captions/Transcript.jsx'
+import { StyleGallery, CaptionStyleEditor, applyStyleToGroup } from '../captions/CaptionStyle.jsx'
 
-const LANGS = [
-  ['tr', 'Türkçe'], ['auto', 'Otomatik algıla'], ['en', 'English'], ['de', 'Deutsch'], ['es', 'Español'], ['fr', 'Français'],
-  ['ru', 'Русский'], ['ar', 'العربية'], ['pt', 'Português'], ['it', 'Italiano'], ['ja', '日本語'], ['ko', '한국어'], ['az', 'Azərbaycanca'],
+const LANGS = [['tr', 'Türkçe'], ['en', 'English'], ['auto', 'Otomatik']]
+const MORE_LANGS = [['de', 'Deutsch'], ['es', 'Español'], ['fr', 'Français'], ['ru', 'Русский'], ['ar', 'العربية'], ['pt', 'Português'], ['it', 'Italiano'], ['ja', '日本語'], ['ko', '한국어'], ['az', 'Azərbaycanca']]
+const QUALITY = [
+  { id: 'small', name: 'Hızlı', hint: 'Videonun ~5 katı hızda' },
+  { id: 'medium', name: 'Doğru', hint: 'En az hata · önerilen' },
+  { id: 'large-v3-turbo', name: 'Büyük', hint: 'Çok dilli, en yavaş' },
 ]
 
 function useObs(o) {
@@ -22,192 +30,207 @@ function useObs(o) {
   return v
 }
 
-let bgUrl = null
-function sampleBg() {
-  if (!bgUrl) { try { bgUrl = sampleA(176, 176).toDataURL('image/jpeg', 0.7) } catch (e) { bgUrl = '' } }
-  return bgUrl
+export default function CaptionsPanel() {
+  useRegVersion()
+  const job0 = useObs(captionJob)
+  const project = useStore(s => s.project)
+  // başka projenin bitmiş işinin mesajı gösterilmez
+  const job = job0.running || !job0.projectId || job0.projectId === project.id ? job0 : { ...job0, done: null, error: null }
+  const groups = useMemo(() => captionGroups(project), [project])
+  const [st, set] = useTabState('captions', { view: null, gid: null })
+  const view = st.view && (st.view === 'create' || groups.length) ? st.view : (groups.length ? 'text' : 'create')
+  const group = groups.find(g => g.groupId === st.gid) || groups[groups.length - 1] || null
+  // yeni altyazı bitince Metin görünümüne geç
+  useEffect(() => { if (job.done && !job.running && groups.length) set({ view: 'text', gid: groups[groups.length - 1].groupId }) }, [job.done]) // eslint-disable-line
+
+  return (
+    <div className="lib-main cap-panel">
+      <PanelHead title="Altyazı" right={groups.length > 0 && (
+        <div className="ibtns cap-views">
+          {[['create', 'Oluştur', 'plus'], ['text', 'Metin', 'type'], ['style', 'Stil', 'sparkle']].map(([v, l, ic]) => (
+            <button key={v} className={'ib' + (view === v ? ' on' : '')} onClick={() => set({ view: v })}><Icon name={ic} size={12} />{l}</button>
+          ))}
+        </div>
+      )} />
+      {job.running && <JobCard job={job} />}
+      {!job.running && job.error && <div className="lib-note warn"><Icon name="warn" size={14} /><span>{job.error}</span></div>}
+      {groups.length > 1 && view !== 'create' && (
+        <div className="cap-group">
+          <select className="field" value={group ? group.groupId : ''} onChange={e => set({ gid: e.target.value })}>
+            {groups.map((g, i) => <option key={g.groupId} value={g.groupId}>Altyazı {i + 1} · {g.clips.length} satır · {Math.floor(g.start / 60)}:{String(Math.floor(g.start % 60)).padStart(2, '0')}</option>)}
+          </select>
+        </div>
+      )}
+      {view === 'create' && <CreateView />}
+      {view === 'text' && group && <Transcript group={group} />}
+      {view === 'style' && group && <StyleView group={group} />}
+    </div>
+  )
 }
 
-export default function CaptionsPanel({ code }) {
-  useRegVersion()
-  const job = useObs(captionJob)
+function JobCard({ job }) {
+  return (
+    <div className="cap-job">
+      <div className="row"><span className="cap-spin" /><span className="grow" style={{ fontWeight: 620 }}>{job.label || 'Konuşma çözümleniyor…'}</span><span className="mono dim" style={{ fontSize: 11 }}>{Math.round((job.progress || 0) * 100)}%</span></div>
+      <Bar value={job.progress} indet={!job.progress} />
+      <div className="row" style={{ justifyContent: 'space-between' }}>
+        <span className="faint" style={{ fontSize: 11 }}>Bilgisayarında çalışır, internet gerekmez.</span>
+        <button className="btn sm danger" onClick={cancelCaptions}><Icon name="x" size={12} />Durdur</button>
+      </div>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------- oluştur
+function CreateView() {
+  const job0 = useObs(captionJob)
+  const pid = useStore(s => s.project.id)
+  const job = job0.running || !job0.projectId || job0.projectId === pid ? job0 : { ...job0, done: null, error: null }
   const selCount = useStore(s => s.selection.clips.length)
-  const hasMain = useStore(s => s.project.tracks.some(t => t.main && t.clips.length))
-  const [o, setO] = useState(() => lsGet('caps', { source: 'main', language: 'tr', model: null, styleId: null, maxWords: 3, uppercase: true, emoji: false, highlightKeywords: true, markFillers: false }))
+  const rev = useStore(s => s.rev)
+  const [o, setO] = useState(() => lsGet('caps', { source: 'main', language: 'tr', model: null, styleId: 'alt-hormozi', maxWords: 3, uppercase: true, emoji: false, highlightKeywords: true, markFillers: false, vad: true }))
   const upd = p => setO(x => { const n = { ...x, ...p }; lsSet('caps', n); return n })
   const [models, setModels] = useState([])
   const [inst, setInst] = useState({})
   const [dl, setDl] = useState(null)
-  const styles = REG.captionStyles.list
-  const style = styles.find(s => s.id === o.styleId) || styles[0]
   const [engineOk, setEngineOk] = useState(true)
   const available = hasFeature('whisper') && hasFeature('build') && engineOk
   useEffect(() => { feature('whisper').then(W => { if (W && W.isAvailable) { try { setEngineOk(!!W.isAvailable()) } catch (e) { /* */ } } }) }, [])
-
   useEffect(() => {
     let alive = true
     modelList().then(async list => {
+      const s = {}
+      for (const m of list) s[m.id] = await modelInstalled(m.id)
       if (!alive) return
-      setModels(list)
-      const st = {}
-      for (const m of list) st[m.id] = await modelInstalled(m.id)
-      if (!alive) return
-      setInst(st)
-      if (!o.model || !list.find(m => m.id === o.model)) {
-        const pick = list.find(m => st[m.id] && m.default) || list.find(m => st[m.id]) || list.find(m => m.default) || list[0]
-        if (pick) upd({ model: pick.id })
+      setModels(list); setInst(s)
+      if (!o.model || !list.some(m => m.id === o.model) || !s[o.model]) {
+        const best = ['medium', 'small', 'large-v3-turbo', 'base', 'tiny'].find(id => s[id]) || 'small'
+        upd({ model: best })
       }
     })
     return () => { alive = false }
   }, []) // eslint-disable-line
-
+  const src = useMemo(() => captionSources(o.source), [o.source, selCount, rev]) // eslint-disable-line
   const model = models.find(m => m.id === o.model)
   const installed = model ? inst[model.id] : false
-  const src = useMemo(() => captionSources(o.source), [o.source, selCount, hasMain]) // eslint-disable-line
-
-  const getModel = async () => {
-    if (!model) return
+  const getModel = async (id) => {
     const ctrl = new AbortController()
-    setDl({ p: 0, ctrl })
+    setDl({ id, p: 0, ctrl })
     try {
-      await downloadModel(model.id, p => setDl({ p, ctrl }), ctrl.signal)
-      setInst(s => ({ ...s, [model.id]: true }))
-      store.toast(model.name + ' modeli indirildi', 'ok', 1600)
+      await downloadModel(id, p => setDl({ id, p, ctrl }), ctrl.signal)
+      setInst(s => ({ ...s, [id]: true }))
+      store.toast('Model indirildi', 'ok', 1600)
     } catch (e) {
       if (!ctrl.signal.aborted) store.toast('Model indirilemedi: ' + (e.message || e), 'error', 4000)
     } finally { setDl(null) }
   }
-
-  const start = () => runCaptions({ ...o, styleId: style ? style.id : null, maxWords: o.maxWords })
+  const lang = o.language || 'tr'
+  const total = src.reduce((a, c) => a + c.duration, 0)
+  const start = () => runCaptions({ ...o })
 
   return (
-    <div className="lib-main">
-      <PanelHead code={code} title="Altyazı" count={styles.length} unit="stil" />
-      <div className="lib-body">
-        {!available && (
-          <div className="lib-note"><Icon name="info" size={14} /><span>{hasFeature('whisper') && !engineOk ? 'Konuşma tanıma motoru bulunamadı (vendor/whisper).' : 'Konuşma tanıma motoru (whisper) henüz kurulu değil.'} Altyazı dosyası içe aktarabilirsin.</span></div>
-        )}
-        <div className="lib-sect"><div className="edge"><b>OTOMATİK</b> ALTYAZI</div></div>
-        <div className="lib-form">
-          <div className="prop">
-            <span className="lbl static">Kaynak</span>
-            <div className="row grow" style={{ gap: 0, border: '1px solid var(--line-2)' }}>
-              {[['main', 'Ana iz'], ['selected', 'Seçili klip'], ['voice', 'Seslendirme']].map(([v, l], i) => (
-                <button key={v} onClick={() => upd({ source: v })} style={{ flex: 1, height: 24, fontSize: 11, fontWeight: 600, borderLeft: i ? '1px solid var(--line-2)' : 0, color: o.source === v ? 'var(--sig-ink)' : 'var(--tx-1)', background: o.source === v ? 'var(--sig)' : 'transparent' }}>{l}</button>
-              ))}
-            </div>
-          </div>
-          <div className="lib-hint mono" style={{ fontSize: 10, marginTop: -4, paddingLeft: 100 }}>{src.length ? `${src.length} KLİP · ${src.reduce((a, c) => a + c.duration, 0).toFixed(1)} SN` : 'SESLİ KLİP YOK'}</div>
-          <div className="prop">
-            <span className="lbl static">Dil</span>
-            <select className="field grow" value={o.language} onChange={e => upd({ language: e.target.value })}>
-              {LANGS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+    <div className="lib-body">
+      {!available && <div className="lib-note warn"><Icon name="info" size={14} /><span>Konuşma tanıma motoru bulunamadı. Altyazı dosyası içe aktarabilirsin.</span></div>}
+      <div className="cap-hero">
+        <div className="cap-hero-t">
+          <b>Konuşmayı altyazıya çevir</b>
+          <span>Her kelime söylendiği anda vurgulanır.</span>
+        </div>
+        <div className="ibtns seg">
+          {[['main', 'Ana iz'], ['selected', 'Seçili klip'], ['voice', 'Seslendirme']].map(([v, l]) => (
+            <button key={v} className={'ib' + (o.source === v ? ' on' : '')} onClick={() => upd({ source: v })}>{l}</button>
+          ))}
+        </div>
+        <div className={'cap-src' + (src.length ? '' : ' no')}>
+          <Icon name={src.length ? 'wave' : 'warn'} size={13} />
+          {src.length ? `${src.length} sesli klip · ${total.toFixed(1)} sn` : o.source === 'selected' ? 'Zaman çizelgesinde sesli bir klip seç' : 'Sesli klip yok — önce video ekle'}
+        </div>
+
+        <div className="cap-f">
+          <span className="lb">Dil</span>
+          <div className="ibtns">
+            {LANGS.map(([v, l]) => <button key={v} className={'ib' + (lang === v ? ' on' : '')} onClick={() => upd({ language: v })}>{l}</button>)}
+            <select className="cap-more" value={MORE_LANGS.some(x => x[0] === lang) ? lang : ''} onChange={e => e.target.value && upd({ language: e.target.value })}>
+              <option value="">Diğer…</option>
+              {MORE_LANGS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
             </select>
           </div>
-          <div className="prop">
-            <span className="lbl static">Model</span>
-            <select className="field grow" value={o.model || ''} onChange={e => upd({ model: e.target.value })} disabled={!models.length}>
-              {!models.length && <option value="">— model yok —</option>}
-              {models.map(m => <option key={m.id} value={m.id}>{m.name}{m.label ? ' · ' + m.label : ''}{m.size ? ` · ${Math.round(m.size / 1e6)} MB` : ''}{inst[m.id] ? '  ✓ kurulu' : ''}</option>)}
-            </select>
+        </div>
+
+        <div className="cap-f">
+          <span className="lb">Doğruluk</span>
+          <div className="cap-q">
+            {QUALITY.map(q => {
+              const m = models.find(x => x.id === q.id)
+              const ok = inst[q.id]
+              const busy = dl && dl.id === q.id
+              return (
+                <button key={q.id} className={'cap-qi' + (o.model === q.id ? ' on' : '')} onClick={() => upd({ model: q.id })}>
+                  <b>{q.name}</b>
+                  <span>{q.hint}</span>
+                  <i className={ok ? 'ok' : ''}>{busy ? Math.round(dl.p * 100) + '%' : ok ? 'Hazır' : m && m.size ? Math.round(m.size / 1e6) + ' MB' : '—'}</i>
+                </button>
+              )
+            })}
           </div>
-          {model && model.desc && <div className="lib-hint" style={{ paddingLeft: 100, marginTop: -4 }}>{model.desc}</div>}
           {model && !installed && !dl && (
-            <div className="row" style={{ paddingLeft: 100 }}>
-              <button className="btn sm" onClick={getModel} disabled={!isElectron}><Icon name="import" size={12} />Modeli indir{model.size ? ` · ${Math.round(model.size / 1e6)} MB` : ''}</button>
-            </div>
+            <button className="btn sm" style={{ alignSelf: 'flex-start' }} onClick={() => getModel(model.id)} disabled={!isElectron}><Icon name="import" size={12} />{model.name} modelini indir{model.size ? ` · ${Math.round(model.size / 1e6)} MB` : ''}</button>
           )}
-          {dl && (
-            <div className="lib-progress">
-              <div className="row"><span className="grow" style={{ fontWeight: 600 }}>Model indiriliyor…</span><span className="mono">{Math.round(dl.p * 100)}%</span><button className="ibtn sm" onClick={() => dl.ctrl.abort()} title="İptal"><Icon name="x" size={12} /></button></div>
-              <Bar value={dl.p} />
-            </div>
-          )}
+          {dl && <div className="row" style={{ gap: 8 }}><Bar value={dl.p} /><button className="ibtn sm" onClick={() => dl.ctrl.abort()}><Icon name="x" size={12} /></button></div>}
         </div>
 
-        <div className="lib-sect"><div className="edge"><b>STİL</b> {styles.length}</div></div>
-        {styles.length ? (
-          <div className="grid lib-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(118px, 1fr))', paddingTop: 8 }}>
-            {styles.map(s => <CapStyleCard key={s.id} s={s} on={style && style.id === s.id} onPick={() => upd({ styleId: s.id, maxWords: s.words || o.maxWords, uppercase: s.uppercase ?? o.uppercase, emoji: s.emoji ?? o.emoji })} />)}
-          </div>
-        ) : <div className="lib-empty" style={{ padding: 14 }}><div className="mono">ALTYAZI STİLİ YÜKLENMEDİ · VARSAYILAN KULLANILIR</div></div>}
+        {job.running ? null : (
+          <button className="btn sig xl cap-go" onClick={start} disabled={!available || !src.length || !isElectron}>
+            <Icon name="caption" size={18} />Altyazı oluştur
+          </button>
+        )}
+        {job.done && !job.running && !job.error && <div className="cap-done"><Icon name="check" size={13} sw={2.4} />{job.done}</div>}
+      </div>
 
-        <div className="lib-form">
-          <div className="prop"><span className="lbl static">Satır başına</span><Slider value={o.maxWords} min={1} max={8} step={1} def={3} onChange={v => upd({ maxWords: v })} /><span className="mono dim" style={{ width: 52, textAlign: 'right', fontSize: 11 }}>{o.maxWords} kelime</span></div>
-          <Toggle label="BÜYÜK HARF" on={o.uppercase} onChange={v => upd({ uppercase: v })} />
-          <Toggle label="Emoji ekle" on={o.emoji} onChange={v => upd({ emoji: v })} hint="Anahtar kelimelere uygun emoji ekler" />
-          <Toggle label="Anahtar kelime vurgusu" on={o.highlightKeywords} onChange={v => upd({ highlightKeywords: v })} />
-          <Toggle label="Dolgu kelimelerini işaretle" on={o.markFillers} onChange={v => upd({ markFillers: v })} hint="ııı, şey, yani… gibi kelimeleri işaretler (zaman çizelgesinde işaret)" />
-          {job.running ? (
-            <div className="lib-progress">
-              <div className="row"><span className="grow" style={{ fontWeight: 600 }}>{job.label || 'Çözümleniyor…'}</span><span className="mono">{Math.round((job.progress || 0) * 100)}%</span></div>
-              <Bar value={job.progress} indet={!job.progress} />
-              <button className="btn sm danger" onClick={cancelCaptions}><Icon name="x" size={12} />İptal</button>
-            </div>
-          ) : (
-            <button className="btn sig lg" onClick={start} disabled={!available || !src.length || !model || !isElectron}>
-              <Icon name="caption" size={16} />Altyazı oluştur
-            </button>
-          )}
-          {job.error && !job.running && <div className="lib-note warn" style={{ margin: 0 }}><Icon name="warn" size={14} />{job.error}</div>}
-          {job.done && !job.running && !job.error && <div className="lib-hint mono" style={{ fontSize: 10 }}>{job.done}</div>}
-        </div>
+      <div className="lib-sect"><div className="edge"><b>Stil</b><span className="faint">· sonra da değiştirebilirsin</span></div></div>
+      <div style={{ padding: '6px 12px 4px' }}>
+        <StyleGallery value={o.styleId} onPick={id => upd({ styleId: id, ...(stylePick(id)) })} compact />
+      </div>
 
-        <div className="lib-sect"><div className="edge"><b>DOSYA</b> SRT · VTT · ASS</div></div>
-        <div className="lib-form">
-          <div className="lib-actions">
-            <button className="btn" onClick={importSubtitleFile} disabled={!isElectron}><Icon name="import" size={13} />İçe aktar</button>
-            <button className="btn" onClick={() => exportSubtitleFile('srt')} disabled={!isElectron}><Icon name="export" size={13} />Dışa aktar (SRT)</button>
-          </div>
+      <div className="lib-sect"><div className="edge"><b>Ayarlar</b></div></div>
+      <div className="lib-form">
+        <div className="prop"><span className="lbl static">Satırda kelime</span><Slider value={o.maxWords} min={1} max={8} step={1} def={3} onChange={v => upd({ maxWords: v })} /><span className="mono dim" style={{ width: 24, textAlign: 'right', fontSize: 12 }}>{o.maxWords}</span></div>
+        <Toggle label="BÜYÜK HARF" on={o.uppercase} onChange={v => upd({ uppercase: v })} />
+        <Toggle label="Emoji ekle" on={o.emoji} onChange={v => upd({ emoji: v })} hint="Anahtar kelimelere uygun emoji ekler" />
+        <Toggle label="Müzik ve oyun sesini atla" on={o.vad !== false} onChange={v => upd({ vad: v })} hint="Konuşma olmayan bölümleri ses etkinliği algılamasıyla atlar; uydurma yazıyı önler" />
+        <Toggle label="Önemli kelimeleri vurgula" on={o.highlightKeywords} onChange={v => upd({ highlightKeywords: v })} />
+        <Toggle label="Dolgu kelimelerini işaretle" on={o.markFillers} onChange={v => upd({ markFillers: v })} hint="ııı, şey, yani gibi kelimelere zaman çizelgesinde işaret koyar" />
+        <div className="lib-actions" style={{ marginTop: 4 }}>
+          <button className="btn" onClick={importSubtitleFile} disabled={!isElectron}><Icon name="import" size={13} />SRT / VTT / ASS içe aktar</button>
         </div>
       </div>
     </div>
   )
 }
 
-// Stil önizlemesi (HTML/CSS) — üzerine gelince aktif kelime ilerler
-const WORDS = ['BU', 'OYUN', 'TAM', 'EFSANE']
-function CapStyleCard({ s, on, onPick }) {
-  const [i, setI] = useState(1)
-  const [hover, setHover] = useState(false)
+function stylePick(id) {
+  const s = REG.captionStyles.byId.get(id)
+  return s ? { maxWords: s.words || 3, uppercase: s.uppercase ?? true, emoji: !!s.emoji } : {}
+}
+
+// ---------------------------------------------------------------- stil
+function StyleView({ group }) {
+  // temsilci satır: oynatma kafasındaki ya da ilk satır
+  const now = usePlayhead(6)
+  const clip = group.clips.find(c => now >= c.start && now < c.start + c.duration) || group.clips[0]
+  // stil düzenlerken önizleme bir altyazıyı göstersin
   useEffect(() => {
-    if (!hover) { setI(1); return }
-    const t = setInterval(() => setI(x => (x + 1) % WORDS.length), 380)
-    return () => clearInterval(t)
-  }, [hover])
-  const tx = s.text || {}
-  const act = s.active || {}
-  const stroke = tx.stroke && tx.stroke.enabled !== false && tx.stroke.width ? `${Math.max(1, tx.stroke.width / 8)}px ${tx.stroke.color || '#000'}` : null
-  const shadow = tx.shadow && tx.shadow.enabled ? `0 2px 4px ${tx.shadow.color || '#000'}` : '0 1px 2px rgba(0,0,0,0.6)'
-  const words = (s.words ? WORDS.slice(0, Math.max(2, Math.min(4, s.words))) : WORDS.slice(0, 3))
-  const upper = s.uppercase !== false
+    const inside = group.clips.some(c => playback.time >= c.start && playback.time < c.start + c.duration)
+    if (!inside && group.clips[0]) { playback.pause(); playback.seek(group.clips[0].start + Math.min(0.6, group.clips[0].duration * 0.5)) }
+  }, [group.groupId]) // eslint-disable-line
   return (
-    <div className={'card lib-card cap-card' + (on ? ' sel' : '')} onClick={onPick} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} title={s.name}>
-      <div className="thumb" style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url(${sampleBg()})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <div className="cap-prev" style={{ fontFamily: `"${tx.font || 'Archivo Black'}", Archivo, sans-serif`, fontWeight: tx.weight || 900, fontStyle: tx.italic ? 'italic' : 'normal' }}>
-          {words.map((w, k) => {
-            const isAct = k === i % words.length
-            const past = k < i % words.length
-            const st = isAct ? act : past ? (s.past || {}) : (s.future || {})
-            const bg = isAct && act.bg ? act.bg : null
-            return (
-              <span key={k} style={{
-                color: st.color || (isAct ? act.color : null) || tx.color || '#fff',
-                opacity: st.opacity ?? 1,
-                WebkitTextStroke: stroke || undefined,
-                paintOrder: 'stroke fill',
-                textShadow: act.glow && isAct ? `0 0 8px ${act.glow.color || '#fff'}` : shadow,
-                background: bg ? (bg.color || bg) : undefined,
-                padding: bg ? '0 3px' : undefined,
-                borderRadius: bg ? Math.min(4, (bg.radius || 0) / 4) : undefined,
-                transform: isAct && act.scale ? `scale(${Math.min(1.25, act.scale)})` : undefined,
-                transition: 'transform 90ms steps(2)',
-              }}>{upper ? w : w.toLocaleLowerCase('tr-TR')}</span>
-            )
-          })}
-        </div>
+    <div className="lib-body">
+      <div className="lib-sect"><div className="edge"><b>Hazır stiller</b><span className="faint">· bütün satırlara uygulanır</span></div></div>
+      <div style={{ padding: '6px 12px 4px' }}>
+        <StyleGallery value={clip.caption.styleId} onPick={id => applyStyleToGroup(group.groupId, id)} compact />
       </div>
-      <div className="name">{s.name}</div>
+      <div className="lib-sect"><div className="edge"><b>Özelleştir</b></div></div>
+      <CaptionStyleEditor gid={group.groupId} clip={clip} />
     </div>
   )
 }

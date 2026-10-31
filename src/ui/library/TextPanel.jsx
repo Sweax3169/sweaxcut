@@ -33,14 +33,14 @@ export default function TextPanel({ code }) {
           onDragStart={e => dragStart(e, 'text', '__default', 'Varsayılan yazı')} onDragEnd={dragEnd}
           onClick={() => ins('__default')} title="Oynatma kafasına düz yazı ekle (T)">
           <span className="tt">Aa</span>
-          <span className="td"><b>Varsayılan yazı</b><span>DÜZ METİN · KISAYOL T</span></span>
+          <span className="td"><b>Varsayılan yazı</b><span>Düz metin · kısayol T</span></span>
           <span className="plus"><Icon name="plus" size={16} sw={2.2} /></span>
         </div>
         {!st.q && !st.cat && <RecentRow kind="text" ids={recent.filter(id => id !== '__default').slice(0, 8)} render={id => card(reg.byId.get(id), true)} />}
         {!reg.list.length ? (
           <div className="lib-empty"><div className="big">Şablon yok</div><div>Yazı paketi yükleniyor ya da kurulu değil.</div></div>
         ) : !list.length ? (
-          <div className="lib-empty"><div className="mono">EŞLEŞEN ŞABLON YOK</div></div>
+          <div className="lib-empty"><div className="mono">Eşleşen şablon yok</div></div>
         ) : (
           <Grid items={list} min={84} page={48} resetKey={st.q + st.cat} render={tpl => card(tpl)} />
         )}

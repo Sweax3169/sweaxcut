@@ -37,6 +37,14 @@ export function register(kind, items, categories) {
   bump()
 }
 
+export function unregister(kind, id) {
+  const r = REG[kind]
+  if (!r || !r.byId.has(id)) return
+  r.byId.delete(id)
+  r.list = r.list.filter(x => x.id !== id)
+  bump()
+}
+
 export function get(kind, id) {
   return REG[kind] && REG[kind].byId.get(id)
 }

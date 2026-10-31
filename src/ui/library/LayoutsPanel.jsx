@@ -36,11 +36,11 @@ function Schema({ def, ratio }) {
         const kind = String(r.kind || r.type || r.role || 'game').toLowerCase()
         const col = COLORS[kind] || 'var(--c-video)'
         const x = fx + (r.x || 0) * fw, y = fy + (r.y || 0) * fh, w = (r.w ?? 1) * fw, h = (r.h ?? 1) * fh
-        const lab = r.label || (kind === 'cam' || kind === 'facecam' || kind === 'kamera' ? 'KAMERA' : kind === 'text' || kind === 'yazi' ? 'YAZI' : kind === 'bg' ? '' : 'OYUN')
+        const lab = r.label || (kind === 'cam' || kind === 'facecam' || kind === 'kamera' ? 'Kamera' : kind === 'text' || kind === 'yazi' ? 'Yazı' : kind === 'bg' ? '' : 'Oyun')
         return (
           <g key={i}>
             <rect x={x + 0.8} y={y + 0.8} width={Math.max(0, w - 1.6)} height={Math.max(0, h - 1.6)} fill={col} fillOpacity={kind === 'bg' ? 1 : 0.22} stroke={col} strokeWidth="0.8" className="reg" />
-            {lab && h > 9 && <text x={x + w / 2} y={y + h / 2 + 2.2} textAnchor="middle" fontSize="6" fontFamily="JetBrains Mono, monospace" fontWeight="700" fill={col} letterSpacing="0.5">{lab}</text>}
+            {lab && h > 9 && <text x={x + w / 2} y={y + h / 2 + 2.2} textAnchor="middle" fontSize="6" fontFamily="Mona Sans Variable, sans-serif" fontWeight="650" fill={col} letterSpacing="0.5">{lab}</text>}
           </g>
         )
       })}
@@ -69,7 +69,7 @@ export default function LayoutsPanel({ code }) {
         {!reg.list.length ? (
           <div className="lib-empty"><div className="big">Düzen yok</div><div>Düzen paketi yükleniyor ya da kurulu değil.</div></div>
         ) : !list.length ? (
-          <div className="lib-empty"><div className="mono">EŞLEŞEN DÜZEN YOK</div></div>
+          <div className="lib-empty"><div className="mono">Eşleşen düzen yok</div></div>
         ) : (
           <Grid items={list} min={84} page={48} resetKey={st.q + st.cat} render={def => (
             <Card key={def.id} kind="layout" id={def.id} name={def.name} className="lay-card" title={def.name + (def.description ? '\n' + def.description : '')}

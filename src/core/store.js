@@ -26,8 +26,8 @@ function initialUI() {
     safeArea: 'none',        // none | tiktok | shorts | reels | grid
     showWaveforms: true,
     timelineHeight: 300,
-    leftWidth: 360,
-    rightWidth: 330,
+    leftWidth: 400,
+    rightWidth: 340,
     projectPath: null,
     dirty: false,
     modal: null,             // { type, props }

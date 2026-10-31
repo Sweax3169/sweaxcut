@@ -70,7 +70,9 @@ export function captionClipsFromResult(B, res, mediaClip, o) {
   const lang = o.language === 'auto' || !o.language ? (res.language || 'tr') : o.language
   const opts = { styleId: o.styleId, maxWords: o.maxWords, uppercase: o.uppercase, emoji: o.emoji, highlightKeywords: o.highlightKeywords, mediaClip, lang }
   const out = B.buildCaptionClips(res, opts) || []
-  return styleClips(Array.isArray(out) ? out : out.clips || [], o.styleId)
+  const clips = styleClips(Array.isArray(out) ? out : out.clips || [], o.styleId)
+  for (const c of clips) if (c.caption) c.caption.maxWords = o.maxWords
+  return clips
 }
 
 export async function runCaptions(o) {
@@ -80,7 +82,7 @@ export async function runCaptions(o) {
   const [W, B] = await Promise.all([feature('whisper'), feature('build')])
   if (!W || !W.transcribe || !B || !B.buildCaptionClips) { store.toast('Konuşma tanıma motoru kurulu değil', 'error'); return }
   const ctrl = new AbortController()
-  captionJob.set({ running: true, progress: 0, label: 'Hazırlanıyor…', error: null, ctrl, done: null })
+  captionJob.set({ running: true, progress: 0, label: 'Hazırlanıyor…', error: null, ctrl, done: null, projectId: store.get().project.id })
   try {
     // model kurulu değilse önce indir
     if (o.model && !(await modelInstalled(o.model))) {
@@ -100,6 +102,7 @@ export async function runCaptions(o) {
       const res = await W.transcribe(m, {
         language: o.language || 'tr',
         model: o.model, signal: ctrl.signal, range: { start: lo, end: hi },
+        quality: o.quality || 'fast', vad: o.vad !== false, verbatim: !!o.markFillers,
         onProgress: (x) => {
           const v = typeof x === 'number' ? x : (x && x.progress) || 0
           captionJob.set({ progress: base + (1 - base) * ((i + Math.max(0, Math.min(1, v))) / clips.length) * 0.97, ...(x && x.label ? { label: (clips.length > 1 ? `${i + 1}/${clips.length} · ` : '') + x.label } : {}) })
@@ -126,7 +129,7 @@ export async function runCaptions(o) {
       }
     })
     const msg = `${built.length} altyazı eklendi${fillers.length ? ` · ${fillers.length} dolgu işaretlendi` : ''}`
-    captionJob.set({ running: false, ctrl: null, progress: 1, label: '', done: msg.toLocaleUpperCase('tr-TR') })
+    captionJob.set({ running: false, ctrl: null, progress: 1, label: '', done: msg })
     store.toast(msg, 'ok', 2200)
   } catch (e) {
     const aborted = ctrl.signal.aborted || (e && e.name === 'AbortError')
@@ -236,4 +239,28 @@ export async function exportSubtitleFile(format = 'srt') {
   if (S && S.writeSubtitleFile) await S.writeSubtitleFile(file, out)
   else fs.writeFileSync(file, out, 'utf8')
   store.toast('Altyazı kaydedildi', 'ok', 1500)
+}
+
+// ---------------------------------------------------------------- tek tıkla: bir klipten (ya da ana izden) altyazı
+// Altyazı panelindeki son ayarlar + kurulu en iyi model. Panel açılır, ilerleme ve ardından düzenleyici orada görünür.
+// 66 sn Türkçe konuşmada ölçüldü (Ryzen 5 7600, işlemci): medium %2,6 WER · small %6,0 · large-v3-turbo %5,1 ama 2 kat yavaş
+const MODEL_PREF = ['medium', 'small', 'large-v3-turbo', 'base', 'tiny']
+export async function bestModel(preferred) {
+  const list = await modelList()
+  if (preferred && list.some(m => m.id === preferred) && await modelInstalled(preferred)) return preferred
+  for (const id of MODEL_PREF) if (list.some(m => m.id === id) && await modelInstalled(id)) return id
+  const def = list.find(m => m.default) || list[0]
+  return def ? def.id : null
+}
+
+export async function captionClip(clipId, overrides = {}) {
+  if (captionJob.get().running) { store.setUI({ leftTab: 'captions' }); return }
+  if (clipId) store.select([clipId])
+  store.setUI({ leftTab: 'captions', screen: 'editor' })
+  let saved = {}
+  try { saved = JSON.parse(localStorage.getItem('sweax.lib.caps') || '{}') } catch (e) { /* */ }
+  const o = { source: clipId ? 'selected' : 'main', language: 'tr', maxWords: 3, uppercase: true, emoji: false, highlightKeywords: true, markFillers: false, styleId: 'alt-hormozi', ...saved, ...overrides }
+  if (clipId) o.source = 'selected'
+  o.model = await bestModel(o.model)
+  return runCaptions(o)
 }

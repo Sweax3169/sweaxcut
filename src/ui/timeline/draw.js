@@ -46,7 +46,7 @@ export function drawBase(ctx, st) {
   const { w, h, project, zoom, scrollX, scrollY, selection, hover, ui, dpr, drag } = st
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
   ctx.clearRect(0, 0, w, h)
-  ctx.fillStyle = '#070809'
+  ctx.fillStyle = '#0d0f14'
   ctx.fillRect(0, 0, w, h)
   const fps = project.settings.fps
   const { rows } = computeRows(project.tracks)
@@ -57,13 +57,10 @@ export function drawBase(ctx, st) {
   ctx.save()
   ctx.translate(0, -scrollY)
   for (const r of rows) {
-    ctx.fillStyle = r.track.main ? '#0e1012' : '#0b0c0e'
+    ctx.fillStyle = r.track.main ? '#161a22' : '#11141a'
     ctx.fillRect(0, r.y, w, r.h)
-    if (r.track.main) {
-      // ana iz: film perforasyonu motifi
-      ctx.fillStyle = '#16181b'
-      for (let x = -(scrollX % 14); x < w; x += 14) { ctx.fillRect(x + 3, r.y - 3, 7, 2); ctx.fillRect(x + 3, r.y + r.h + 1, 7, 2) }
-    }
+    ctx.fillStyle = r.track.main ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.025)'
+    ctx.fillRect(0, r.y, w, 1)
     if (r.track.locked) {
       ctx.fillStyle = 'rgba(255,255,255,0.025)'
       for (let x = -(scrollX % 12) - r.h; x < w; x += 12) { ctx.beginPath(); ctx.moveTo(x, r.y + r.h); ctx.lineTo(x + r.h, r.y); ctx.lineTo(x + r.h + 4, r.y); ctx.lineTo(x + 4, r.y + r.h); ctx.fill() }
@@ -91,58 +88,56 @@ export function drawBase(ctx, st) {
         const cx = X(cut), cy = r.y + r.h / 2
         if (win) {
           const x0 = X(win.start), x1 = X(win.end)
-          ctx.fillStyle = 'rgba(228,255,58,0.18)'
-          ctx.fillRect(x0, r.y + 2, x1 - x0, r.h - 4)
-          ctx.strokeStyle = '#e4ff3a'
+          ctx.fillStyle = 'rgba(255,255,255,0.10)'
+          roundRectPath(ctx, x0, r.y + 3, x1 - x0, r.h - 6, 5); ctx.fill()
+          ctx.strokeStyle = 'rgba(255,255,255,0.7)'
           ctx.lineWidth = 1
-          ctx.strokeRect(x0 + 0.5, r.y + 2.5, x1 - x0 - 1, r.h - 5)
-          ctx.save(); ctx.beginPath(); ctx.rect(x0, r.y + 2, x1 - x0, r.h - 4); ctx.clip()
-          ctx.strokeStyle = 'rgba(228,255,58,0.35)'
+          roundRectPath(ctx, x0 + 0.5, r.y + 3.5, x1 - x0 - 1, r.h - 7, 5); ctx.stroke()
+          ctx.save(); roundRectPath(ctx, x0, r.y + 3, x1 - x0, r.h - 6, 5); ctx.clip()
+          ctx.strokeStyle = 'rgba(255,255,255,0.16)'
           for (let x = x0 - r.h; x < x1; x += 6) { ctx.beginPath(); ctx.moveTo(x, r.y + r.h); ctx.lineTo(x + r.h, r.y); ctx.stroke() }
           ctx.restore()
         }
         const hv = hover && hover.cut === a.id
-        ctx.fillStyle = hv ? '#e4ff3a' : (win ? '#e4ff3a' : '#1d1f23')
-        ctx.strokeStyle = win || hv ? '#e4ff3a' : '#3b3f46'
-        ctx.lineWidth = 1
-        ctx.fillRect(cx - 7, cy - 7, 14, 14)
-        ctx.strokeRect(cx - 6.5, cy - 6.5, 13, 13)
-        ctx.strokeStyle = win || hv ? '#0a0b00' : '#a9acb2'
-        ctx.beginPath()
-        ctx.moveTo(cx - 3, cy - 3); ctx.lineTo(cx + 3, cy + 3); ctx.moveTo(cx + 3, cy - 3); ctx.lineTo(cx - 3, cy + 3)
-        ctx.stroke()
+        ctx.fillStyle = hv || win ? '#f4f6fa' : '#2c323e'
+        ctx.shadowColor = 'rgba(0,0,0,0.6)'; ctx.shadowBlur = 6; ctx.shadowOffsetY = 1
+        roundRectPath(ctx, cx - 8, cy - 8, 16, 16, 5); ctx.fill()
+        ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0; ctx.shadowOffsetY = 0
+        ctx.fillStyle = hv || win ? '#12151b' : '#a9afbc'
+        ctx.beginPath(); ctx.moveTo(cx - 4, cy - 3.5); ctx.lineTo(cx, cy); ctx.lineTo(cx - 4, cy + 3.5); ctx.closePath(); ctx.fill()
+        ctx.beginPath(); ctx.moveTo(cx + 4, cy - 3.5); ctx.lineTo(cx, cy); ctx.lineTo(cx + 4, cy + 3.5); ctx.closePath(); ctx.fill()
       }
     }
   }
   ctx.restore()
 
   // cetvel
-  ctx.fillStyle = '#0d0e10'
+  ctx.fillStyle = '#13161c'
   ctx.fillRect(0, 0, w, RULER_H)
-  ctx.fillStyle = '#202227'
+  ctx.fillStyle = 'rgba(255,255,255,0.05)'
   ctx.fillRect(0, RULER_H - 1, w, 1)
   // aralık (giriş/çıkış)
   if (ui.rangeIn != null || ui.rangeOut != null) {
     const a = ui.rangeIn ?? 0, b = ui.rangeOut ?? (t1 + 10)
-    ctx.fillStyle = 'rgba(228,255,58,0.12)'
+    ctx.fillStyle = 'rgba(255,75,62,0.14)'
     ctx.fillRect(X(a), 0, X(b) - X(a), RULER_H - 1)
-    ctx.fillStyle = '#e4ff3a'
+    ctx.fillStyle = '#ff6b5d'
     if (ui.rangeIn != null) ctx.fillRect(X(a) - 1, 0, 2, RULER_H)
     if (ui.rangeOut != null) ctx.fillRect(X(b) - 1, 0, 2, RULER_H)
   }
   const step = rulerStep(zoom)
   const sub = step / 5
-  ctx.font = '500 9.5px "JetBrains Mono", monospace'
+  ctx.font = '500 10px "Geist Mono Variable", monospace'
   ctx.textBaseline = 'top'
   const i0 = Math.floor(t0 / sub), i1 = Math.ceil(t1 / sub)
   for (let i = i0; i <= i1; i++) {
     const t = Math.round(i * sub * 1e6) / 1e6
     const x = X(t)
     const major = i % 5 === 0
-    ctx.fillStyle = major ? '#4a4e55' : '#2a2d32'
-    ctx.fillRect(x, major ? RULER_H - 12 : RULER_H - 6, 1, major ? 11 : 5)
+    ctx.fillStyle = major ? '#4a5160' : '#2a2f39'
+    ctx.fillRect(x, major ? RULER_H - 11 : RULER_H - 6, 1, major ? 10 : 5)
     if (major) {
-      ctx.fillStyle = '#6c7078'
+      ctx.fillStyle = '#7b8292'
       ctx.fillText(fmtRuler(Math.max(0, t), step, fps), x + 4, 6)
     }
   }
@@ -150,9 +145,10 @@ export function drawBase(ctx, st) {
   for (const m of project.markers || []) {
     const x = X(m.time)
     if (x < -10 || x > w + 10) continue
-    ctx.fillStyle = m.color || '#e4ff3a'
-    ctx.beginPath(); ctx.moveTo(x - 5, RULER_H - 13); ctx.lineTo(x + 5, RULER_H - 13); ctx.lineTo(x + 5, RULER_H - 6); ctx.lineTo(x, RULER_H - 2); ctx.lineTo(x - 5, RULER_H - 6); ctx.fill()
-    if (m.label) { ctx.fillStyle = '#a9acb2'; ctx.fillText(m.label, x + 7, RULER_H - 13) }
+    ctx.fillStyle = m.color || '#ffc24b'
+    roundRectPath(ctx, x - 5, RULER_H - 14, 10, 9, 3); ctx.fill()
+    ctx.beginPath(); ctx.moveTo(x - 3, RULER_H - 6); ctx.lineTo(x + 3, RULER_H - 6); ctx.lineTo(x, RULER_H - 2); ctx.fill()
+    if (m.label) { ctx.fillStyle = '#a9afbc'; ctx.fillText(m.label, x + 8, RULER_H - 14) }
   }
 }
 
@@ -179,8 +175,10 @@ function drawClip(ctx, c, tr, r, X, zoom, project, selected, hover, ghost, ui) {
   ctx.save()
   if (ghost) ctx.globalAlpha = 0.35
   if (tr.hidden || (c.type === 'audio' && tr.muted)) ctx.globalAlpha *= 0.45
-  roundRectPath(ctx, x0 + 0.5, y + 0.5, w - 1, h - 1, 2)
-  ctx.fillStyle = hexA(col, 0.16)
+  roundRectPath(ctx, x0 + 0.5, y + 0.5, w - 1, h - 1, Math.min(6, w / 2))
+  const gr = ctx.createLinearGradient(0, y, 0, y + h)
+  gr.addColorStop(0, hexA(col, 0.34)); gr.addColorStop(1, hexA(col, 0.16))
+  ctx.fillStyle = gr
   ctx.fill()
   ctx.save()
   ctx.clip()
@@ -205,14 +203,14 @@ function drawClip(ctx, c, tr, r, X, zoom, project, selected, hover, ghost, ui) {
     }
     // alt şerit: ses dalgası
     if (thumbH < h) {
-      ctx.fillStyle = 'rgba(7,8,9,0.85)'
+      ctx.fillStyle = 'rgba(10,12,16,0.88)'
       ctx.fillRect(x0, y + thumbH, w, h - thumbH)
-      drawWave(ctx, c, media, x0, x1, y + thumbH + 1, h - thumbH - 2, zoom, '#2ee6a6', ui)
+      drawWave(ctx, c, media, x0, x1, y + thumbH + 1, h - thumbH - 2, zoom, '#36d39b', ui)
     }
     if (media.status === 'processing') {
       ctx.fillStyle = 'rgba(0,0,0,0.5)'
       ctx.fillRect(x0, y + h - 3, w, 3)
-      ctx.fillStyle = '#e4ff3a'
+      ctx.fillStyle = '#f4f6fa'
       ctx.fillRect(x0, y + h - 3, w * (media.progress || 0), 3)
     }
   } else if (c.type === 'audio' && media) {
@@ -221,7 +219,7 @@ function drawClip(ctx, c, tr, r, X, zoom, project, selected, hover, ghost, ui) {
     drawWave(ctx, c, media, x0, x1, y + 14, h - 15, zoom, col, ui)
     // vuruş işaretleri
     if (c.beats && c.beats.length) {
-      ctx.fillStyle = '#e4ff3a'
+      ctx.fillStyle = '#ffc24b'
       const rate = (c.out - c.in) / c.duration
       for (const b of c.beats) {
         const lt = (b - c.in) / rate
@@ -232,10 +230,8 @@ function drawClip(ctx, c, tr, r, X, zoom, project, selected, hover, ghost, ui) {
     }
   } else {
     // yazı/çıkartma/efekt blok
-    ctx.fillStyle = hexA(col, 0.22)
+    ctx.fillStyle = hexA(col, 0.12)
     ctx.fillRect(x0, y, w, h)
-    ctx.fillStyle = hexA(col, 0.5)
-    ctx.fillRect(x0, y, 3, h)
   }
 
   // ses geçişleri (fade) üçgenleri
@@ -249,7 +245,7 @@ function drawClip(ctx, c, tr, r, X, zoom, project, selected, hover, ghost, ui) {
   // etiket
   const label = clipLabel(c, media)
   const badges = clipBadges(c)
-  ctx.font = '600 10.5px Archivo, sans-serif'
+  ctx.font = '600 11px "Mona Sans Variable", sans-serif'
   ctx.textBaseline = 'middle'
   const ly = c.type === 'text' || c.type === 'sticker' || c.type === 'effect' || c.type === 'filter' || c.type === 'adjust' ? y + h / 2 : y + 8
   let lx = x0 + 6
@@ -257,21 +253,21 @@ function drawClip(ctx, c, tr, r, X, zoom, project, selected, hover, ghost, ui) {
     const bw = badges ? ctx.measureText(badges).width + 10 : 0
     const tw = Math.min(ctx.measureText(label).width, w - 14 - bw)
     if (ly < y + h / 2) {
-      ctx.fillStyle = 'rgba(7,8,9,0.72)'
-      ctx.fillRect(x0 + 2, y + 2, Math.max(0, Math.min(w - 4, tw + 8 + bw)), 13)
+      ctx.fillStyle = 'rgba(10,12,16,0.7)'
+      roundRectPath(ctx, x0 + 3, y + 2, Math.max(0, Math.min(w - 6, tw + 8 + bw)), 14, 4); ctx.fill()
     }
-    ctx.fillStyle = '#f1f1ec'
-    if (tw > 8) ctx.fillText(fitText(ctx, label, tw), lx, ly)
+    ctx.fillStyle = '#eef0f4'
+    if (tw > 8) ctx.fillText(fitText(ctx, label, tw), lx, ly + 0.5)
     if (badges && w > bw + 30) {
-      ctx.font = '600 9.5px "JetBrains Mono", monospace'
-      ctx.fillStyle = '#e4ff3a'
+      ctx.font = '600 10px "Geist Mono Variable", monospace'
+      ctx.fillStyle = '#ffc24b'
       ctx.fillText(badges, lx + tw + 6, ly)
     }
   }
   // anahtar kare elmasları
   const kts = allKeyTimes(c)
   if (kts.length) {
-    ctx.fillStyle = selected ? '#e4ff3a' : '#f1f1ec'
+    ctx.fillStyle = '#ffc24b'
     for (const kt of kts) {
       const kx = x0 + kt * zoom
       const ky = y + h - 6
@@ -281,28 +277,30 @@ function drawClip(ctx, c, tr, r, X, zoom, project, selected, hover, ghost, ui) {
   ctx.restore() // klip kırpması
 
   // çerçeve
-  roundRectPath(ctx, x0 + 0.5, y + 0.5, w - 1, h - 1, 2)
+  if (selected) { ctx.shadowColor = 'rgba(255,255,255,0.35)'; ctx.shadowBlur = 10 }
+  roundRectPath(ctx, x0 + (selected ? 1 : 0.5), y + (selected ? 1 : 0.5), w - (selected ? 2 : 1), h - (selected ? 2 : 1), Math.min(6, w / 2))
   ctx.lineWidth = selected ? 2 : 1
-  ctx.strokeStyle = selected ? '#e4ff3a' : hexA(col, hover ? 0.9 : 0.55)
+  ctx.strokeStyle = selected ? '#ffffff' : hexA(col, hover ? 0.95 : 0.5)
   ctx.stroke()
+  ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0
   if (selected && w > 30 && au && (c.type === 'audio' || (c.type === 'video' && media && media.hasAudio && !au.muted))) {
     // ses yumuşatma tutamaçları
     const fx0 = x0 + 6 + (au.fadeIn || 0) * zoom, fx1 = x1 - 6 - (au.fadeOut || 0) * zoom
-    ctx.fillStyle = '#f1f1ec'
-    ctx.strokeStyle = '#070809'
-    ctx.lineWidth = 1
-    for (const fx of [fx0, fx1]) { ctx.fillRect(fx - 4, y + 1, 8, 8); ctx.strokeRect(fx - 3.5, y + 1.5, 7, 7) }
+    ctx.fillStyle = '#f4f6fa'
+    ctx.strokeStyle = '#0d0f14'
+    ctx.lineWidth = 1.5
+    for (const fx of [fx0, fx1]) { ctx.beginPath(); ctx.arc(fx, y + 6, 4, 0, Math.PI * 2); ctx.fill(); ctx.stroke() }
   }
   if (selected && w > 14) {
     // kırpma tutamaçları (köşeli parantez)
-    ctx.fillStyle = '#e4ff3a'
-    ctx.fillRect(x0, y, 5, h)
-    ctx.fillRect(x1 - 5, y, 5, h)
-    ctx.fillStyle = '#0a0b00'
-    ctx.fillRect(x0 + 2, y + h / 2 - 6, 1, 12)
-    ctx.fillRect(x1 - 3, y + h / 2 - 6, 1, 12)
+    ctx.fillStyle = '#ffffff'
+    roundRectPath(ctx, x0 + 1, y + 1, 7, h - 2, 3); ctx.fill()
+    roundRectPath(ctx, x1 - 8, y + 1, 7, h - 2, 3); ctx.fill()
+    ctx.fillStyle = '#12151b'
+    ctx.fillRect(x0 + 4, y + h / 2 - 6, 1.2, 12)
+    ctx.fillRect(x1 - 5, y + h / 2 - 6, 1.2, 12)
   } else if (hover && hover.edge) {
-    ctx.fillStyle = '#f1f1ec'
+    ctx.fillStyle = '#eef0f4'
     if (hover.edge === 'start') ctx.fillRect(x0, y, 3, h)
     else ctx.fillRect(x1 - 3, y, 3, h)
   }
@@ -373,33 +371,33 @@ export function drawOverlay(ctx, st) {
       const y = g.y - scrollY
       ctx.fillStyle = hexA(g.color, 0.28)
       ctx.fillRect(x0, y + 1, x1 - x0, g.h - 2)
-      ctx.strokeStyle = g.invalid ? '#ff4d5e' : '#e4ff3a'
+      ctx.strokeStyle = g.invalid ? '#ff5c7a' : '#ffffff'
       ctx.lineWidth = 1.5
       ctx.setLineDash([5, 3])
       ctx.strokeRect(x0 + 0.5, y + 1.5, x1 - x0 - 1, g.h - 3)
       ctx.setLineDash([])
     }
     if (drag.insertY != null) {
-      ctx.fillStyle = '#e4ff3a'
+      ctx.fillStyle = '#ffffff'
       ctx.fillRect(0, drag.insertY - scrollY - 1, w, 2)
     }
   }
   if (dropHint) {
     const x0 = X(dropHint.time), x1 = X(dropHint.time + (dropHint.duration || 3))
     const y = dropHint.y - scrollY
-    ctx.fillStyle = 'rgba(228,255,58,0.16)'
+    ctx.fillStyle = 'rgba(255,255,255,0.10)'
     ctx.fillRect(x0, y, Math.max(6, x1 - x0), dropHint.h)
-    ctx.strokeStyle = '#e4ff3a'
+    ctx.strokeStyle = '#ffffff'
     ctx.lineWidth = 1.5
     ctx.strokeRect(x0 + 0.5, y + 0.5, Math.max(6, x1 - x0) - 1, dropHint.h - 1)
-    ctx.font = '700 10px Archivo, sans-serif'
-    ctx.fillStyle = '#e4ff3a'
+    ctx.font = '650 11px "Mona Sans Variable", sans-serif'
+    ctx.fillStyle = '#ffffff'
     ctx.textBaseline = 'bottom'
     if (dropHint.label) ctx.fillText(dropHint.label, x0 + 4, y - 3)
   }
   if (marquee) {
-    ctx.fillStyle = 'rgba(228,255,58,0.07)'
-    ctx.strokeStyle = 'rgba(228,255,58,0.7)'
+    ctx.fillStyle = 'rgba(255,255,255,0.06)'
+    ctx.strokeStyle = 'rgba(255,255,255,0.6)'
     ctx.lineWidth = 1
     const x = Math.min(marquee.x0, marquee.x1), y = Math.min(marquee.y0, marquee.y1)
     const mw = Math.abs(marquee.x1 - marquee.x0), mh = Math.abs(marquee.y1 - marquee.y0)
@@ -408,7 +406,7 @@ export function drawOverlay(ctx, st) {
   }
   if (snapLine != null) {
     const x = X(snapLine)
-    ctx.strokeStyle = '#7af0ff'
+    ctx.strokeStyle = '#4fd6e8'
     ctx.lineWidth = 1
     ctx.setLineDash([3, 3])
     ctx.beginPath(); ctx.moveTo(x, RULER_H); ctx.lineTo(x, h); ctx.stroke()
@@ -417,12 +415,13 @@ export function drawOverlay(ctx, st) {
   // oynatma kafası
   const px = X(time)
   if (px >= -2 && px <= w + 2) {
-    ctx.fillStyle = '#e4ff3a'
-    ctx.fillRect(px - 0.5, RULER_H - 2, 1.5, h)
-    ctx.beginPath()
-    ctx.moveTo(px - 6, 2); ctx.lineTo(px + 7, 2); ctx.lineTo(px + 7, RULER_H - 12); ctx.lineTo(px + 0.5, RULER_H - 4); ctx.lineTo(px - 6, RULER_H - 12)
-    ctx.closePath(); ctx.fill()
-    ctx.fillStyle = '#0a0b00'
-    ctx.fillRect(px - 2, 7, 1.5, 9); ctx.fillRect(px + 1.5, 7, 1.5, 9)
+    ctx.fillStyle = '#ff4b3e'
+    ctx.shadowColor = 'rgba(255,75,62,0.55)'; ctx.shadowBlur = 8
+    ctx.fillRect(px - 0.75, RULER_H - 4, 2, h)
+    roundRectPath(ctx, px - 6.5, 3, 14, 15, 4); ctx.fill()
+    ctx.beginPath(); ctx.moveTo(px - 4, 17); ctx.lineTo(px + 5, 17); ctx.lineTo(px + 0.5, RULER_H - 4); ctx.closePath(); ctx.fill()
+    ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0
+    ctx.fillStyle = 'rgba(255,255,255,0.9)'
+    ctx.fillRect(px - 2, 7, 1.4, 7); ctx.fillRect(px + 1.6, 7, 1.4, 7)
   }
 }

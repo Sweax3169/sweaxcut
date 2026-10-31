@@ -25,10 +25,14 @@ import CaptionTab from './CaptionTab.jsx'
 import TtsTab from './TtsTab.jsx'
 import StickerTab from './StickerTab.jsx'
 import ProjectTab from './ProjectTab.jsx'
+import CurveEditor from './CurveEditor.jsx'
 import MultiTab from './MultiTab.jsx'
 
 export const TYPE_LABEL = { video: 'Video', image: 'Görsel', audio: 'Ses', text: 'Yazı', sticker: 'Çıkartma', effect: 'Efekt', filter: 'Filtre', adjust: 'Ayar katmanı' }
 const TYPE_CODE = { video: 'V', image: 'G', audio: 'A', text: 'T', sticker: 'Ç', effect: 'E', filter: 'F', adjust: 'K' }
+const TYPE_ICON = { video: 'film', image: 'image', audio: 'wave', text: 'type', sticker: 'smile', effect: 'fx', filter: 'filter', adjust: 'adjust' }
+const capMods = import.meta.glob('../library/captions-run.js')
+const runCap = (id) => { const l = capMods['../library/captions-run.js']; if (l) l().then(m => m.captionClip(id)) }
 
 const TAB = {
   basic: { label: 'Temel', icon: 'fit' },
@@ -57,7 +61,7 @@ function tabsFor(clip, media) {
   const t = clip.type
   const ids = t === 'video' ? ['basic', 'mask', 'color', 'effects', 'anim', 'speed', media && media.hasAudio ? 'audio' : null, clip.transition ? 'transition' : null]
     : t === 'image' ? ['basic', 'mask', 'color', 'effects', 'anim', clip.transition ? 'transition' : null]
-      : t === 'text' ? ['text', 'style', 'anim', 'basic', 'effects', clip.caption ? 'caption' : null, 'tts']
+      : t === 'text' ? (clip.caption ? ['caption', 'text', 'style', 'anim', 'basic', 'effects', 'tts'] : ['text', 'style', 'anim', 'basic', 'effects', 'tts'])
         : t === 'sticker' ? ['basic', 'sticker', 'anim', 'effects']
           : t === 'audio' ? ['audio', 'voice', 'speed', hasBeats ? 'beats' : null]
             : t === 'effect' ? ['params']
@@ -109,11 +113,11 @@ function Tabs({ tabs, tab, setTab, dots }) {
 }
 
 // Başlık: tür şeridi + ad + işlemler
-function Head({ color, code, kind, meta, name, placeholder, onName, actions }) {
+function Head({ color, code, kind, meta, name, placeholder, onName, actions, icon }) {
   const [txt, setTxt] = useState(null)
   return (
     <div className="ihead" style={{ '--tc': color }}>
-      <i className="tbar" />
+      <i className="tbar">{icon && <Icon name={icon} size={18} sw={1.9} />}</i>
       <div className="hmain">
         <div className="tline">
           {code && <span className="tcode">{code}</span>}
@@ -132,17 +136,44 @@ function Head({ color, code, kind, meta, name, placeholder, onName, actions }) {
   )
 }
 
+// Hızlı eylemler: türüne göre en sık iş tek tıkta (altyazı, sessizlik, renk, animasyon)
+function QuickActs({ clip, media, setTab }) {
+  const t = clip.type
+  if (t === 'video' && media && media.hasAudio) return (
+    <div className="quick-acts">
+      <button className="qa hot" onClick={() => runCap(clip.id)} data-tip="Bu klibin konuşmasını kelime kelime altyazıya çevir"><Icon name="caption" size={14} /><span>Altyazı oluştur</span></button>
+      <button className="qa" onClick={() => store.setUI({ leftTab: 'tools' })} data-tip="Sessizlik kesme, sabitleme, arka plan silme"><Icon name="magic" size={14} /><span>Akıllı araçlar</span></button>
+    </div>
+  )
+  if (t === 'audio' && media) return (
+    <div className="quick-acts">
+      <button className="qa hot" onClick={() => runCap(clip.id)}><Icon name="caption" size={14} /><span>Altyazı oluştur</span></button>
+    </div>
+  )
+  if (t === 'text' && clip.caption) return (
+    <div className="quick-acts">
+      <button className="qa hot" onClick={() => store.setUI({ leftTab: 'captions' })} data-tip="Bütün altyazıları metin gibi düzenle, böl, birleştir"><Icon name="caption" size={14} /><span>Altyazı düzenleyici</span></button>
+      <button className="qa" onClick={() => setTab('caption')}><Icon name="sparkle" size={14} /><span>Stil</span></button>
+    </div>
+  )
+  return null
+}
+
 // Anahtar kare şeridi: önceki/sonraki, sayaç, bu karedeki yumuşatma, hepsini temizle
 function KfBar({ clip, lt, b }) {
+  const [curve, setCurve] = useState(false)
   if (!anyKeys(clip)) return null
   const times = allKeyTimes(clip)
   const at = keysAtTime(clip, lt)
   const idx = times.findIndex(x => Math.abs(x - lt) <= 1 / 120)
   let ease = null
+  let bez = null
   if (at.length) {
     const k = clip.keyframes[at[0]][keyAt(clip, at[0], lt)]
     ease = k ? (typeof k.ease === 'string' ? k.ease : k.ease ? 'custom' : 'linear') : null
+    if (k && k.ease && k.ease.bezier) bez = k.ease.bezier
   }
+  const first = at.length && keyAt(clip, at[0], lt) === 0
   const before = times.filter(x => x < lt - 1e-3).length
   return (
     <div className="kfbar">
@@ -161,8 +192,18 @@ function KfBar({ clip, lt, b }) {
           </select>
         </label>
       ) : <span className="kgap">kareler arası</span>}
+      {at.length > 0 && !first && <button className={'kcurve' + (curve ? ' on' : '')} onClick={() => setCurve(!curve)} data-tip="Geçiş eğrisini çiz"><Icon name="ease" size={12} />Eğri</button>}
       <span className="grow" />
       <button className="ibtn sm" data-tip="Bütün anahtar kareleri temizle" onClick={() => A.clearKeys(clip.id)}><Icon name="trash" size={12} /></button>
+      {curve && at.length > 0 && !first && (
+        <div className="kfpop">
+          <div className="kfpop-h"><b>Geçiş eğrisi</b><span>önceki kareden bu kareye</span></div>
+          <CurveEditor value={bez} onChange={(v, o) => {
+            b.edit(c => { for (const p of at) { const i = keyAt(c, p, lt); if (i >= 0) c.keyframes[p][i].ease = { bezier: v } } }, 'Eğri', 'curve:' + clip.id)
+            if (o && o.final) store.endCoalesce()
+          }} />
+        </div>
+      )}
     </div>
   )
 }
@@ -176,7 +217,7 @@ function Foot({ clip, fps }) {
   const pct = clamp(lt / Math.max(1e-6, clip.duration), 0, 1) * 100
   return (
     <div className="ifoot">
-      <span className={'fst' + (inside ? '' : ' out')}>{inside ? 'KLİP İÇİ' : 'KLİP DIŞI'}</span>
+      <span className={'fst' + (inside ? '' : ' out')}>{inside ? 'Klipte' : 'Klip dışı'}</span>
       <span className="ftc">{timecode(clamp(lt, 0, clip.duration), fps)}</span>
       <span className="fdur">/ {timecode(clip.duration, fps)}</span>
       <div className="fbar">
@@ -262,7 +303,7 @@ function ClipInspector({ id, focusTick }) {
   const placeholder = type === 'text' ? ((clip.text && clip.text.content) || 'Yazı').split('\n')[0].slice(0, 40) : (media ? media.name : TYPE_LABEL[type])
   return (
     <div className="panel insp" data-type={type}>
-      <Head color={`var(--c-${type})`} code={TYPE_CODE[type]} kind={TYPE_LABEL[type]} meta={meta}
+      <Head color={`var(--c-${type})`} code={TYPE_CODE[type]} icon={TYPE_ICON[type]} kind={TYPE_LABEL[type]} meta={meta}
         name={clip.name || ''} placeholder={placeholder}
         onName={v => A.setProps(clip.id, c => { c.name = v }, 'Ad değiştir', 'name:' + clip.id)}
         actions={<>
@@ -272,6 +313,7 @@ function ClipInspector({ id, focusTick }) {
           </button>
           <button className="ibtn sm danger" data-tip="Klibi sil" data-kb="Del" onClick={() => A.deleteSelected()}><Icon name="trash" size={13} /></button>
         </>} />
+      <QuickActs clip={clip} media={media} setTab={setTab} />
       {tabs.length > 1 && <Tabs tabs={tabs} tab={tab} setTab={setTab} dots={dots} />}
       <KfBar clip={clip} lt={lt} b={b} />
       <div className="pbody ibody" key={tab}>
@@ -291,13 +333,13 @@ function ProjectInspector() {
   const name = useStore(selProjName)
   return (
     <div className="panel insp" data-type="project">
-      <Head color="var(--sig)" code="P" kind="Proje" meta={settings.width + '×' + settings.height + '  ' + settings.fps + ' fps'} name={name}
+      <Head color="var(--rec)" code="P" icon="film" kind="Proje" meta={settings.width + '×' + settings.height + '  ' + settings.fps + ' fps'} name={name}
         onName={v => store.edit('Proje adı', d => { d.name = v }, { coalesce: 'pname' })} />
       <div className="pbody ibody">
         <ProjectTab settings={settings} />
         <div className="iend"><span className="perf" /></div>
       </div>
-      <div className="ifoot"><span className="fst">SEÇİM YOK</span><span className="fdur">bir klip seç ya da zaman çizelgesine medya bırak</span></div>
+      <div className="ifoot"><span className="fst">Seçim yok</span><span className="fdur" style={{ fontFamily: 'var(--font-ui)' }}>Düzenlemek için bir klip seç</span></div>
     </div>
   )
 }
@@ -318,13 +360,13 @@ function MultiInspector() {
   if (clips.length < 2) return clips.length === 1 ? <ClipInspector id={clips[0].id} /> : <ProjectInspector />
   return (
     <div className="panel insp" data-type="multi">
-      <Head color="var(--tx-1)" code={String(clips.length)} kind="Çoklu seçim" meta="ortak özellikler" name={clips.length + ' klip'}
+      <Head color="var(--tx-1)" code={String(clips.length)} icon="layers" kind="Çoklu seçim" meta="ortak özellikler" name={clips.length + ' klip'}
         actions={<button className="ibtn sm danger" data-tip="Seçilenleri sil" data-kb="Del" onClick={() => A.deleteSelected()}><Icon name="trash" size={13} /></button>} />
       <div className="pbody ibody">
         <MultiTab clips={clips} settings={settings} />
         <div className="iend"><span className="perf" /></div>
       </div>
-      <div className="ifoot"><span className="fst">{clips.length} KLİP</span><span className="fdur">Shift / Ctrl ile seçime ekle-çıkar</span></div>
+      <div className="ifoot"><span className="fst">{clips.length} klip</span><span className="fdur" style={{ fontFamily: 'var(--font-ui)' }}>Shift / Ctrl ile seçime ekle-çıkar</span></div>
     </div>
   )
 }

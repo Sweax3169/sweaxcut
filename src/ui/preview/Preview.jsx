@@ -8,6 +8,7 @@ import Icon from '../Icon.jsx'
 import { openMenu } from '../controls.jsx'
 import * as A from '../actions.js'
 import { prop } from '../../core/keyframes.js'
+import Scopes from './Scopes.jsx'
 
 const audioMods = import.meta.glob('../../engine/audio.js', { eager: true })
 const audioMod = audioMods['../../engine/audio.js']
@@ -22,6 +23,39 @@ export default function Preview() {
   const ph = useStore(s => s.project.settings.height)
   const safe = useStore(s => s.ui.safeArea)
   const [full, setFull] = useState(false)
+  const [playing, setPlaying] = useState(false)
+  const ambient = useStore(s => s.ui.ambient !== false)
+  const scopes = useStore(s => !!s.ui.scopes)
+  useEffect(() => playback.onState(st => setPlaying(st.playing)), [])
+  // ortam ışığı: kareden örneklenen renkler monitörün çevresine yayılır
+  useEffect(() => {
+    if (!ambient) return
+    const small = document.createElement('canvas'); small.width = 8; small.height = 4
+    const x = small.getContext('2d', { willReadFrequently: true })
+    let last = 0, trail = 0
+    const tone = (d, x0, x1) => {
+      let r = 0, g = 0, b = 0, n = 0
+      for (let y = 0; y < 4; y++) for (let i = x0; i < x1; i++) { const o = (y * 8 + i) * 4; r += d[o]; g += d[o + 1]; b += d[o + 2]; n++ }
+      r /= n; g /= n; b /= n
+      const m = (r + g + b) / 3, k = 1.35
+      const c = v => Math.max(0, Math.min(255, Math.round(m + (v - m) * k)))
+      return `rgb(${c(r)},${c(g)},${c(b)})`
+    }
+    const f = (c, now) => {
+      if (now - last < 200) { clearTimeout(trail); trail = setTimeout(() => playback.requestRender(), 210 - (now - last)); return }
+      last = now
+      const el = wrapRef.current
+      if (!el) return
+      x.drawImage(c, 0, 0, 8, 4)
+      const d = x.getImageData(0, 0, 8, 4).data
+      el.style.setProperty('--amb-l', tone(d, 0, 3))
+      el.style.setProperty('--amb-c', tone(d, 2, 6))
+      el.style.setProperty('--amb-r', tone(d, 5, 8))
+    }
+    playback.afterRender.add(f)
+    playback.requestRender()
+    return () => { playback.afterRender.delete(f); clearTimeout(trail) }
+  }, [ambient])
 
   useEffect(() => {
     playback.attach(canvasRef.current)
@@ -71,30 +105,58 @@ export default function Preview() {
   return (
     <div className="panel preview">
       <div className="phead">
-        <span className="edge" style={{ width: 90 }}>ÖNİZLEME</span>
+        <span className="ph-title"><i className={'live' + (playing ? ' on' : '')} />Önizleme</span>
         <span className="grow" />
-        <button className="btn sm ghost mono" onClick={ratioMenu} data-tip="En-boy oranı"><Icon name="ratio" size={13} />{ratio}</button>
+        <button className="btn sm ghost" onClick={ratioMenu} data-tip="En-boy oranı"><Icon name="ratio" size={14} />{ratio}</button>
         <button className={'ibtn sm' + (safe !== 'none' ? ' on' : '')} onClick={safeMenu} data-tip="Güvenli alan"><Icon name="safe" size={14} /></button>
+        <button className={'ibtn sm' + (scopes ? ' on' : '')} onClick={() => store.setUI(u => ({ scopes: !u.scopes }))} data-tip="Renk kapsamları (histogram, dalga, vektör)"><Icon name="scope" size={14} /></button>
         <QualityBtn />
         <button className="ibtn sm" onClick={() => window.dispatchEvent(new CustomEvent('sweax:fullscreen'))} data-tip="Tam ekran" data-kb="F"><Icon name="full" size={14} /></button>
       </div>
       <div ref={wrapRef} className={'stage-wrap' + (full ? ' full' : '')}>
+        {ambient && <div className="amb" />}
+        {scopes && !full && <Scopes onClose={() => store.setUI({ scopes: false })} />}
         <div ref={stageRef} className="stage" style={{ width: box.w, height: box.h }}>
           <canvas ref={canvasRef} className="stage-canvas" style={{ width: box.w, height: box.h }} />
           <SafeOverlay mode={safe} />
           <TransformOverlay box={box} />
         </div>
       </div>
+      <Coach />
       <Transport />
+    </div>
+  )
+}
+
+// Rehber şeridi: dosyalar bırakılınca "sıradaki adım" önerileri (kapatılınca bir daha çıkmaz)
+const capMods = import.meta.glob('../library/captions-run.js')
+function Coach() {
+  const coach = useStore(s => s.ui.coach)
+  const has = useStore(s => s.project.tracks.some(t => t.main && t.clips.length))
+  const hasCaps = useStore(s => s.project.tracks.some(t => t.clips.some(c => c.caption)))
+  if (!coach || !has) return null
+  let off = false
+  try { off = localStorage.getItem('sweax.coach.off') === '1' } catch (e) { /* */ }
+  if (off) return null
+  const close = (forever) => { if (forever) { try { localStorage.setItem('sweax.coach.off', '1') } catch (e) { /* */ } } store.setUI({ coach: false }) }
+  return (
+    <div className="coach">
+      <span className="ct">Sıradaki adım</span>
+      <button className="cb" onClick={() => { store.openModal('autoedit', {}); close() }}><Icon name="wand" size={13} />Otomatik kurgu</button>
+      {!hasCaps && <button className="cb" onClick={() => { const l = capMods['../library/captions-run.js']; if (l) l().then(m => m.captionClip(null)); close() }}><Icon name="caption" size={13} />Altyazı ekle</button>}
+      <button className="cb" onClick={() => { store.setUI({ leftTab: 'auto' }); close() }}><Icon name="sparkle" size={13} />Güzelleştir</button>
+      <button className="cb" onClick={() => { store.openModal('export'); close() }}><Icon name="export" size={13} />Dışa aktar</button>
+      <span className="grow" />
+      <button className="cx" onClick={() => close(true)} data-tip="Bir daha gösterme"><Icon name="x" size={12} /></button>
     </div>
   )
 }
 
 function QualityBtn() {
   const q = useStore(s => s.ui.previewQuality)
-  const lab = { auto: 'OTO', full: 'TAM', half: '1/2', quarter: '1/4' }[q]
+  const lab = { auto: 'Otomatik', full: 'Tam', half: '1/2', quarter: '1/4' }[q]
   return (
-    <button className="btn sm ghost mono" data-tip="Önizleme kalitesi" onClick={e => openMenu(e, [
+    <button className="btn sm ghost" data-tip="Önizleme kalitesi" onClick={e => openMenu(e, [
       { header: 'Önizleme kalitesi' },
       ...[['auto', 'Otomatik (akıcı)'], ['full', 'Tam çözünürlük'], ['half', 'Yarım'], ['quarter', 'Çeyrek (en hızlı)']]
         .map(([v, l]) => ({ label: l, icon: q === v ? 'check' : null, onClick: () => store.setUI({ previewQuality: v }) })),
@@ -130,7 +192,7 @@ function Transport() {
         const v = Math.min(1, Math.max(0, (ch ? lv.r : lv.l) || 0))
         const on = Math.round(v * seg)
         for (let i = 0; i < seg; i++) {
-          ctx.fillStyle = i < on ? (i > seg * 0.85 ? '#ff4d5e' : i > seg * 0.65 ? '#e4ff3a' : '#2ee6a6') : '#202227'
+          ctx.fillStyle = i < on ? (i > seg * 0.85 ? '#ff4b3e' : i > seg * 0.65 ? '#ffb547' : '#3ddc97') : '#2c323e'
           ctx.fillRect(i * (w / seg), ch * (h / 2 + 1), w / seg - 1.5, h / 2 - 1)
         }
       }
@@ -144,7 +206,7 @@ function Transport() {
       <div className="tp-mid">
         <button className="ibtn" onClick={() => playback.seek(0)} data-tip="Başa git" data-kb="Home"><Icon name="prev" size={13} /></button>
         <button className="ibtn" onClick={() => playback.step(-1)} data-tip="Bir kare geri" data-kb="←"><Icon name="stepBack" size={16} sw={2} /></button>
-        <button className="tp-play" onClick={() => playback.toggle()} data-tip={playing ? 'Duraklat' : 'Oynat'} data-kb="Boşluk">
+        <button className={'tp-play' + (playing ? ' on' : '')} onClick={() => playback.toggle()} data-tip={playing ? 'Duraklat' : 'Oynat'} data-kb="Boşluk">
           <Icon name={playing ? 'pause' : 'play'} size={17} />
         </button>
         <button className="ibtn" onClick={() => playback.step(1)} data-tip="Bir kare ileri" data-kb="→"><Icon name="stepFwd" size={16} sw={2} /></button>
@@ -316,7 +378,7 @@ function TransformOverlay({ box }) {
           onPointerDown={e => startDrag(e, clip, 'move')}>
           {['nw', 'ne', 'sw', 'se'].map(h => <span key={h} className={'xf-h ' + h} onPointerDown={e => startDrag(e, clip, 'scale')} />)}
           <span className="xf-rot" onPointerDown={e => startDrag(e, clip, 'rotate')}><Icon name="rotate" size={11} sw={2} /></span>
-          <span className="xf-tag mono">{clip.type === 'text' ? 'YAZI' : clip.type === 'sticker' ? 'ÇIKARTMA' : clip.type === 'image' ? 'GÖRSEL' : 'VİDEO'}</span>
+          <span className="xf-tag">{clip.type === 'text' ? 'Yazı' : clip.type === 'sticker' ? 'Çıkartma' : clip.type === 'image' ? 'Görsel' : 'Video'}</span>
         </div>
       )}
       {guides && guides.gx.map((v, i) => <div key={'x' + i} className="xf-guide v" style={{ left: v * box.w }} />)}

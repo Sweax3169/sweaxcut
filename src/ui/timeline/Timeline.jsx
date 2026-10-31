@@ -16,6 +16,8 @@ const sfxMods = import.meta.glob('../../packs/sfx/render.js', { eager: true })
 const sfxRender = sfxMods['../../packs/sfx/render.js']
 const libMods = import.meta.glob('../library/insert.js', { eager: true })
 const libInsert = libMods['../library/insert.js']
+const capMods = import.meta.glob('../library/captions-run.js')
+const captionClip = (id) => { const l = capMods['../library/captions-run.js']; if (l) l().then(m => m.captionClip(id)) }
 
 const EDGE_PX = 7
 
@@ -40,6 +42,11 @@ function Toolbar() {
   )
   return (
     <div className="tl-toolbar">
+      <div className="row" style={{ gap: 6 }}>
+        <button className="tl-auto" onClick={() => { const c = selectedVideo(); captionClip(c ? c.id : null) }} data-tip="Konuşmayı kelime kelime altyazıya çevir"><Icon name="caption" size={15} />Altyazı</button>
+        <button className="tl-auto" onClick={() => store.openModal('autoedit', {})} data-tip="Videolarından tek tıkla kurgu"><Icon name="wand" size={15} />Otomatik kurgu</button>
+      </div>
+      <span className="tl-sep" />
       <div className="row" style={{ gap: 2 }}>
         <B icon="split" tip="Böl" kb="Ctrl+B" onClick={A.split} />
         <B icon="trash" tip="Sil" kb="Del" onClick={() => A.deleteSelected()} dis={!hasSel} />
@@ -68,6 +75,13 @@ function Toolbar() {
       </div>
     </div>
   )
+}
+function selectedVideo() {
+  const s = store.get()
+  const id = s.selection.clips[s.selection.clips.length - 1]
+  if (!id) return null
+  for (const t of s.project.tracks) for (const c of t.clips) if (c.id === id && (c.type === 'video' || c.type === 'audio')) return c
+  return null
 }
 const zoomToSlider = z => (Math.log(z / 2) / Math.log(400)) * 1000
 const sliderToZoom = v => 2 * Math.pow(400, v / 1000)
@@ -462,6 +476,9 @@ function TimelineBody() {
         { label: 'Yapıştır', icon: 'copy', kb: 'Ctrl+V', onClick: A.paste },
         { label: 'Çoğalt', icon: 'dup', kb: 'Ctrl+D', onClick: A.duplicate },
         '-',
+        (c.type === 'video' || c.type === 'audio') && { label: 'Bu klipten altyazı oluştur', icon: 'caption', onClick: () => captionClip(c.id) },
+        c.type === 'text' && c.caption && { label: 'Altyazı düzenleyicisini aç', icon: 'caption', onClick: () => store.setUI({ leftTab: 'captions' }) },
+        '-',
         c.type === 'video' && { label: 'Kare dondur', icon: 'freeze', onClick: A.freezeFrame },
         (c.type === 'video' || c.type === 'audio') && { label: c.reverse ? 'Ters çevirmeyi kaldır' : 'Ters çevir', icon: 'reverse', onClick: A.toggleReverse },
         c.type === 'video' && { label: 'Sesi ayır', icon: 'wave', onClick: A.detachAudio },
@@ -649,8 +666,13 @@ function TimelineBody() {
         )}
         {!tracks.some(t => t.clips.length) && (
           <div className="tl-empty">
-            <span className="edge" style={{ justifyContent: 'center' }}>BOŞ ŞERİT</span>
-            <div>Medyayı buraya sürükle ya da <button className="link" onClick={() => A.pickAndImport({ addToTimeline: true })}>dosya seç</button></div>
+            <span className="edge">Videoları buraya sürükle ya da <button className="link" onClick={() => A.pickAndImport({ addToTimeline: true })}>dosya seç</button></span>
+            <div className="tl-steps">
+              <button className="tl-step first" onClick={() => A.pickAndImport({ addToTimeline: true })}><span className="n">1</span><b>Ekle</b><span>Video, fotoğraf, müzik</span></button>
+              <button className="tl-step" onClick={() => store.openModal('autoedit', {})}><span className="n">2</span><b>Otomatik kurgu</b><span>Vuruşa göre kesim, zoom, renk</span></button>
+              <button className="tl-step" onClick={() => store.setUI({ leftTab: 'captions' })}><span className="n">3</span><b>Altyazı</b><span>Konuşma kelime kelime yazıya</span></button>
+              <button className="tl-step" onClick={() => store.openModal('export')}><span className="n">4</span><b>Dışa aktar</b><span>TikTok, Reels, YouTube</span></button>
+            </div>
           </div>
         )}
       </div>
@@ -685,7 +707,7 @@ function TrackHeaders({ scrollY }) {
   const toggle = (id, key, label) => store.edit(label, d => { const t = d.tracks.find(x => x.id === id); if (t) t[key] = !t[key] })
   return (
     <div className="tl-heads" style={{ width: HEADER_W }}>
-      <div className="tl-heads-ruler"><span className="edge">İZLER</span></div>
+      <div className="tl-heads-ruler"><span className="edge">İzler</span></div>
       <div className="tl-heads-inner" style={{ transform: `translateY(${-scrollY}px)` }}>
         {rows.map(r => {
           const t = r.track
@@ -694,7 +716,7 @@ function TrackHeaders({ scrollY }) {
             <div key={t.id} className={'tl-head k-' + t.kind + (t.main ? ' main' : '')} style={{ top: r.y - RULER_H, height: r.h }}>
               <span className="tl-head-bar" />
               <div className="tl-head-name">
-                <span className="mono">{t.main ? 'ANA' : (TRACK_LABELS[t.kind] || '').toUpperCase().slice(0, 4) + idx}</span>
+                <span>{t.main ? 'Ana iz' : (t.name || (TRACK_LABELS[t.kind] || '') + ' ' + idx)}</span>
               </div>
               <div className="tl-head-btns">
                 {t.kind === 'audio' || t.kind === 'video'

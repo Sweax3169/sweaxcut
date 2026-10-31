@@ -30,7 +30,7 @@ export default function App() {
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    initPacks().finally(() => setReady(true))
+    initPacks().then(() => import('../features/captions/userstyles.js').then(m => m.loadUserStyles()).catch(() => {})).finally(() => setReady(true))
     // donanım kodlayıcı tespitini arka planda önceden yap (ilk dışa aktarmada beklenmesin)
     setTimeout(() => { import('../engine/export.js').then(m => m.getEncoders && m.getEncoders()).catch(() => {}) }, 4000)
     const off = installShortcuts()

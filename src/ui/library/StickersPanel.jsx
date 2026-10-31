@@ -54,15 +54,15 @@ export default function StickersPanel({ code }) {
         </div>
         {!st.q && !st.cat && recent.length > 0 && (
           <>
-            <div className="lib-sect"><div className="edge">SON KULLANILANLAR</div></div>
+            <div className="lib-sect"><div className="edge">Son kullanılanlar</div></div>
             <div className="emoji-grid">{recent.slice(0, 10).map(def => <StkCell key={'r' + def.id} def={def} onApply={() => ins(def)} />)}</div>
           </>
         )}
         {!reg.list.length && <div className="lib-empty"><div className="big">Çıkartma yok</div><div>Çıkartma paketi yükleniyor ya da kurulu değil.</div></div>}
-        {reg.list.length > 0 && !list.length && <div className="lib-empty"><div className="mono">EŞLEŞEN ÇIKARTMA YOK</div></div>}
+        {reg.list.length > 0 && !list.length && <div className="lib-empty"><div className="mono">Eşleşen çıkartma yok</div></div>}
         {vectors.length > 0 && (
           <>
-            <div className="lib-sect"><div className="edge"><b>ANİMASYONLU</b> {vectors.length}</div></div>
+            <div className="lib-sect"><div className="edge"><b>Animasyonlu</b><span className="faint">{vectors.length}</span></div></div>
             <Grid items={vectors} min={80} page={36} resetKey={st.q + st.cat} render={def => (
               <Card key={def.id} kind="sticker" id={def.id} name={def.name} className="stk-card" onApply={() => ins(def)} title={def.name}
                 thumb={hover => <StickerThumb def={def} hover={hover} />} badge={def.isNew ? <span className="lib-new">YENİ</span> : null} />
@@ -71,7 +71,7 @@ export default function StickersPanel({ code }) {
         )}
         {emojis.length > 0 && (
           <>
-            <div className="lib-sect"><div className="edge"><b>EMOJİ</b> {emojis.length}</div></div>
+            <div className="lib-sect"><div className="edge"><b>Emoji</b><span className="faint">{emojis.length}</span></div></div>
             <EmojiGrid items={emojis} resetKey={st.q + st.cat} favs={favs} onApply={ins} />
           </>
         )}

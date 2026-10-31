@@ -159,6 +159,8 @@ const HALLUCINATIONS = [
   /(www\.|https?:\/\/)\S+/i,
   /^\s*[[(*♪♫].*[\])*♪♫]\s*$/u, // [Müzik], (alkış), ♪…♪
   /^\s*(müzik|music|alkış|applause|gülüşmeler|laughter)\.?\s*$/i,
+  // tek-iki kelimelik, bir harfi 6+ kez tekrarlayan uğultu yazımı ("bzzzzzzz", "hmmmmmm") — konuşmasız oyun / ton sesi
+  /^\s*\S*(\p{L})\1{5,}\S*(\s+\S+)?\s*$/u,
 ]
 
 export function isHallucination(text) {

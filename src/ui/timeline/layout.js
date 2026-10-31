@@ -13,14 +13,14 @@ export const TRACK_H = {
 }
 
 export const CLIP_COLORS = {
-  video: '#3fa9f5',
-  image: '#5ec4ff',
-  audio: '#2ee6a6',
-  text: '#ff5da2',
-  sticker: '#b98cff',
-  effect: '#ff6b6b',
-  filter: '#7af0ff',
-  adjust: '#c9ccd2',
+  video: '#4d8dff',
+  image: '#5cb6ff',
+  audio: '#36d39b',
+  text: '#e070ee',
+  sticker: '#ffb84d',
+  effect: '#ff6b8b',
+  filter: '#4fd6e8',
+  adjust: '#b9c0cd',
 }
 
 export const TRACK_LABELS = {

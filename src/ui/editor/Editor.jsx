@@ -37,7 +37,7 @@ export default function Editor() {
   const rightW = useStore(s => s.ui.rightWidth)
   const tlH = useStore(s => s.ui.timelineHeight)
   return (
-    <div className="editor" style={{ gridTemplateColumns: `${leftW}px 1px 1fr 1px ${rightW}px`, gridTemplateRows: `1fr 1px ${tlH}px` }}>
+    <div className="editor" style={{ gridTemplateColumns: `${leftW}px 6px 1fr 6px ${rightW}px`, gridTemplateRows: `1fr 6px ${tlH}px` }}>
       <Library />
       <Splitter dir="v" onDrag={d => store.setUI(u => ({ leftWidth: Math.max(270, Math.min(620, u.leftWidth + d)) }))} />
       <Preview />

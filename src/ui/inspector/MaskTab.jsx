@@ -100,7 +100,7 @@ function MaskView({ ctx, m }) {
             <line x1="0" y1="0" x2="0" y2="5" stroke="var(--line-2)" strokeWidth="1.5" />
           </pattern>
         </defs>
-        <rect width={fw} height={fh} fill={m.invert ? 'rgba(228,255,58,0.16)' : 'url(#mvhatch)'} />
+        <rect width={fw} height={fh} fill={m.invert ? 'rgba(255,75,62,0.18)' : 'url(#mvhatch)'} />
         <g transform={`translate(${cx},${cy}) rotate(${-rot})`}>
           {m.type === 'linear' && <><rect x={-big} y={-big} width={big * 2} height={big} {...vis} fill={m.invert ? 'var(--bg-2)' : 'var(--sig)'} fillOpacity={m.invert ? 1 : 0.16} /><line x1={-big} y1="0" x2={big} y2="0" stroke="var(--sig)" strokeWidth="1.2" /></>}
           {m.type === 'mirror' && <><rect x={-big} y={-hh} width={big * 2} height={hh * 2} fill={m.invert ? 'var(--bg-2)' : 'var(--sig)'} fillOpacity={m.invert ? 1 : 0.16} /><line x1={-big} y1={-hh} x2={big} y2={-hh} stroke="var(--sig)" /><line x1={-big} y1={hh} x2={big} y2={hh} stroke="var(--sig)" /></>}

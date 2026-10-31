@@ -1,7 +1,7 @@
 // Ses sekmesi: müzik, ses efektleri, seslendirme kaydı, metinden sese.
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Icon from '../Icon.jsx'
-import { store } from '../../core/store.js'
+import { store, useStore } from '../../core/store.js'
 import { REG } from '../../engine/registry.js'
 import { createTextClip } from '../../core/model.js'
 import * as TL from '../../core/timeline.js'
@@ -32,6 +32,9 @@ function useObs(o) {
 export default function AudioPanel({ code }) {
   const [st, set] = useTabState('audio', { sub: 'music' })
   useRegVersion()
+  // komut paleti / başka bir panel belirli alt sekmeyi isteyebilir
+  const want = useStore(s => s.ui.leftSub)
+  useEffect(() => { if (want && SUBS.some(x => x.id === want) && want !== st.sub) set({ sub: want }) }, [want]) // eslint-disable-line
   const n = { music: REG.music.list.length, sfx: REG.sfx.list.length }
   return (
     <div className="lib-main">
@@ -118,7 +121,7 @@ function AudioList({ kind }) {
           <>
             {!st.q && !st.cat && recent.length > 0 && (
               <>
-                <div className="lib-sect"><div className="edge">SON KULLANILANLAR</div></div>
+                <div className="lib-sect"><div className="edge">Son kullanılanlar</div></div>
                 <div className="lib-rows">{recent.slice(0, 4).map(def => <ARow key={'r' + def.id} kind={kind} def={def} />)}</div>
               </>
             )}
@@ -126,7 +129,7 @@ function AudioList({ kind }) {
               {list.slice(0, n).map(def => <ARow key={def.id} kind={kind} def={def} />)}
             </div>
             {n < list.length && <div ref={sent} className="lib-more mono">+{list.length - n}</div>}
-            {!list.length && <div className="lib-empty"><div className="mono">EŞLEŞEN SES YOK</div></div>}
+            {!list.length && <div className="lib-empty"><div className="mono">Eşleşen ses yok</div></div>}
           </>
         )}
       </div>
@@ -161,7 +164,7 @@ function ARow({ kind, def }) {
       </div>
       <div className="meta">
         <div className="n">{def.name}</div>
-        <div className="s">{(cat ? cat.name : def.category || '').toLocaleUpperCase('tr-TR')} · {fmtS(def.duration)}{def.bpm ? ' · ' + def.bpm + ' BPM' : ''}</div>
+        <div className="s">{cat ? cat.name : def.category || ''} · {fmtS(def.duration)}{def.bpm ? ' · ' + def.bpm + ' BPM' : ''}</div>
       </div>
       <div className="acts">
         <button className={'ibtn sm' + (fav ? ' on' : '')} title="Favori" onClick={e => { e.stopPropagation(); toggleFav(kind, def.id) }}><Icon name="star" size={13} fill={fav} /></button>
@@ -185,7 +188,7 @@ function Cover({ id, kind }) {
     const r = () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 1000) / 1000 }
     x.fillStyle = kind === 'music' ? '#0c1714' : '#15130a'
     x.fillRect(0, 0, 80, 80)
-    const col = kind === 'music' ? '#2ee6a6' : '#e4ff3a'
+    const col = kind === 'music' ? '#36d39b' : '#ffb84d'
     x.fillStyle = col
     const bars = 10
     for (let i = 0; i < bars; i++) {
@@ -220,11 +223,11 @@ function Recorder() {
         {rs.countdown > 0 && <div className="rec-count" key={rs.countdown}>{rs.countdown}</div>}
         <div className="rec-top">
           <button className={'rec-btn' + (rs.recording ? ' on' : '')} onClick={toggle} disabled={rs.starting && !rs.countdown} title={rs.recording ? 'Kaydı bitir ve ekle' : 'Kayda başla'}>
-            <i /><span className="lb">{rs.recording ? 'DURDUR' : 'KAYIT'}</span>
+            <i /><span className="lb">{rs.recording ? 'Durdur' : 'Kayıt'}</span>
           </button>
           <div className="col" style={{ gap: 0, flex: 1, minWidth: 0 }}>
             <div className={'rec-time' + (rs.recording ? ' on' : '')}>{tc}</div>
-            <div className={'rec-state' + (rs.recording ? ' on' : '')}>{rs.recording ? 'KAYDEDİLİYOR' : rs.starting ? 'HAZIRLANIYOR…' : 'BEKLEMEDE'}</div>
+            <div className={'rec-state' + (rs.recording ? ' on' : '')}>{rs.recording ? 'Kaydediliyor' : rs.starting ? 'Hazırlanıyor…' : 'Beklemede'}</div>
           </div>
         </div>
         <div style={{ marginTop: 6 }}><Meter active={rs.recording} /></div>
@@ -368,7 +371,7 @@ function TTS() {
         </div>
       )}
       <div className="lib-form">
-        <div className="row"><span className="lib-label grow">Metin</span><span className="mono faint" style={{ fontSize: 10 }}>{text.length} KR</span></div>
+        <div className="row"><span className="lib-label grow">Metin</span><span className="faint" style={{ fontSize: 11 }}>{text.length} karakter</span></div>
         <textarea className="field" value={text} onChange={e => setText(e.target.value)} onKeyDown={e => e.stopPropagation()} spellCheck={false} placeholder="Seslendirilecek metni yaz…" />
         <div className="lib-label">Ses · {voices.length}</div>
         <div className="voice-list">
@@ -377,9 +380,10 @@ function TTS() {
             <div key={v.id} className={'voice-it' + (voice && v.id === voice.id ? ' on' : '')} onClick={() => upd({ voice: v.id })}>
               <span className="lang">{String(v.lang || v.language || '').split(/[-_]/)[0].toUpperCase()}</span>
               <span className="vn">{v.name}{v.gender ? ' · ' + v.gender : ''}{v.langName ? <span className="faint"> · {v.langName}</span> : null}</span>
+              {v.commercial === false && <span className="tag nc" data-tip={'Lisans: ' + (v.license || 'ticari olmayan kullanım') + '. Para kazanılan videolarda kullanma.'}>Ticari değil</span>}
               {v.installed === false
-                ? (v.downloadable === false ? <span className="tag">YOK</span> : <span className="tag">İNDİR{v.size ? ' ' + Math.round(v.size / 1e6) + 'MB' : ''}</span>)
-                : (v.system || (v.engine && v.engine !== 'piper')) ? <span className="tag">SİSTEM</span> : <span className="tag ok">HAZIR</span>}
+                ? (v.downloadable === false ? <span className="tag">Yok</span> : <span className="tag">İndir{v.size ? ' ' + Math.round(v.size / 1e6) + ' MB' : ''}</span>)
+                : (v.system || (v.engine && v.engine !== 'piper')) ? <span className="tag">Sistem</span> : <span className="tag ok">Hazır</span>}
             </div>
           ))}
         </div>

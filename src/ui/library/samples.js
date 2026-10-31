@@ -69,9 +69,9 @@ export function sampleA(w = 176, h = 176) {
     const cx = w * 0.64, cy = h * 0.72
     x.beginPath(); x.moveTo(cx - 9 * k, cy); x.lineTo(cx - 3 * k, cy); x.moveTo(cx + 3 * k, cy); x.lineTo(cx + 9 * k, cy)
     x.moveTo(cx, cy - 9 * k); x.lineTo(cx, cy - 3 * k); x.moveTo(cx, cy + 3 * k); x.lineTo(cx, cy + 9 * k); x.stroke()
-    x.fillStyle = '#ffffff'; x.font = `800 ${12 * k}px "JetBrains Mono", monospace`; x.textAlign = 'right'; x.textBaseline = 'alphabetic'
+    x.fillStyle = '#ffffff'; x.font = `800 ${12 * k}px "Geist Mono Variable", monospace`; x.textAlign = 'right'; x.textBaseline = 'alphabetic'
     x.fillText('30/90', w - 8 * k, h - 9 * k)
-    x.fillStyle = '#ffe45c'; x.font = `800 ${8 * k}px "JetBrains Mono", monospace`; x.textAlign = 'left'
+    x.fillStyle = '#ffe45c'; x.font = `800 ${8 * k}px "Geist Mono Variable", monospace`; x.textAlign = 'left'
     x.fillText('x3 ELENDİ', 8 * k, 13 * k)
     return c
   })
@@ -113,7 +113,7 @@ export function sampleB(w = 176, h = 176) {
     x.fillStyle = 'rgba(0,0,0,0.55)'; x.fillRect(w - 40 * k, 8 * k, 32 * k, 32 * k)
     x.strokeStyle = '#ffffff'; x.lineWidth = k; x.strokeRect(w - 40 * k, 8 * k, 32 * k, 32 * k)
     x.fillStyle = '#ffd400'; x.beginPath(); x.moveTo(w - 24 * k, 18 * k); x.lineTo(w - 20 * k, 28 * k); x.lineTo(w - 28 * k, 28 * k); x.fill()
-    x.fillStyle = '#ffffff'; x.font = `800 ${9 * k}px "JetBrains Mono", monospace`; x.textBaseline = 'alphabetic'
+    x.fillStyle = '#ffffff'; x.font = `800 ${9 * k}px "Geist Mono Variable", monospace`; x.textBaseline = 'alphabetic'
     x.fillText('TUR 2', 8 * k, h - 9 * k)
     return c
   })

@@ -192,7 +192,7 @@ export async function findHighlights(clips, { count = 6, zoom = true, strength =
   if (!top.length) return 0
   store.edit('Öne çıkanları bul', d => {
     for (const h of top) {
-      d.markers.push({ id: uid('k'), time: h.t, color: '#e4ff3a', label: h.label || 'Öne çıkan' })
+      d.markers.push({ id: uid('k'), time: h.t, color: '#ffc24b', label: h.label || 'Öne çıkan' })
       if (!zoom) continue
       const c = TL.getClip(d, h.clipId)
       if (!c || !c.transform) continue

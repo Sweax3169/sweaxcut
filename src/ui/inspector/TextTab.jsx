@@ -9,7 +9,7 @@ import { useReg, useRegCats, clamp } from './hooks.js'
 export const FONT_CATS = { display: 'Gösterişli', sans: 'Yalın', serif: 'Tırnaklı', hand: 'El yazısı', mono: 'Eş aralıklı', gaming: 'Oyun', fun: 'Eğlenceli' }
 
 // ---------------------------------------------------------------- yazı tipi seçici
-function FontPicker({ value, onChange }) {
+export function FontPicker({ value, onChange }) {
   const fonts = useReg('fonts')
   const cats = useRegCats('fonts')
   const [open, setOpen] = useState(false)

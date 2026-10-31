@@ -28,7 +28,11 @@ async function ensureAssets(project, warn) {
   if (f) jobs.push(f().then(m => m && typeof m.ensureProjectFonts === 'function' ? m.ensureProjectFonts(project) : null))
   if (typeof stickerRender.preloadStickerImages === 'function') jobs.push(Promise.resolve().then(() => stickerRender.preloadStickerImages(project)))
   const all = Promise.all(jobs.map(j => j.catch(e => warn && warn('Varlık hazırlanamadı: ' + String(e && e.message || e).slice(0, 120)))))
-  await Promise.race([all, sleep(15000).then(() => warn && warn('Yazı tipi / çıkartma yüklemesi zaman aşımına uğradı'))])
+  // zaman aşımı yalnız gerçekten beklenirse uyarır (yükleme bitince zamanlayıcı iptal)
+  let timer = 0
+  const timeout = new Promise(r => { timer = setTimeout(() => { warn && warn('Yazı tipi / çıkartma yüklemesi zaman aşımına uğradı'); r() }, 15000) })
+  await Promise.race([all, timeout])
+  clearTimeout(timer)
 }
 
 export { getEncoders, FORMATS }

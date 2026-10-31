@@ -44,7 +44,7 @@ export default function TransitionTab({ ctx }) {
           <i className="fsw trsw"><Icon name="transition" size={15} /></i>
           <div className="col grow" style={{ gap: 2, minWidth: 0 }}>
             <span className="fname">{def ? def.name : tr.id}</span>
-            <span className="faint mono" style={{ fontSize: 9.5 }}>{def ? (cat || '').toLocaleUpperCase('tr-TR') : 'KAYITLI DEĞİL'} · SONRAKİ KLİBE</span>
+            <span className="faint" style={{ fontSize: 11 }}>{def ? (cat || '') : 'Kayıtlı değil'} · sonraki klibe</span>
           </div>
           <div style={{ position: 'relative' }}>
             <button className="btn sm" onClick={() => setPick(!pick)}>Değiştir</button>

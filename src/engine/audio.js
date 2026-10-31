@@ -394,8 +394,15 @@ function automate(param, fn, ctxAt, tA, tB, rate = D.envRate, ctxNow = 0) {
     const k = Math.min(n - 2, Math.floor(skip / dur * (n - 1)))
     if (k > 0) return automate(param, fn, ctxAt + dur * k / (n - 1), tA + dur * k / (n - 1), tB, rate, ctxNow)
   }
-  param.setValueAtTime(curve[0], ctxAt)
-  param.setValueCurveAtTime(curve, ctxAt, dur)
+  try {
+    param.setValueAtTime(curve[0], ctxAt)
+    param.setValueCurveAtTime(curve, ctxAt, dur)
+  } catch (e) {
+    // aynı parametrede bu aralığa düşen eski bir olay var (yeniden planlama): o andan sonrasını temizleyip yeniden yaz
+    param.cancelScheduledValues(ctxAt)
+    param.setValueAtTime(curve[0], ctxAt)
+    param.setValueCurveAtTime(curve, ctxAt, dur)
+  }
 }
 
 // Ses çıkışı kuran ortak planlayıcı (önizleme + çevrimdışı)

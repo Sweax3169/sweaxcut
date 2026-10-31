@@ -149,7 +149,7 @@ export function Toggle({ on, onChange, label, hint }) {
 }
 
 // ---------------------------------------------------------------- Renk
-const SWATCHES = ['#ffffff', '#000000', '#e4ff3a', '#ff3b5c', '#ff8a00', '#ffd400', '#2ee6a6', '#00c2ff', '#3f6bff', '#a855f7', '#ff5da2', '#8b5a2b']
+const SWATCHES = ['#ffffff', '#000000', '#ffe600', '#ff3b5c', '#ff8a00', '#ffd400', '#2ee6a6', '#00c2ff', '#3f6bff', '#a855f7', '#ff5da2', '#8b5a2b']
 export function ColorField({ value, onChange, label, swatches = true, alpha }) {
   const ref = useRef(null)
   return (
@@ -199,18 +199,13 @@ export function Segmented({ value, onChange, options, label, small }) {
   return (
     <div className="prop">
       {label != null && <span className="lbl static">{label}</span>}
-      <div className="row grow" style={{ gap: 0, border: '1px solid var(--line-2)', borderRadius: 2 }}>
-        {options.map((o, i) => {
+      <div className="ibtns grow seg">
+        {options.map((o) => {
           const v = typeof o === 'object' ? o.value : o
           const lab = typeof o === 'object' ? o.label : o
-          const on = v === value
           return (
-            <button key={String(v)} onClick={() => onChange(v)} title={typeof o === 'object' ? o.hint : undefined}
-              style={{
-                flex: 1, height: small ? 20 : 24, fontSize: 11, fontWeight: 600,
-                color: on ? 'var(--sig-ink)' : 'var(--tx-1)', background: on ? 'var(--sig)' : 'transparent',
-                borderLeft: i ? '1px solid var(--line-2)' : 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
-              }}>
+            <button key={String(v)} className={'ib' + (v === value ? ' on' : '')} onClick={() => onChange(v)} title={typeof o === 'object' ? o.hint : undefined}
+              style={small ? { height: 22 } : null}>
               {typeof o === 'object' && o.icon ? <Icon name={o.icon} size={13} /> : null}{lab}
             </button>
           )
@@ -338,8 +333,8 @@ export function Modal({ title, children, onClose, footer, width, edge }) {
       <div className="modal" style={{ width }}>
         <div className="mhead">
           <div className="col grow" style={{ gap: 4 }}>
-            {edge && <div className="edge">{edge}</div>}
             <h2>{title}</h2>
+            {edge && <div className="edge">{edge}</div>}
           </div>
           {onClose && <button className="ibtn" onClick={onClose}><Icon name="close" /></button>}
         </div>

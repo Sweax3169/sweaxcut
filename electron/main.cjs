@@ -51,7 +51,7 @@ function createWindow() {
     minHeight: 720,
     frame: false,
     show: false,
-    backgroundColor: '#0b0b0c',
+    backgroundColor: '#08090c',
     title: 'SWEAXCUT',
     icon: path.join(__dirname, '..', 'build', 'icon.ico'),
     webPreferences: {

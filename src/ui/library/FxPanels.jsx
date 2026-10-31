@@ -21,8 +21,8 @@ function SampleSwitch() {
   const hasClips = useStore(s => s.project.tracks.some(t => t.kind !== 'audio' && t.clips.length))
   return (
     <div className="seg" title="Önizleme görüntüsü">
-      <button className={mode === 'sample' ? 'on' : ''} onClick={() => setSampleMode('sample')}>ÖRNEK</button>
-      <button className={mode === 'frame' ? 'on' : ''} onClick={() => setSampleMode('frame')} disabled={!hasClips} style={{ opacity: hasClips ? 1 : 0.4 }} title="Önizlemedeki o anki kareyi kullan">KARE</button>
+      <button className={mode === 'sample' ? 'on' : ''} onClick={() => setSampleMode('sample')}>Örnek</button>
+      <button className={mode === 'frame' ? 'on' : ''} onClick={() => setSampleMode('frame')} disabled={!hasClips} style={{ opacity: hasClips ? 1 : 0.4 }} title="Önizlemedeki o anki kareyi kullan">Kare</button>
     </div>
   )
 }
@@ -67,7 +67,7 @@ function FxBody({ kind, regKey, code, title, unit, cls, placeholder, apply, menu
         {!reg.list.length ? (
           <div className="lib-empty"><div className="big">Boş makara</div><div>{title} paketi yükleniyor ya da kurulu değil.</div></div>
         ) : !list.length ? (
-          <div className="lib-empty"><div className="mono">EŞLEŞEN ÖĞE YOK</div></div>
+          <div className="lib-empty"><div className="mono">Eşleşen öğe yok</div></div>
         ) : (
           <Grid items={list} min={84} page={42} resetKey={st.q + st.cat} render={def => card(def)} />
         )}
@@ -92,7 +92,7 @@ export function EffectsPanel({ code }) {
       opt={<label className="row" style={{ gap: 7, cursor: 'pointer' }} onClick={flip} title="Kapalıyken efekt, oynatma kafasında ayrı bir efekt katmanı olarak eklenir">
         <span className={'toggle' + (toClip ? ' on' : '')} />
         <span>Seçili klibe uygula</span>
-        {toClip && <span className="mono faint" style={{ fontSize: 9.5 }}>{selCount ? selCount + ' SEÇİLİ' : 'SEÇİM YOK'}</span>}
+        {toClip && <span className="faint" style={{ fontSize: 11 }}>{selCount ? selCount + ' seçili' : 'Seçim yok'}</span>}
       </label>} />
   )
 }
@@ -108,7 +108,7 @@ export function FiltersPanel({ code }) {
         { label: 'Filtre katmanı olarak ekle', icon: 'layers', onClick: () => insertLibraryItem({ kind: 'filter', id: def.id }, { time: now(), toClip: false }) },
       ]}
       badgeOf={def => def.swatch && def.swatch.length ? <span className="lib-swatch">{def.swatch.slice(0, 5).map((c, i) => <i key={i} style={{ background: c }} />)}</span> : null}
-      opt={<span className="mono faint" style={{ fontSize: 9.5, letterSpacing: '0.08em' }}>{sel ? 'HEDEF: SEÇİLİ KLİP' : 'HEDEF: FİLTRE KATMANI'}</span>} />
+      opt={<span className="faint" style={{ fontSize: 11 }}>{sel ? 'Seçili klibe uygulanır' : 'Filtre katmanı olarak eklenir'}</span>} />
   )
 }
 
@@ -123,6 +123,6 @@ export function TransitionsPanel({ code }) {
         { label: 'Bütün kesimlere uygula', icon: 'transition', onClick: () => insertLibraryItem({ kind: 'transition', id: def.id }, { all: true }) },
       ]}
       badgeOf={def => def.duration ? <span className="lib-badge mono">{def.duration.toFixed(1)}s</span> : null}
-      opt={<span className="mono faint" style={{ fontSize: 9.5, letterSpacing: '0.08em' }}>{sel ? 'HEDEF: SEÇİLİ KLİBİN SONU' : 'HEDEF: EN YAKIN KESİM'} · SAĞ TIK: TÜMÜ</span>} />
+      opt={<span className="faint" style={{ fontSize: 11 }}>{sel ? 'Seçili klibin sonuna' : 'En yakın kesime'} · sağ tık: tümüne</span>} />
   )
 }

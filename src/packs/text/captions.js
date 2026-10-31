@@ -28,7 +28,7 @@ export const CAPTION_STYLES = [
   // ---------------------------------------------------------------- viral
   C('alt-sari-kelime', 'Sarı kelime', 'viral', 3, { font: 'Archivo Black', weight: 400, color: '#FFFFFF', stroke: sk('#000000', 9), shadow: sh('#000', 10, 0, 6, 0.6) },
     { uppercase: true, active: { color: '#FFE600', scale: 1.14 }, wordIn: 'pop' }),
-  C('alt-hormozi', 'Hormozi', 'viral', 3, { font: 'Montserrat', weight: 900, size: 92, color: '#FFFFFF', stroke: sk('#000000', 11), shadow: sh('#000', 0, 0, 8, 0.9) },
+  C('alt-hormozi', 'Büyük sarı', 'viral', 3, { font: 'Montserrat', weight: 900, size: 92, color: '#FFFFFF', stroke: sk('#000000', 11), shadow: sh('#000', 0, 0, 8, 0.9) },
     { uppercase: true, active: { color: '#FFD400', scale: 1.22 }, past: { color: '#FFFFFF' }, wordIn: 'pop' }),
   C('alt-yesil-kutu', 'Yeşil kutu', 'viral', 3, { font: 'Montserrat', weight: 900, color: '#FFFFFF', stroke: sk('#000000', 7) },
     { uppercase: true, active: { color: '#FFFFFF', bg: { color: '#22C55E', radius: 12, padX: 14, padY: 8 }, scale: 1.08 }, wordIn: 'none' }),

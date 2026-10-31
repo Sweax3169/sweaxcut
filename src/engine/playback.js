@@ -49,6 +49,8 @@ class Playback {
     })
   }
 
+  afterRender = new Set()
+
   attach(canvas) {
     if (this.comp && this.comp.canvas === canvas) return
     if (this.comp) this.comp.dispose()
@@ -202,6 +204,8 @@ class Playback {
     const now = performance.now()
     if (now - this._fpsT > 1000) { this.fpsMeasured = this._frames * 1000 / (now - this._fpsT); this._frames = 0; this._fpsT = now }
     if (this.overlayDraw) this.overlayDraw()
+    // çizimden hemen sonra (tampon henüz silinmeden) kareyi okuyan dinleyiciler: ortam ışığı, ölçüm kapsamları
+    if (this.afterRender.size) for (const f of this.afterRender) { try { f(c, now) } catch (e) { /* */ } }
   }
 
   // Şu anki kareyi PNG olarak al (önizleme çözünürlüğünde değil, tam boy için dışa aktarmayı kullan)

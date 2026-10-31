@@ -5,10 +5,21 @@ import { openMenu } from './controls.jsx'
 import * as A from './actions.js'
 import { ipc } from '../platform/node.js'
 
-export function Logo({ size = 15 }) {
+// Logo: çapraz kesilmiş kare çerçeve — sağ parça kesik boyunca kaymış (kurgunun "kesim"i)
+export function LogoMark({ size = 22 }) {
+  return (
+    <svg className="lm" width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M6 3h7.7L8.7 21H6a3 3 0 01-3-3V6a3 3 0 013-3z" fill="#f4f6fa" />
+      <path className="lr" d="M15.3 3H18a3 3 0 013 3v12a3 3 0 01-3 3h-7.7z" fill="var(--rec)" transform="translate(0.5 -1.3)" />
+    </svg>
+  )
+}
+
+export function Logo({ size = 15, mark = true }) {
   return (
     <div className="logo" style={{ fontSize: size }}>
-      <span>SWEAX</span><i /><span>CUT</span>
+      {mark && <LogoMark size={Math.round(size * 1.55)} />}
+      <span className="lw"><b>SWEAX</b><span>CUT</span></span>
     </div>
   )
 }
@@ -65,6 +76,8 @@ export default function TitleBar() {
     })),
     '-',
     { label: 'Dalga formlarını göster', icon: store.get().ui.showWaveforms ? 'check' : null, onClick: () => store.setUI(u => ({ showWaveforms: !u.showWaveforms })) },
+    { label: 'Ortam ışığı (önizleme çevresi)', icon: store.get().ui.ambient !== false ? 'check' : null, onClick: () => store.setUI(u => ({ ambient: u.ambient === false })) },
+    { label: 'Renk kapsamları', icon: store.get().ui.scopes ? 'check' : null, onClick: () => store.setUI(u => ({ scopes: !u.scopes })) },
     { label: 'Zaman çizelgesini sığdır', kb: 'Shift+Z', icon: 'fit', onClick: () => window.dispatchEvent(new CustomEvent('sweax:fit-timeline')) },
     { label: 'Tam ekran önizleme', kb: 'F', icon: 'full', onClick: () => window.dispatchEvent(new CustomEvent('sweax:fullscreen')) },
   ])
@@ -90,17 +103,18 @@ export default function TitleBar() {
               onBlur={() => { const v = editName.trim(); if (v) store.edit('Proje adı', d => { d.name = v }); setEditName(null) }}
               onKeyDown={e => { if (e.key === 'Enter') e.target.blur(); if (e.key === 'Escape') setEditName(null); e.stopPropagation() }} />
           : <button className="tb-name" onClick={() => setEditName(name)} data-tip="Adı değiştir">
-              <span className={'tb-dot' + (dirty ? ' dirty' : '')} />{name}
+              <span className={'tb-dot' + (dirty ? ' dirty' : '')} />{name}<span className="st">{dirty ? 'kaydedilmedi' : 'kaydedildi'}</span>
             </button>)}
       </div>
       <div className="tb-right">
+        <button className="tb-cmd" onClick={() => store.openModal('command')} data-tip="Her araca, efekte ve komuta buradan ulaş"><Icon name="search" size={14} /><span>Ne yapmak istiyorsun?</span><kbd>Ctrl K</kbd></button>
         {ed && <>
           <button className="ibtn" disabled={!canUndo} onClick={() => store.undo()} data-tip="Geri al" data-kb="Ctrl+Z"><Icon name="undo" /></button>
           <button className="ibtn" disabled={!canRedo} onClick={() => store.redo()} data-tip="Yinele" data-kb="Ctrl+Y"><Icon name="redo" /></button>
-          <button className="btn sig tb-export" onClick={() => store.openModal('export')}><Icon name="export" size={14} sw={2} />Dışa aktar</button>
+          <button className="btn sig tb-export" onClick={() => store.openModal('export')} data-tip="Videoyu kaydet" data-kb="Ctrl+E"><Icon name="export" size={15} sw={2} />Dışa aktar</button>
         </>}
         <div className="tb-win">
-          <button onClick={() => ipc && ipc.send('win:minimize')}><Icon name="winMin" size={14} /></button>
+          <button onClick={() => ipc && ipc.send('win:minimize')}><Icon name="winMin" size={15} /></button>
           <button onClick={() => ipc && ipc.send('win:maximize')}><Icon name={max ? 'winRestore' : 'winMax'} size={13} /></button>
           <button className="x" onClick={() => ipc && ipc.send('win:close')}><Icon name="close" size={14} /></button>
         </div>

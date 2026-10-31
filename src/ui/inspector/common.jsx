@@ -102,7 +102,7 @@ export function Cell({ axis, value, onChange, step = 1, scale = 1, digits = 0, s
 }
 
 // ---------------------------------------------------------------- renk
-const PRESETS = ['#ffffff', '#000000', '#e4ff3a', '#ff3b5c', '#00c2ff', '#ff5da2']
+const PRESETS = ['#ffffff', '#000000', '#ffe600', '#ff3b5c', '#00c2ff', '#ff5da2']
 export function toHex6(c) {
   if (Array.isArray(c)) return '#' + c.slice(0, 3).map(x => Math.round(clamp(+x || 0, 0, 1) * 255).toString(16).padStart(2, '0')).join('')
   if (!c || typeof c !== 'string' || c[0] !== '#') return '#ffffff'

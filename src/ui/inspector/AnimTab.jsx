@@ -134,7 +134,7 @@ export default function AnimTab({ ctx, text }) {
       <div className="stickytop">
         <SubTabs value={slot} onChange={setSlot} options={SLOTS.map(s => ({ ...s, dot: !!anim[s.value] }))} />
         <div className="animcur">
-          <span className="faint mono" style={{ fontSize: 9.5 }}>{SLOTS.find(s => s.value === slot).label.toLocaleUpperCase('tr-TR')}</span>
+          <span className="faint" style={{ fontSize: 11 }}>{SLOTS.find(s => s.value === slot).label}</span>
           <span className="grow nm">{curDef ? curDef.name : cur ? cur.id : '—'}</span>
           {cur && <button className="btn sm" onClick={preview}><Icon name="play" size={10} />Önizle</button>}
         </div>

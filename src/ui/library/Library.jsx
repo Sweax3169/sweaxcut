@@ -11,10 +11,12 @@ import StickersPanel from './StickersPanel.jsx'
 import { EffectsPanel, FiltersPanel, TransitionsPanel } from './FxPanels.jsx'
 import LayoutsPanel from './LayoutsPanel.jsx'
 import ToolsPanel from './ToolsPanel.jsx'
+import AutoPanel from './AutoPanel.jsx'
 import { recorderState, captionJob } from './jobs.js'
 
 export const LIB_TABS = [
   { id: 'media', label: 'Medya', icon: 'media', C: MediaPanel },
+  { id: 'auto', label: 'Otomatik', icon: 'wand', C: AutoPanel, magic: true },
   { id: 'audio', label: 'Ses', icon: 'music', C: AudioPanel },
   { id: 'text', label: 'Yazı', icon: 'text', C: TextPanel },
   { id: 'captions', label: 'Altyazı', icon: 'caption', C: CaptionsPanel },
@@ -43,8 +45,8 @@ export default function Library() {
       <nav className="lib-rail">
         {LIB_TABS.map((t, i) => (
           <React.Fragment key={t.id}>
-            {(t.id === 'effects' || t.id === 'layouts') && <div className="sep" />}
-            <button className={'lib-ri' + (t.id === cur.id ? ' on' : '')} onClick={() => store.setUI({ leftTab: t.id, leftSub: null })}>
+            {(t.id === 'audio' || t.id === 'effects' || t.id === 'layouts') && <div className="sep" />}
+            <button className={'lib-ri' + (t.id === cur.id ? ' on' : '') + (t.magic ? ' magic' : '')} onClick={() => store.setUI({ leftTab: t.id, leftSub: null })}>
               <span className="no">{String(i + 1).padStart(2, '0')}</span>
               {t.id === 'audio' && rec.recording && <span className="rec-dot" />}
               {t.id === 'captions' && cap.running && <span className="busy-dot" />}

@@ -30,7 +30,7 @@ export default function MultiTab({ clips, settings }) {
       <div className="multihead">
         <span className="big">{clips.length}</span>
         <div className="col" style={{ gap: 3 }}>
-          <span className="edge" style={{ gap: 4 }}>KLİP SEÇİLİ</span>
+          <span className="edge" style={{ gap: 4 }}>klip seçili</span>
           <span className="mtypes">{Object.entries(counts).map(([k, n]) => <span key={k} style={{ color: `var(--c-${k})` }}>■ <b>{n}</b> {TYPE_TR[k] || k}</span>)}</span>
         </div>
       </div>

@@ -17,7 +17,7 @@ function useTarget(types) {
 }
 
 function Target({ clip, types }) {
-  return <div className="tool-res" style={{ borderStyle: 'solid' }}>HEDEF: {clip ? <b>{clip.name || clip.type}</b> : <span style={{ color: 'var(--danger)' }}>{types === 'video' ? 'VİDEO KLİP SEÇ' : 'SESLİ KLİP SEÇ'}</span>}</div>
+  return <div className="tool-res">Hedef: {clip ? <b>{clip.name || clip.type}</b> : <span style={{ color: 'var(--danger)' }}>{types === 'video' ? 'bir video klip seç' : 'sesli bir klip seç'}</span>}</div>
 }
 
 async function withBusy(label, fn) {
@@ -133,7 +133,7 @@ function VideoTool({ tool }) {
           ) : null}
         </div>
       ))}
-      {msg && <div className="tool-res">{msg.toLocaleUpperCase('tr-TR')}</div>}
+      {msg && <div className="tool-res">{msg}</div>}
       <div className="lib-actions">
         {job ? (
           <button className="btn danger" onClick={() => job.ctrl.abort()}><Icon name="x" size={13} />İptal · {Math.round((job.p || 0) * 100)}%</button>
@@ -242,7 +242,7 @@ function StabTool() {
           {[[1, 'Hafif'], [2, 'Orta'], [3, 'Güçlü']].map(([v, l], i) => <button key={v} onClick={() => setLvl(v)} style={{ flex: 1, height: 22, fontSize: 11, fontWeight: 600, borderLeft: i ? '1px solid var(--line-2)' : 0, color: lvl === v ? 'var(--sig-ink)' : 'var(--tx-1)', background: lvl === v ? 'var(--sig)' : 'transparent' }}>{l}</button>)}
         </div>
       </div>
-      {clip && clip.stabilize > 0 && <div className="tool-res">SABİTLEME AÇIK · GÜÇ <b>{clip.stabilize}</b></div>}
+      {clip && clip.stabilize > 0 && <div className="tool-res">Sabitleme açık · güç <b>{clip.stabilize}</b></div>}
       <div className="lib-actions">
         <button className="btn sig" onClick={run} disabled={!clip || !isElectron}><Icon name="stabilize" size={13} />Sabitle</button>
         {clip && clip.stabilize > 0 && <button className="btn" onClick={() => store.edit('Sabitlemeyi kapat', d => { for (const t of d.tracks) for (const c of t.clips) if (c.id === clip.id) c.stabilize = 0 })}>Kapat</button>}
@@ -266,7 +266,7 @@ function ShortsTool() {
   return (
     <>
       <div className="prop"><span className="lbl static">Parça süresi</span><Slider value={sec} min={15} max={180} step={5} def={60} onChange={v => { setSec(v); lsSet('shorts', v) }} /><span className="mono dim" style={{ width: 40, textAlign: 'right', fontSize: 11 }}>{sec} s</span></div>
-      <div className="tool-res">ANA İZ <b>{dur.toFixed(0)}</b> SN → <b>{dur > sec ? n : 1}</b> PARÇA</div>
+      <div className="tool-res">Ana iz <b>{dur.toFixed(0)}</b> sn → <b>{dur > sec ? n : 1}</b> parça</div>
       <div className="lib-actions">
         <button className="btn sig" onClick={run} disabled={dur <= sec}><Icon name="scissors" size={13} />Eşit böl</button>
         <button className="btn" onClick={fromMarkers}><Icon name="highlight" size={13} />Öne çıkanlardan</button>

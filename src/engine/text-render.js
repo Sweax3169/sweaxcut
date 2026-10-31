@@ -672,7 +672,8 @@ export function renderTextLayer(clip, lt, scale, project) {
   const s = clip.text
   if (!s) return null
   if (clip.caption && Array.isArray(clip.caption.words) && clip.caption.words.length) {
-    const cs = (clip.caption.styleId && regGet('captionStyles', clip.caption.styleId)) || DEFAULT_CAPTION
+    let cs = (clip.caption.styleId && regGet('captionStyles', clip.caption.styleId)) || DEFAULT_CAPTION
+    if (clip.caption.look) cs = withLook(cs, clip.caption.look)
     try { return renderCaption(clip, lt, scale, project, cs) } catch (e) { console.warn('altyazı çizilemedi', e) }
   }
   let st = cache.get(clip.id)
@@ -975,6 +976,17 @@ function invert(m) {
 // ================================================================== ALTYAZI (kelime kelime)
 const DEFAULT_CAPTION = { id: '_varsayilan', active: { color: '#FFE600', scale: 1.1 }, wordIn: 'pop' }
 const WORD_IN_DUR = 0.2
+
+// Klibin kendi görünüm değişiklikleri (altyazı düzenleyicisi) kayıtlı stilin üstüne; önbellek anahtarı için id'ye eklenir
+const lookCache = new WeakMap()
+function withLook(cs, look) {
+  let m = lookCache.get(look)
+  if (m && m.base === cs) return m.res
+  const res = mergeStyle(cs, look)
+  res.id = cs.id + '|' + hashStr(JSON.stringify(look)).toString(36)
+  lookCache.set(look, { base: cs, res })
+  return res
+}
 
 function mergeStyle(s, o) {
   if (!o) return s

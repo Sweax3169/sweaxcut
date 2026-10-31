@@ -4,6 +4,7 @@ import { playback } from '../engine/playback.js'
 import * as A from './actions.js'
 
 export const SHORTCUTS = [
+  ['Ctrl+K', 'Komut paleti: her araç ve efekt'],
   ['Boşluk', 'Oynat / duraklat'],
   ['Ctrl+B · S', 'Oynatma kafasında böl'],
   ['Q · W', 'Solu / sağı kırp (dalgalı)'],
@@ -64,6 +65,12 @@ function cutPoints() {
 export function installShortcuts() {
   const down = (e) => {
     const s = store.get()
+    // komut paleti her ekranda (yazı yazarken bile)
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K') && !e.altKey) {
+      e.preventDefault()
+      if (s.ui.modal && s.ui.modal.type === 'command') store.closeModal(); else if (!s.ui.modal) store.openModal('command')
+      return
+    }
     if (s.ui.screen !== 'editor' || s.ui.modal) return
     if (isTyping(e)) return
     const k = e.key

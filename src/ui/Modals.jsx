@@ -8,6 +8,8 @@ import { SHORTCUTS } from './shortcuts.js'
 import { playback } from '../engine/playback.js'
 import { ipc, path, appPaths, fs, ensureDir } from '../platform/node.js'
 import { Logo } from './TitleBar.jsx'
+import AutoEditModal from './modals/AutoEditModal.jsx'
+import CommandPalette from './modals/CommandPalette.jsx'
 
 const expMods = import.meta.glob('../engine/export.js', { eager: true })
 const exporter = expMods['../engine/export.js'] || null
@@ -19,12 +21,14 @@ export default function Modals() {
   if (modal.type === 'export') return <ExportModal onClose={close} {...modal.props} />
   if (modal.type === 'shortcuts') return <ShortcutsModal onClose={close} />
   if (modal.type === 'about') return <AboutModal onClose={close} />
+  if (modal.type === 'autoedit') return <AutoEditModal onClose={close} {...modal.props} />
+  if (modal.type === 'command') return <CommandPalette onClose={close} />
   return null
 }
 
 function ShortcutsModal({ onClose }) {
   return (
-    <Modal title="Klavye kısayolları" edge="YARDIM · KISAYOL" onClose={onClose} width={560}>
+    <Modal title="Klavye kısayolları" edge="Yardım" onClose={onClose} width={560}>
       <div className="kbd-list">
         {SHORTCUTS.map(([k, d]) => <React.Fragment key={k}><span className="k">{k}</span><span>{d}</span></React.Fragment>)}
       </div>
@@ -33,12 +37,12 @@ function ShortcutsModal({ onClose }) {
 }
 
 function AboutModal({ onClose }) {
-  const v = appPaths().version || '2.0.0'
+  const v = appPaths().version || '3.0.0'
   return (
-    <Modal title="SWEAXCUT" edge={'SÜRÜM ' + v} onClose={onClose} width={460}>
+    <Modal title="SWEAXCUT" edge={'Sürüm ' + v} onClose={onClose} width={460}>
       <div className="col" style={{ gap: 12 }}>
         <Logo size={34} />
-        <div className="dim">Sweax Studios yapımı, oyun içerik üreticileri için ücretsiz video kurgu programı. Filigran yok, ücretli özellik yok, hesap yok. Her şey bilgisayarında çalışır.</div>
+        <div className="dim">Sweax Studios yapımı video kurgu programı. Kurgu, altyazı ve dışa aktarma bilgisayarında çalışır.</div>
         <div className="faint" style={{ fontSize: 11, lineHeight: 1.5 }}>
           Emoji grafikleri: Twemoji © Twitter, Inc. ve katkıda bulunanlar, CC-BY 4.0.<br />
           Geçişlerin bir kısmı gl-transitions (MIT), yazı tipleri SIL OFL, altyazı whisper.cpp (MIT), seslendirme Piper (MIT),
@@ -49,6 +53,14 @@ function AboutModal({ onClose }) {
   )
 }
 
+const EXP_PRESETS = [
+  { id: 'sosyal', name: 'Sosyal medya', hint: 'TikTok · Reels · Shorts', o: { format: 'mp4', resolution: '1080p', fps: 30, quality: 'yuksek', codec: 'h264' } },
+  { id: 'youtube', name: 'YouTube', hint: '1080p · 60 kare', o: { format: 'mp4', resolution: '1080p', fps: 60, quality: 'yuksek', codec: 'h264' } },
+  { id: '4k', name: 'En yüksek', hint: '4K · H.265', o: { format: 'mp4', resolution: '4k', fps: 30, quality: 'maksimum', codec: 'hevc' } },
+  { id: 'hizli', name: 'Hızlı paylaş', hint: '720p · küçük dosya', o: { format: 'mp4', resolution: '720p', fps: 30, quality: 'orta', codec: 'h264' } },
+  { id: 'gif', name: 'GIF', hint: 'Döngülü hareketli görsel', o: { format: 'gif', resolution: '480p' } },
+  { id: 'ses', name: 'Yalnız ses', hint: 'MP3 · 320k', o: { format: 'mp3', audioBitrate: 320 } },
+]
 const RES = [['auto', 'Proje'], ['480p', '480p'], ['720p', '720p'], ['1080p', '1080p'], ['1440p', '2K'], ['4k', '4K']]
 const QUAL = [['dusuk', 'Düşük'], ['orta', 'Orta'], ['yuksek', 'Yüksek'], ['maksimum', 'Maksimum']]
 const FORMATS = [
@@ -126,7 +138,7 @@ function ExportModal({ onClose, mode }) {
 
   if (run) {
     return (
-      <Modal title={run.done ? 'Hazır' : run.error ? 'Hata' : 'Dışa aktarılıyor'} edge="ÇIKTI · İŞLEME" width={560}
+      <Modal title={run.done ? 'Hazır' : run.error ? 'Hata' : 'Dışa aktarılıyor'} edge={run.done ? 'Video kaydedildi' : 'Lütfen bekle'} width={560}
         onClose={run.done || run.error ? onClose : null}
         footer={run.done ? <>
           <button className="btn" onClick={() => ipc.invoke('shell:show', run.path)}><Icon name="folder" />Klasörde göster</button>
@@ -141,11 +153,11 @@ function ExportModal({ onClose, mode }) {
           </> : run.error ? <div style={{ color: 'var(--danger)', whiteSpace: 'pre-wrap', userSelect: 'text' }}>{run.error}</div> : <>
             <div className="exp-big">%{Math.floor((run.progress || 0) * 100)}</div>
             <div className="bar"><i style={{ width: (run.progress || 0) * 100 + '%' }} /></div>
-            <div className="row mono dim" style={{ fontSize: 11, gap: 16 }}>
-              <span>{{ hazirlik: 'HAZIRLIK', goruntu: 'GÖRÜNTÜ', ses: 'SES', birlestirme: 'BİRLEŞTİRME' }[run.stage] || 'İŞLENİYOR'}</span>
-              {run.frame != null && <span>KARE {run.frame}/{run.total}</span>}
-              {run.fps ? <span>{run.fps.toFixed(0)} FPS</span> : null}
-              {run.eta != null && isFinite(run.eta) ? <span>KALAN ~{Math.ceil(run.eta)} SN</span> : null}
+            <div className="row dim" style={{ fontSize: 12, gap: 16 }}>
+              <span>{{ hazirlik: 'Hazırlanıyor', goruntu: 'Görüntü işleniyor', ses: 'Ses işleniyor', birlestirme: 'Birleştiriliyor' }[run.stage] || 'İşleniyor'}</span>
+              {run.frame != null && <span>Kare {run.frame}/{run.total}</span>}
+              {run.fps ? <span>{run.fps.toFixed(0)} kare/sn</span> : null}
+              {run.eta != null && isFinite(run.eta) ? <span>Kalan ~{Math.ceil(run.eta)} sn</span> : null}
             </div>
           </>}
         </div>
@@ -154,9 +166,9 @@ function ExportModal({ onClose, mode }) {
   }
 
   return (
-    <Modal title="Dışa aktar" edge="ÇIKTI · AYARLAR" onClose={onClose} width={760}
+    <Modal title="Dışa aktar" edge="Videoyu bilgisayarına kaydet" onClose={onClose} width={760}
       footer={<>
-        <span className="faint mono" style={{ marginRight: 'auto', fontSize: 11 }}>Filigran yok · sınır yok</span>
+        <span className="faint" style={{ marginRight: 'auto', fontSize: 12 }}>Filigran eklenmez</span>
         <button className="btn" onClick={onClose}>Vazgeç</button>
         <button className="btn sig lg" onClick={start}><Icon name="export" size={15} sw={2} />Dışa aktar</button>
       </>}>
@@ -170,6 +182,12 @@ function ExportModal({ onClose, mode }) {
           </div>
         </div>
         <div className="exp-opts">
+          <div className="exp-presets">
+            {EXP_PRESETS.map(p => {
+              const on = Object.entries(p.o).every(([k, v]) => opts[k] === v)
+              return <button key={p.id} className={'exp-preset' + (on ? ' on' : '')} onClick={() => setOpts(o => ({ ...o, ...p.o }))}><b>{p.name}</b><span>{p.hint}</span></button>
+            })}
+          </div>
           <div className="prop"><span className="lbl static">Dosya adı</span><input className="field grow" value={name} onChange={e => setName(e.target.value)} onKeyDown={e => e.stopPropagation()} /></div>
           <div className="prop"><span className="lbl static">Klasör</span>
             <input className="field grow mono" style={{ fontSize: 11 }} value={dir} readOnly />
@@ -224,7 +242,7 @@ function FrameExport({ onClose }) {
     setBusy(false)
   }
   return (
-    <Modal title="Kareyi kaydet" edge="ÇIKTI · TEK KARE" onClose={onClose} width={420}
+    <Modal title="Kareyi kaydet" edge="Tek kare" onClose={onClose} width={420}
       footer={<><button className="btn" onClick={onClose}>Vazgeç</button><button className="btn sig" disabled={busy} onClick={go}>Kaydet</button></>}>
       <div className="dim">Oynatma kafasındaki kare proje çözünürlüğünde PNG olarak kaydedilir.</div>
     </Modal>

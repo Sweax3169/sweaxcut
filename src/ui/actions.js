@@ -364,7 +364,7 @@ export function applyTransitionAll(def) {
   })
 }
 
-export function addMarker(label = '', color = '#e4ff3a') {
+export function addMarker(label = '', color = '#ffc24b') {
   const t = now()
   store.edit('İşaret ekle', d => { d.markers.push({ id: uid('k'), time: t, color, label }) })
 }

@@ -93,7 +93,7 @@ export default function MediaPanel({ code }) {
             <div>Henüz medya yok. Kayıtlarını içe aktar ya da aşağıdaki hazır arka planlardan başla.</div>
           </div>
         ) : !list.length ? (
-          <div className="lib-empty"><div className="mono">EŞLEŞEN DOSYA YOK</div></div>
+          <div className="lib-empty"><div className="mono">Eşleşen dosya yok</div></div>
         ) : (
           <div className="grid lib-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(118px, 1fr))' }}>
             {list.map(m => <MediaCard key={m.id} m={m} used={used.has(m.id)} sel={sel === m.id} onSelect={() => setSel(m.id)} />)}
@@ -104,7 +104,7 @@ export default function MediaPanel({ code }) {
       {over && (
         <div className="lib-dropover">
           <div className="big">BIRAK</div>
-          <div className="mono">ZAMAN ÇİZELGESİNE EKLENECEK</div>
+          <div className="mono">Zaman çizelgesine eklenecek</div>
         </div>
       )}
     </div>
@@ -151,12 +151,12 @@ function MediaCard({ m, used, sel, onSelect }) {
         onMouseLeave={() => setScrub(null)}>
         {thumb || <Icon name={m.type === 'audio' ? 'wave' : m.type === 'image' ? 'image' : 'film'} size={22} style={{ color: 'var(--tx-3)' }} />}
         <span className="type"><Icon name={m.type === 'audio' ? 'music' : m.type === 'image' ? 'image' : 'film'} size={11} /></span>
-        {used && <span className="used" title="Zaman çizelgesinde kullanılıyor">KUL</span>}
+        {used && <span className="used" title="Zaman çizelgesinde kullanılıyor">Kurguda</span>}
         {m.type !== 'image' && <span className="lib-badge mono">{fmt(m.duration)}</span>}
         {m.type === 'image' && m.width ? <span className="lib-badge mono">{m.width}×{m.height}</span> : null}
         {scrub != null && <span className="scrub" style={{ left: scrub * 100 + '%' }} />}
         {proc && <span className="prog"><i style={{ width: Math.round((m.progress || 0) * 100) + '%' }} /></span>}
-        {proc && !m.thumbsDir && m.type === 'video' && <span className="proc">İŞLENİYOR {Math.round((m.progress || 0) * 100)}%</span>}
+        {proc && !m.thumbsDir && m.type === 'video' && <span className="proc">İşleniyor %{Math.round((m.progress || 0) * 100)}</span>}
         {m.error && <span className="err" title={m.error}><Icon name="warn" size={18} /></span>}
         <button className="add" title="Zaman çizelgesine ekle" onClick={e => { e.stopPropagation(); add() }}><Icon name="plus" size={13} sw={2.2} /></button>
       </div>
@@ -203,7 +203,7 @@ function Builtins({ settings }) {
   }
   return (
     <>
-      <div className="lib-sect"><div className="edge"><b>HAZIR</b> DÜZ RENK · DEGRADE · {settings.ratio}</div></div>
+      <div className="lib-sect"><div className="edge"><b>Hazır arka planlar</b><span className="faint">· düz renk, degrade · {settings.ratio}</span></div></div>
       <div className="grid lib-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(52px, 1fr))', gap: '8px 6px' }}>
         {BUILTINS.map(def => (
           <div key={def.id} className="card lib-card builtin-card" title={def.name + ' — tıkla: ekle'}

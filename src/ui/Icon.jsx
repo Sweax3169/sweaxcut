@@ -1,8 +1,9 @@
-// SWEAXCUT ikon seti — 24'lük ızgara, 1.6 çizgi, kare uçlar (mekanik his). Hepsi el yapımı.
+// SWEAXCUT ikon seti — 24'lük ızgara, 1.6 çizgi, yuvarlak uçlar. Hepsi el yapımı.
 import React from 'react'
 
 const P = {
   play: 'M7 4.5v15l12-7.5z',
+  scope: 'M4 20V11M8 20V6M12 20v-9M16 20V8M20 20v-5M3 20h18',
   pause: 'M7 5h3.5v14H7zM13.5 5H17v14h-3.5z',
   stop: 'M6 6h12v12H6z',
   prev: 'M6 5v14M18 5L8 12l10 7z',
@@ -138,7 +139,7 @@ export default function Icon({ name, size = 16, sw = 1.6, fill = false, style, c
   return (
     <svg className={className} style={style} width={size} height={size} viewBox="0 0 24 24"
       fill={filled ? 'currentColor' : 'none'} stroke={filled ? 'none' : 'currentColor'}
-      strokeWidth={sw} strokeLinecap="square" strokeLinejoin="miter" aria-hidden="true">
+      strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d={d} />
     </svg>
   )

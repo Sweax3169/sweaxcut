@@ -235,7 +235,7 @@ export function ChromaSection({ ctx, code }) {
         {[['#00ff00', 'Yeşil perde'], ['#00b140', 'Stüdyo yeşili'], ['#0047bb', 'Mavi perde'], ['#ffffff', 'Beyaz'], ['#000000', 'Siyah']].map(([c, n]) => (
           <button key={c} className={'ks' + (c === ch.color ? ' on' : '')} style={{ background: c }} data-tip={n} onClick={() => set('color', 'Anahtar renk')(c, { final: true })} />
         ))}
-        <span className="faint mono" style={{ fontSize: 9.5, marginLeft: 4 }}>HAZIR PERDELER</span>
+        <span className="faint" style={{ fontSize: 11, marginLeft: 4 }}>Hazır perdeler</span>
       </div>
       <Row label="Güç" value={ch.strength} min={0} max={1} step={1} scale={100} suffix="%" def={0.4} onChange={set('strength', 'Anahtar gücü')} disabled={!ch.enabled} />
       <Row label="Yumuşaklık" value={ch.smooth} min={0} max={1} step={1} scale={100} suffix="%" def={0.1} onChange={set('smooth', 'Anahtar yumuşaklığı')} disabled={!ch.enabled} />

@@ -77,7 +77,8 @@ export default function TtsTab({ ctx }) {
   return (
     <Sec id="tts" code="01" title="Metni seslendir" sub={prevClip ? 'eklendi' : null}>
       <Select label="Ses" value={voice} options={opts} onChange={v => setT('voice', 'Seslendirme sesi')(v, { final: true })} />
-      {vdef && <div className="ttsvoice mono"><span>{(vdef.engine || '').toLocaleUpperCase('tr-TR')}</span><span>{vdef.gender === 'female' ? 'KADIN' : vdef.gender === 'male' ? 'ERKEK' : ''}</span><span>{vdef.quality ? String(vdef.quality).toLocaleUpperCase('tr-TR') : ''}</span><span className={vdef.installed ? 'ok' : ''}>{vdef.installed ? 'KURULU' : vdef.downloadable ? 'İNDİRİLECEK' : 'YOK'}</span></div>}
+      {vdef && vdef.commercial === false && <Note kind="warn">Bu ses yalnız ticari olmayan kullanım içindir ({vdef.license || 'CC BY-NC-SA'}). Para kazanılan videolarda başka bir ses seç.</Note>}
+      {vdef && <div className="ttsvoice"><span>{vdef.engine || ''}</span><span>{vdef.gender === 'female' ? 'Kadın' : vdef.gender === 'male' ? 'Erkek' : ''}</span><span>{vdef.quality ? String(vdef.quality) : ''}</span><span className={vdef.installed ? 'ok' : ''}>{vdef.installed ? 'Kurulu' : vdef.downloadable ? 'İndirilecek' : 'Yok'}</span></div>}
       <Row label="Hız" value={rate} min={0.5} max={2} step={0.05} digits={2} suffix="×" def={1} onChange={setT('rate', 'Konuşma hızı')} />
       <Row label="Perde" value={pitch} min={-12} max={12} step={1} suffix=" yt" def={0} onChange={setT('pitch', 'Ses perdesi')} />
       <div className="ttsquote">“{text.length > 140 ? text.slice(0, 140) + '…' : text || '—'}”</div>

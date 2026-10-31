@@ -8,6 +8,7 @@ import Icon from '../Icon.jsx'
 import { Sec, Note, Empty } from './common.jsx'
 import { useReg, usePlayhead } from './hooks.js'
 import { textCss } from './TextStyleTab.jsx'
+import { StyleGallery, CaptionStyleEditor, applyStyleToGroup } from '../captions/CaptionStyle.jsx'
 
 const NESTED = ['stroke', 'stroke2', 'shadow', 'glow', 'bg']
 const textPack = Object.values(import.meta.glob('../../packs/text/index.js', { eager: true }))[0] || {}
@@ -79,47 +80,17 @@ function Words({ ctx }) {
 }
 
 export default function CaptionTab({ ctx }) {
-  const { clip, b } = ctx
-  const styles = useReg('captionStyles')
+  const { clip } = ctx
   const cap = clip.caption
   if (!cap) return <Empty title="Altyazı değil" text="Bu yazı bir otomatik altyazı parçası değil." />
-  const cur = cap.styleId ? regGet('captionStyles', cap.styleId) : null
-  const apply = (st) => b.edit(c => {
-    if (textPack.applyCaptionStyle) textPack.applyCaptionStyle(c, st.id)
-    else { c.caption.styleId = st.id; mergeStyle(c, st) }
-  }, 'Altyazı stili: ' + st.name)
-  const applyAll = () => {
-    const gid = cap.groupId
-    const src = JSON.parse(JSON.stringify(clip.text))
-    let n = 0
-    store.edit('Tüm altyazılara uygula', d => {
-      for (const tr of d.tracks) for (const c of tr.clips) {
-        if (c.id === clip.id || !c.caption) continue
-        if (gid != null && c.caption.groupId !== gid) continue
-        const content = c.text.content
-        c.text = { ...JSON.parse(JSON.stringify(src)), content }
-        c.caption.styleId = cap.styleId
-        n++
-      }
-    })
-    store.toast(n + ' altyazıya uygulandı', 'ok', 1600)
-  }
+  const gid = cap.groupId || 'tek'
   return (
     <>
-      <Sec id="capst" code="01" title="Altyazı stili" sub={cur ? cur.name : null}>
-        {styles.length ? (
-          <div className="capgrid">
-            {styles.map(st => (
-              <button key={st.id} className={'capst' + (cap.styleId === st.id ? ' on' : '')} onClick={() => apply(st)} data-tip={st.name}>
-                <span className="cpv"><StylePreview st={st} /></span>
-                <span className="inm">{st.name}</span>
-              </button>
-            ))}
-          </div>
-        ) : <Note>Altyazı stili paketi yüklenmedi.</Note>}
-        <button className="btn sm" onClick={applyAll}><Icon name="copy" size={12} />Tüm altyazılara uygula</button>
+      <Sec id="capst" title="Hazır stiller" sub="bütün satırlar">
+        <StyleGallery value={cap.styleId} onPick={id => applyStyleToGroup(gid, id)} compact />
       </Sec>
-      <Sec id="capw" code="02" title="Kelimeler" sub={(cap.words || []).length + ' kelime'}>
+      <CaptionStyleEditor gid={gid} clip={clip} />
+      <Sec id="capw" title="Kelimeler" sub={(cap.words || []).length + ' kelime'} defaultOpen={false}>
         <Words ctx={ctx} />
       </Sec>
     </>
