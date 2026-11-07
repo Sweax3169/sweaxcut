@@ -152,15 +152,21 @@ function TimelineBody() {
     return unsub
   }, [])
 
-  // oynatma kafası + otomatik kaydırma
-  useEffect(() => playback.onTime((t) => {
-    const s = store.get()
-    const x = t * s.ui.zoom - s.ui.scrollX
-    if (playback.playing && (x > size.w - 40 || x < 0)) {
-      store.setUI({ scrollX: Math.max(0, t * s.ui.zoom - 60) })
-    }
-    redrawOv.current()
-  }), [size])
+  // oynatma kafası + otomatik kaydırma. Kullanıcı oynatırken başka yere kaydırdıysa (followHold) görünümü geri
+  // çekmez; oynatma kafası yeniden ekrana girince ya da oynatma baştan başlayınca takip sürer.
+  useEffect(() => {
+    let wasPlaying = playback.playing
+    return playback.onTime((t) => {
+      const s = store.get()
+      const x = t * s.ui.zoom - s.ui.scrollX
+      const inView = x >= 0 && x <= size.w - 40
+      if (playback.playing && !wasPlaying) st.followHold = false
+      wasPlaying = playback.playing
+      if (inView) st.followHold = false
+      if (playback.playing && !inView && !st.followHold) store.setUI({ scrollX: Math.max(0, t * s.ui.zoom - 60) })
+      redrawOv.current()
+    })
+  }, [size]) // eslint-disable-line
 
   // sığdır
   useEffect(() => {
@@ -441,6 +447,7 @@ function TimelineBody() {
       const { x } = local(e)
       const tAt = (x + s.ui.scrollX) / s.ui.zoom
       const nz = Math.max(2, Math.min(800, s.ui.zoom * (e.deltaY < 0 ? 1.18 : 1 / 1.18)))
+      if (playback.playing) st.followHold = true
       store.setUI({ zoom: nz, scrollX: Math.max(0, tAt * nz - x) })
       return
     }
@@ -451,6 +458,7 @@ function TimelineBody() {
       st.scrollY = ny; setScrollY(ny); redrawBase.current(); redrawOv.current()
     } else {
       const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
+      if (playback.playing) st.followHold = true
       store.setUI({ scrollX: Math.max(0, s.ui.scrollX + dx) })
     }
   }

@@ -20,6 +20,9 @@ function findClip(project, id) {
   return null
 }
 
+// listenin kaydırma konumu gruba göre hatırlanır (Stil'e ya da başka sekmeye geçip dönünce kalınan yer)
+const scrollMem = new Map()
+
 export default function Transcript({ group }) {
   const t = usePlayhead(20)
   const fps = useStore(s => s.project.settings.fps) || 30
@@ -27,16 +30,42 @@ export default function Transcript({ group }) {
   const [editing, setEditing] = useState(null) // { id, caret }
   const [find, setFind] = useState(null) // { q, r }
   const listRef = useRef(null)
+  const lastActive = useRef(null)
   const lines = group.clips
   const cur = lines.findIndex(c => t >= c.start && t < c.start + c.duration)
-  // oynatırken etkin satırı görünür tut
-  useEffect(() => {
-    if (cur < 0 || editing || !listRef.current) return
-    const el = listRef.current.querySelector(`[data-i="${cur}"]`)
-    if (el && playback.playing) el.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
-  }, [cur, editing])
-
   const gid = group.groupId
+  useLayoutEffect(() => {
+    const L = listRef.current
+    if (!L) return
+    if (scrollMem.has(gid)) L.scrollTop = scrollMem.get(gid)
+    else if (cur >= 0) { const el = L.querySelector(`[data-id="${lines[cur].id}"]`); if (el) L.scrollTop = Math.max(0, el.getBoundingClientRect().top - L.getBoundingClientRect().top - L.clientHeight / 3) }
+    const save = () => scrollMem.set(gid, L.scrollTop)
+    L.addEventListener('scroll', save, { passive: true })
+    return () => L.removeEventListener('scroll', save)
+  }, [gid]) // eslint-disable-line
+  // Oynatırken etkin satırı takip et; ama yalnız kullanıcı oynayan satırı görürken. Aşağı kaydırıp başka bir satırla
+  // uğraşıyorsa (siliyor, düzeltiyor) liste onu oynayan satıra geri çekmez.
+  useEffect(() => {
+    const L = listRef.current
+    if (cur < 0 || !L) return
+    const id = lines[cur].id
+    const prev = lastActive.current
+    lastActive.current = id
+    if (editing || !playback.playing) return
+    const box = L.getBoundingClientRect()
+    const seen = lid => {
+      const el = lid && L.querySelector(`[data-id="${lid}"]`)
+      if (!el) return false
+      const r = el.getBoundingClientRect()
+      return r.bottom > box.top && r.top < box.bottom
+    }
+    if (!seen(prev) && !seen(id)) return
+    const r = L.querySelector(`[data-id="${id}"]`).getBoundingClientRect()
+    const pad = 24
+    const dy = r.top < box.top + pad ? r.top - box.top - pad : r.bottom > box.bottom - pad ? r.bottom - box.bottom + pad : 0
+    if (dy) L.scrollBy({ top: dy, behavior: 'smooth' })
+  }, [cur, editing]) // eslint-disable-line
+
   const edit = (label, fn, opts) => store.edit(label, fn, opts)
   const hits = useMemo(() => {
     if (!find || !find.q) return 0
@@ -156,7 +185,7 @@ function Line({ c, i, t, fps, on, sel, editing, setEditing, prevId, nextId, find
   const step = (ev) => (ev.shiftKey ? 0.1 : 1 / fps)
   const q = find ? find.toLocaleLowerCase('tr-TR') : null
   return (
-    <div className={'tx-line' + (on ? ' on' : '') + (sel ? ' sel' : '') + (editing ? ' ed' : '')} data-i={i}>
+    <div className={'tx-line' + (on ? ' on' : '') + (sel ? ' sel' : '') + (editing ? ' ed' : '')} data-i={i} data-id={c.id}>
       <button className="tx-tc mono" onClick={() => seek(c.start)} data-tip={'Bu satıra git · ' + c.duration.toFixed(2) + ' sn'}>{fmt(c.start)}</button>
       {editing ? (
         <textarea ref={ref} className="tx-in" value={txt ?? joined} spellCheck={false}

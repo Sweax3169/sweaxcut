@@ -343,7 +343,7 @@ Everything else (the Silero VAD model, the MediaPipe models, fonts, stickers, mu
 
 ## Install
 
-1. Download `SWEAXCUT-Kurulum-3.0.0.exe` (about 214 MB) from the [latest release](https://github.com/Sweax3169/sweaxcut/releases/latest).
+1. Download `SWEAXCUT-Kurulum-3.0.1.exe` (about 214 MB) from the [latest release](https://github.com/Sweax3169/sweaxcut/releases/latest).
 2. Run it. It installs for your user account, adds desktop and Start menu shortcuts, registers `.sweax` project files and opens the app.
 3. Drop your videos on a recipe card, or on the drop area to edit them yourself.
 

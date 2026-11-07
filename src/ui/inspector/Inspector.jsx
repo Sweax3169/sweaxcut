@@ -1,7 +1,7 @@
 // SAĞ DENETÇİ PANELİ — seçili klibin / projenin özellikleri.
 // Seçim yok → PROJE; tek klip → türüne göre sekmeler; çoklu seçim → ortak temel özellikler.
 // Yeniden çizim dar tutulur: yalnızca seçili klip değişince, ve klipte anahtar kare varsa oynatma kafasıyla (~20 fps).
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import '../styles/inspector.css'
 import { store, useStore } from '../../core/store.js'
 import { defaultTransform, defaultMask, defaultChroma, defaultAdjust, defaultHSL, defaultAudio } from '../../core/model.js'
@@ -69,6 +69,20 @@ function tabsFor(clip, media) {
                 : t === 'adjust' ? ['adjust', 'filter']
                   : ['basic']
   return ids.filter(Boolean)
+}
+
+// Kaydırma hafızası: tür + sekme başına. Klip silinince panel Proje'ye döner; aynı türden bir klip seçilince ya da
+// sekmeye geri gelince kalınan yerden devam eder (başa atmaz).
+const scrollMem = new Map()
+function useScrollMem(key) {
+  const keyRef = useRef(key)
+  keyRef.current = key
+  // geri çağrılan ref: her yeni gövde öğesi (sekme değişimi, Proje ↔ klip) bağlanırken konumu geri yükler
+  return useCallback((el) => {
+    if (!el) return
+    el.scrollTop = scrollMem.get(keyRef.current) || 0
+    el.addEventListener('scroll', () => scrollMem.set(keyRef.current, el.scrollTop), { passive: true })
+  }, [])
 }
 
 // Sekme hafızası: türe göre son sekme (ui.inspectorTab dizgeyse bir kerelik istek sayılır, ör. 'transition')
@@ -252,6 +266,7 @@ function ClipInspector({ id, focusTick }) {
   const settings = useSettings()
   const tabs = clip ? tabsFor(clip, media) : ['basic']
   const [tab, setTab] = useTab(clip ? clip.type : 'none', tabs)
+  const bodyRef = useScrollMem((clip ? clip.type : 'none') + ':' + tab)
   const [armed, setArmed] = useState(false)
   useEffect(() => { if (!armed) return; const t = setTimeout(() => setArmed(false), 2200); return () => clearTimeout(t) }, [armed])
   // Alt+1..9 sekme kısayolu (odak denetçideyken ya da genel)
@@ -316,7 +331,7 @@ function ClipInspector({ id, focusTick }) {
       <QuickActs clip={clip} media={media} setTab={setTab} />
       {tabs.length > 1 && <Tabs tabs={tabs} tab={tab} setTab={setTab} dots={dots} />}
       <KfBar clip={clip} lt={lt} b={b} />
-      <div className="pbody ibody" key={tab}>
+      <div className="pbody ibody" key={tab} ref={bodyRef}>
         {body}
         <div className="iend"><span className="perf" /></div>
       </div>
@@ -331,11 +346,12 @@ const selProjName = s => s.project.name
 function ProjectInspector() {
   const settings = useSettings()
   const name = useStore(selProjName)
+  const bodyRef = useScrollMem('project')
   return (
     <div className="panel insp" data-type="project">
       <Head color="var(--rec)" code="P" icon="film" kind="Proje" meta={settings.width + '×' + settings.height + '  ' + settings.fps + ' fps'} name={name}
         onName={v => store.edit('Proje adı', d => { d.name = v }, { coalesce: 'pname' })} />
-      <div className="pbody ibody">
+      <div className="pbody ibody" ref={bodyRef}>
         <ProjectTab settings={settings} />
         <div className="iend"><span className="perf" /></div>
       </div>

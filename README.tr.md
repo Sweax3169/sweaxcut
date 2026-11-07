@@ -343,7 +343,7 @@ Geri kalan her şey (Silero VAD modeli, MediaPipe modelleri, yazı tipleri, çı
 
 ## Kurulum
 
-1. [Son sürümden](https://github.com/Sweax3169/sweaxcut/releases/latest) `SWEAXCUT-Kurulum-3.0.0.exe` dosyasını indir (yaklaşık 214 MB).
+1. [Son sürümden](https://github.com/Sweax3169/sweaxcut/releases/latest) `SWEAXCUT-Kurulum-3.0.1.exe` dosyasını indir (yaklaşık 214 MB).
 2. Çalıştır. Yalnız senin kullanıcı hesabına kurulur, masaüstüne ve Başlat menüsüne kısayol ekler, `.sweax` proje dosyalarını tanıtır ve uygulamayı açar.
 3. Videolarını bir tarif kartına ya da kendin düzenlemek için bırakma alanına bırak.
 
